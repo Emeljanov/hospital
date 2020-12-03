@@ -1,0 +1,12 @@
+.idea/
+*.iml
+*.iws
+
+log/
+target/
+
+*.class
+
+*.zip
+*.tar.gz
+*.rar	
