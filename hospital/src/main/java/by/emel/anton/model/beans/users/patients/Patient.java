@@ -1,43 +1,45 @@
 package by.emel.anton.model.beans.users.patients;
 
+import by.emel.anton.constants.Constans;
 import by.emel.anton.model.beans.therapy.Therapy;
+import by.emel.anton.model.beans.users.User;
+import by.emel.anton.model.beans.users.UserType;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 
-public abstract class Patient {
-    private int id;
-    private String name;
-    private LocalDate birthday;
+public abstract class Patient extends User {
     private int doctorId;
-    private List<Therapy> therapies;
 
-    public Patient(int id, String name, LocalDate birthday, int doctorId, List<Therapy> therapies) {
-        this.id = id;
-        this.name = name;
-        this.birthday = birthday;
+    private List<Integer> therapies;
+
+    public Patient(int id, String login, String password, String name, LocalDate birthday, int doctorId) {
+        super(id, login, password, UserType.PATIENT, name, birthday);
         this.doctorId = doctorId;
-        this.therapies = therapies;
+        this.therapies = new ArrayList<>();
     }
 
-    public int getId() {
-        return id;
-    }
 
-    public String getName() {
-        return name;
-    }
-
-    public LocalDate getBirthday() {
-        return birthday;
-    }
 
     public int getDoctorId() {
         return doctorId;
     }
 
-    public List<Therapy> getTherapies() {
+    public List<Integer> getTherapies() {
         return therapies;
     }
 
+    public void setDoctorId(int doctorId) {
+        this.doctorId = doctorId;
+    }
+
+    public void setTherapies(List<Integer> therapies) {
+        this.therapies = therapies;
+    }
+
+    @Override
+    public String toString() {
+        return super.toString() + Constans.SEPARATOR + doctorId;
+    }
 }
