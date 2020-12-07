@@ -12,7 +12,10 @@ public abstract class User {
     private String name;
     private LocalDate birthday;
 
-    public User(int id,String login, String password, UserType userType, String name, LocalDate birthday) {
+    public User() {
+    }
+
+    public User(int id, String login, String password, UserType userType, String name, LocalDate birthday) {
         this.id =id;
         this.login = login;
         this.password = password;
@@ -23,6 +26,10 @@ public abstract class User {
 
     public int getId() {
         return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
     }
 
     public String getLogin() {
@@ -43,6 +50,10 @@ public abstract class User {
 
     public LocalDate getBirthday() {
         return birthday;
+    }
+
+    public void setUserType(UserType userType) {
+        this.userType = userType;
     }
 
     public void setLogin(String login) {

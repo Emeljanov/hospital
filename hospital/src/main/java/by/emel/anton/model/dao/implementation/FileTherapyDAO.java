@@ -21,15 +21,15 @@ public class FileTherapyDAO implements TherapyDAO {
     }
 
     @Override
-    public int getLastID() {
-        int idMax = 0;
+    public int getNextID() {
+        int nextId = 1;
         try(BufferedReader bufferedReader = new BufferedReader(new FileReader(Constans.FILE_PATH_THERAPIES))) {
             String line = bufferedReader.readLine();
             while (line != null) {
                 String[] therapyDate = line.split(Constans.SEPARATOR);
                 int id = Integer.valueOf(therapyDate[0]);
-                if(id > idMax) {
-                    idMax = id + 1;
+                if(id > nextId) {
+                    nextId = id + 1;
                 }
                 line = bufferedReader.readLine();
             }
@@ -39,7 +39,7 @@ public class FileTherapyDAO implements TherapyDAO {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        return idMax;
+        return nextId;
     }
 
     @Override

@@ -2,7 +2,7 @@ package by.emel.anton.model.dao.interfaces;
 
 
 import by.emel.anton.model.beans.users.User;
-
+import by.emel.anton.model.beans.users.UserType;
 
 
 public interface UserDAO {
@@ -12,6 +12,8 @@ public interface UserDAO {
     void updateUser(User user);
 
     void saveUser(User user);
+
+    int getNextId(UserType userType);
 
 
 }

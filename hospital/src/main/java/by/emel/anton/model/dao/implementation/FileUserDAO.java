@@ -3,13 +3,9 @@ package by.emel.anton.model.dao.implementation;
 import by.emel.anton.constants.Constans;
 import by.emel.anton.model.beans.users.User;
 import by.emel.anton.model.beans.users.UserType;
-import by.emel.anton.model.beans.users.doctors.GeneralDoctor;
-import by.emel.anton.model.beans.users.patients.OrdinaryPatient;
-import by.emel.anton.model.dao.exceptions.UserDAOException;
 import by.emel.anton.model.dao.interfaces.UserDAO;
 
 import java.io.*;
-import java.time.LocalDate;
 
 public class FileUserDAO implements UserDAO {
 
@@ -57,6 +53,37 @@ public class FileUserDAO implements UserDAO {
 
         }
 
+    }
+
+    @Override
+    public int getNextId(UserType userType) {
+        int nextId = 1;
+        String filePath = "";
+        if(userType == UserType.DOCTOR) {
+            filePath = Constans.FILE_PATH_DOCTORS;
+        }
+        else if(userType == UserType.PATIENT) {
+            filePath = Constans.FILE_PATH_PATIENTS;
+        }
+
+        try(BufferedReader bufferedReader = new BufferedReader(new FileReader(filePath))) {
+            String line = bufferedReader.readLine();
+            while (line != null) {
+                String[] userData = line.split(Constans.SEPARATOR);
+                int id = Integer.valueOf(userData[0]);
+                if(id > nextId) {
+                    nextId = id + 1;
+                }
+                line = bufferedReader.readLine();
+            }
+
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        return nextId;
     }
 
 

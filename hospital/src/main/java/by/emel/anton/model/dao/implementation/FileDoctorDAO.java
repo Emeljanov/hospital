@@ -4,6 +4,7 @@ import by.emel.anton.constants.Constans;
 import by.emel.anton.model.beans.users.UserType;
 import by.emel.anton.model.beans.users.doctors.Doctor;
 import by.emel.anton.model.beans.users.doctors.GeneralDoctor;
+import by.emel.anton.model.beans.users.patients.Patient;
 import by.emel.anton.model.dao.exceptions.UserDAOException;
 import by.emel.anton.model.dao.interfaces.DoctorDAO;
 import by.emel.anton.service.StringToList;
@@ -36,9 +37,6 @@ public class FileDoctorDAO implements DoctorDAO {
             }
             throw new UserDAOException("Login or password are incorrect");
 
-
-
-
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         } catch (IOException e) {
@@ -46,6 +44,11 @@ public class FileDoctorDAO implements DoctorDAO {
         }
 
         return null;
+    }
+
+    @Override
+    public void setDoctorIdToPatient(Doctor doctor, Patient patient) {
+        patient.setDoctorId(doctor.getId());
     }
 
 }

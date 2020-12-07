@@ -12,12 +12,14 @@ import java.util.List;
 public abstract class Patient extends User {
     private int doctorId;
 
-    private List<Integer> therapies;
+    private List<Integer> therapies = new ArrayList<>();
+
+    public Patient() {
+    }
 
     public Patient(int id, String login, String password, String name, LocalDate birthday, int doctorId) {
         super(id, login, password, UserType.PATIENT, name, birthday);
         this.doctorId = doctorId;
-        this.therapies = new ArrayList<>();
     }
 
 

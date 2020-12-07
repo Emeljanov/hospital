@@ -13,6 +13,12 @@ import java.util.List;
 
 public abstract class Doctor extends User {
 
+
+    public Doctor() {
+        this.patientsId = new ArrayList<>();
+
+    }
+
     public Doctor(int id, String login, String password, String name, LocalDate birthday) {
         super(id,login, password, UserType.DOCTOR,name,birthday);
         this.patientsId = new ArrayList<>();
@@ -30,6 +36,11 @@ public abstract class Doctor extends User {
             patientsId.add(id);
         }
 
+    }
+
+    public void setDoctorIdToPatient(Patient patient) {
+        int doctorId = getId();
+        patient.setDoctorId(doctorId);
     }
 
     public List<Integer> getPatientsId() {

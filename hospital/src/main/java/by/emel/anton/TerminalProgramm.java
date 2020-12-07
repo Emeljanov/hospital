@@ -2,7 +2,11 @@ package by.emel.anton;
 
 import by.emel.anton.model.beans.therapy.OrdinaryTherapy;
 import by.emel.anton.model.beans.therapy.Therapy;
+import by.emel.anton.model.beans.users.User;
+import by.emel.anton.model.beans.users.UserType;
 import by.emel.anton.model.beans.users.doctors.Doctor;
+import by.emel.anton.model.beans.users.doctors.GeneralDoctor;
+import by.emel.anton.model.beans.users.patients.OrdinaryPatient;
 import by.emel.anton.model.beans.users.patients.Patient;
 import by.emel.anton.model.dao.exceptions.UserDAOException;
 import by.emel.anton.model.dao.interfaces.DoctorDAO;
@@ -13,7 +17,6 @@ import by.emel.anton.model.dao.interfaces.UserDAO;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.sql.SQLOutput;
 import java.time.LocalDate;
 
 public class TerminalProgramm {
@@ -30,7 +33,7 @@ public class TerminalProgramm {
     }
 
     public void startProgramm() {
-        System.out.println("Hi, you are a doctor or patient? (d/p)");
+        System.out.println("Hi, you are a doctor or patient? (d/p). If you are new user - create account(new)");
         try(BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(System.in))) {
             String answer = bufferedReader.readLine();
             if(answer.equals("d")) {
@@ -41,9 +44,50 @@ public class TerminalProgramm {
                 System.out.println("You are the patient!");
                 enterPatient(bufferedReader);
             }
+            else if (answer.equals("new")) {
+               createNewUser(bufferedReader);
+
+            }
         } catch (IOException | UserDAOException e) {
             e.printStackTrace();
         }
+    }
+
+    private void createNewUser(BufferedReader bufferedReader) throws IOException {
+        System.out.println("Create doctor or patient?");
+        String answer = bufferedReader.readLine();
+
+        UserType userType = null;
+        User user = null;
+
+        if(answer.equals("doctor")) {
+            userType = UserType.DOCTOR;
+            user = new GeneralDoctor();
+        }
+        else if( answer.equals("patient")) {
+            userType = UserType.PATIENT;
+            user = new OrdinaryPatient();
+
+        }
+        int id = userDAO.getNextId(userType);
+        System.out.println("Enter login");
+        String login = bufferedReader.readLine();
+        System.out.println("Enter passwrod");
+        String password = bufferedReader.readLine();
+        System.out.println("Enter name");
+        String name = bufferedReader.readLine();
+        System.out.println("Enter birthday yyyy-mm-dd");
+        LocalDate birthdday = LocalDate.parse(bufferedReader.readLine());
+
+        user.setId(id);
+        user.setUserType(userType);
+        user.setLogin(login);
+        user.setPassword(password);
+        user.setBirthday(birthdday);
+        user.setName(name);
+
+        userDAO.saveUser(user);
+
     }
 
     private void enterDoctor(BufferedReader bufferedReader) throws IOException, UserDAOException {
@@ -66,6 +110,7 @@ public class TerminalProgramm {
 
             if(answer.equals("add")) {
                 System.out.println("add");
+                System.out.println("Enter patient name");
             }
             else if(answer.equals("see")) {
                 System.out.println("see");
@@ -91,7 +136,7 @@ public class TerminalProgramm {
         System.out.println("Enter end date (yyyy-mm-dd");
         String endDate = bufferedReader.readLine();
 
-        int id = therapyDAO.getLastID();
+        int id = therapyDAO.getNextID();
 
         Therapy therapy = new OrdinaryTherapy(id,description, LocalDate.now(),LocalDate.parse(endDate));
         doctor.setTherapy(patient,therapy);

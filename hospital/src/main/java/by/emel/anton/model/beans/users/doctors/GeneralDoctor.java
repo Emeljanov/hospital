@@ -7,6 +7,9 @@ import java.time.LocalDate;
 
 public class GeneralDoctor extends Doctor {
 
+    public GeneralDoctor() {
+        super();
+    }
 
     public GeneralDoctor(int id, String login, String password, String name, LocalDate birthday) {
         super(id, login, password, name, birthday);

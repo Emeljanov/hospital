@@ -6,8 +6,7 @@ import by.emel.anton.model.beans.users.patients.Patient;
 public interface TherapyDAO {
     void saveTherapy(Therapy therapy);
 
-    int getLastID();
-
+    int getNextID();
 
     Therapy getTherapy(int id);
 }
