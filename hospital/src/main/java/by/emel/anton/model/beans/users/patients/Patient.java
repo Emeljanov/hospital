@@ -40,6 +40,6 @@ public abstract class Patient extends User {
 
     @Override
     public String toString() {
-        return super.toString() + Constans.SEPARATOR + doctorId;
+        return super.toString() + Constans.SEPARATOR + doctorId + Constans.SEPARATOR + therapies.toString();
     }
 }

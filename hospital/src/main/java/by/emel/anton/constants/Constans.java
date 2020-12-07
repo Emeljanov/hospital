@@ -10,4 +10,6 @@ public class Constans {
     public static final String FILE_PATH_DOCTORS = "src/main/data/doctors";
     public static final String FILE_PATH_PATIENTS = "src/main/data/patients";
     public static final String FILE_PATH_THERAPIES = "src/main/data/therapies";
+    public static final String FILE_PATH_TEMP = "src/main/data/temp";
+
 }

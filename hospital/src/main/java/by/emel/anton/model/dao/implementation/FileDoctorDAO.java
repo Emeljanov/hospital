@@ -13,22 +13,6 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 
 public class FileDoctorDAO implements DoctorDAO {
-    @Override
-    public boolean saveDoctor(Doctor doctor) {
-
-        String login = doctor.getLogin();
-
-        if(!new FileUserDAO().isLoginExist(login, Constans.FILE_PATH_DOCTORS)) {
-            try(FileWriter fw = new FileWriter(Constans.FILE_PATH_DOCTORS,true)) {
-                fw.write(doctor.toString());
-                fw.write(Constans.DESCENT);
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-
-        }
-        return false;
-    }
 
     @Override
     public Doctor getDoctor(String login, String password) throws UserDAOException {
@@ -39,7 +23,6 @@ public class FileDoctorDAO implements DoctorDAO {
                 String[] userData = line.split(Constans.SEPARATOR);
                 if(userData[1].equals(login) && userData[2].equals(password)) {
                     int id = Integer.valueOf(userData[0]);
-                    UserType userType = UserType.valueOf(userData[3]);
                     LocalDate birthday = LocalDate.parse(userData[5]);
                     String name = userData[4];
                     ArrayList<Integer> patients = StringToList.toIntegerList(userData[6]);
@@ -65,8 +48,4 @@ public class FileDoctorDAO implements DoctorDAO {
         return null;
     }
 
-    @Override
-    public boolean updateDoctor(Doctor doctor) {
-        return false;
-    }
 }

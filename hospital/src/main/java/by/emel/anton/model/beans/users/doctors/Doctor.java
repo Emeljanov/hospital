@@ -25,7 +25,11 @@ public abstract class Doctor extends User {
     }
 
     public void setPatientId(int id) {
-        patientsId.add(id);
+
+        if(!patientsId.contains(id)) {
+            patientsId.add(id);
+        }
+
     }
 
     public List<Integer> getPatientsId() {
