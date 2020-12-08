@@ -159,6 +159,10 @@ public class TerminalProgramm {
         System.out.println("Please, enter patients id");
         int patientId = Integer.parseInt(bufferedReader.readLine());
         doctor.setPatientId(patientId);
+        userDAO.updateUser(doctor);
+        Patient patient = patientDAO.getPatientById(patientId);
+        patient.setDoctorId(doctor.getId());
+        userDAO.updateUser(patient);
         forDoctor(bufferedReader,doctor);
     }
 

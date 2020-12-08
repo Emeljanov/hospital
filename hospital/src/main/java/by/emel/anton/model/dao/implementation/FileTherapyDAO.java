@@ -27,7 +27,7 @@ public class FileTherapyDAO implements TherapyDAO {
             while (line != null) {
                 String[] therapyDate = line.split(Constans.SEPARATOR);
                 int id = Integer.parseInt(therapyDate[0]);
-                if(id > nextId) {
+                if(id >= nextId) {
                     nextId = id + 1;
                 }
                 line = bufferedReader.readLine();

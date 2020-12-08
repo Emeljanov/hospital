@@ -20,7 +20,5 @@ public class Runner {
         TerminalProgramm terminalProgramm = new TerminalProgramm(userDAO,patientDAO,doctorDAO,therapyDAO);
         terminalProgramm.startProgramm();
 
-
-
     }
 }
