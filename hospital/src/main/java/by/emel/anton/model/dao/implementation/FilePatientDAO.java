@@ -1,7 +1,6 @@
 package by.emel.anton.model.dao.implementation;
 
 import by.emel.anton.constants.Constans;
-import by.emel.anton.model.beans.users.doctors.GeneralDoctor;
 import by.emel.anton.model.beans.users.patients.OrdinaryPatient;
 import by.emel.anton.model.beans.users.patients.Patient;
 import by.emel.anton.model.dao.exceptions.UserDAOException;
@@ -9,7 +8,6 @@ import by.emel.anton.model.dao.interfaces.PatientDAO;
 import by.emel.anton.service.StringToList;
 
 import java.io.BufferedReader;
-import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.time.LocalDate;
@@ -36,13 +34,11 @@ public class FilePatientDAO implements PatientDAO {
 
                 line = bufferedReader.readLine();
             }
-            throw new UserDAOException("Login or password are incorrect");
+            throw new UserDAOException(Constans.EXCEPTION_MESSAGE_LP_INCORRECT);
 
 
 
 
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -57,7 +53,7 @@ public class FilePatientDAO implements PatientDAO {
 
             while (line != null) {
                 String[] userData = line.split(Constans.SEPARATOR);
-                if(Integer.valueOf(userData[0]) == id) {
+                if(Integer.parseInt(userData[0]) == id) {
                     String login = userData[1];
                     String password = userData[2];
                     String name = userData[4];
@@ -71,13 +67,8 @@ public class FilePatientDAO implements PatientDAO {
 
                 line = bufferedReader.readLine();
             }
-            throw new UserDAOException("Login or password are incorrect");
+            throw new UserDAOException(Constans.EXCEPTION_MESSAGE_LP_INCORRECT);
 
-
-
-
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
         } catch (IOException e) {
             e.printStackTrace();
         }

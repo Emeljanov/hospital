@@ -3,7 +3,6 @@ package by.emel.anton.model.dao.implementation;
 import by.emel.anton.constants.Constans;
 import by.emel.anton.model.beans.therapy.OrdinaryTherapy;
 import by.emel.anton.model.beans.therapy.Therapy;
-import by.emel.anton.model.beans.users.patients.Patient;
 import by.emel.anton.model.dao.interfaces.TherapyDAO;
 
 import java.io.*;
@@ -27,15 +26,13 @@ public class FileTherapyDAO implements TherapyDAO {
             String line = bufferedReader.readLine();
             while (line != null) {
                 String[] therapyDate = line.split(Constans.SEPARATOR);
-                int id = Integer.valueOf(therapyDate[0]);
+                int id = Integer.parseInt(therapyDate[0]);
                 if(id > nextId) {
                     nextId = id + 1;
                 }
                 line = bufferedReader.readLine();
             }
 
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -48,22 +45,18 @@ public class FileTherapyDAO implements TherapyDAO {
             String line = bufferedReader.readLine();
             while (line != null) {
                 String[] therapyData = line.split(Constans.SEPARATOR);
-                if(Integer.valueOf(therapyData[0]) == id) {
+                if(Integer.parseInt(therapyData[0]) == id) {
                     String description = therapyData[1];
                     LocalDate startDate = LocalDate.parse(therapyData[2]);
                     LocalDate endDate = LocalDate.parse(therapyData[3]);
-                    Therapy therapy = new OrdinaryTherapy(id,description,startDate,endDate);
-                    return therapy;
+                    return new OrdinaryTherapy(id,description,startDate,endDate);
                 }
                 line = bufferedReader.readLine();
             }
 
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
         } catch (IOException e) {
             e.printStackTrace();
         }
-
 
         return null;
 

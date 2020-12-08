@@ -1,8 +1,5 @@
 package by.emel.anton.model.beans.users.doctors;
 
-
-
-
 import java.time.LocalDate;
 
 public class GeneralDoctor extends Doctor {

@@ -13,7 +13,7 @@ public interface UserDAO {
 
     void saveUser(User user);
 
-    int getNextId(UserType userType);
+    int getNextId(User user);
 
 
 }

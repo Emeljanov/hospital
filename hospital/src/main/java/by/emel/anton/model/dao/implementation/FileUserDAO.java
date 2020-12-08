@@ -50,15 +50,14 @@ public class FileUserDAO implements UserDAO {
                     e.printStackTrace();
                 }
             }
-
         }
-
     }
 
     @Override
-    public int getNextId(UserType userType) {
+    public int getNextId(User user) {
         int nextId = 1;
         String filePath = "";
+        UserType userType = user.getUserType();
         if(userType == UserType.DOCTOR) {
             filePath = Constans.FILE_PATH_DOCTORS;
         }
@@ -70,15 +69,13 @@ public class FileUserDAO implements UserDAO {
             String line = bufferedReader.readLine();
             while (line != null) {
                 String[] userData = line.split(Constans.SEPARATOR);
-                int id = Integer.valueOf(userData[0]);
-                if(id > nextId) {
+                int id = Integer.parseInt(userData[0]);
+                if(id >= nextId) {
                     nextId = id + 1;
                 }
                 line = bufferedReader.readLine();
             }
 
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -105,7 +102,7 @@ public class FileUserDAO implements UserDAO {
             String line = bufferedReader.readLine();
             while (line != null) {
                 String[] userData = line.split(Constans.SEPARATOR);
-                if(userId != Integer.valueOf(userData[0])) {
+                if(userId != Integer.parseInt(userData[0])) {
                     try(FileWriter fw = new FileWriter(tempFile,true)) {
                         fw.write(line);
                         fw.write(Constans.DESCENT);
@@ -115,11 +112,10 @@ public class FileUserDAO implements UserDAO {
                 line = bufferedReader.readLine();
             }
 
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
         } catch (IOException e) {
             e.printStackTrace();
         }
+
         String filePath = userFile.getPath();
         userFile.delete();
         tempFile.renameTo(new File(filePath));

@@ -7,6 +7,8 @@ public class Constans {
     public static final String EXCEPTION_EMPTY_LOGIN = "";
     public static final String COMMA = ",";
 
+    public static final String EXCEPTION_MESSAGE_LP_INCORRECT = "Login or password are incorrect";
+
     public static final String FILE_PATH_DOCTORS = "src/main/data/doctors";
     public static final String FILE_PATH_PATIENTS = "src/main/data/patients";
     public static final String FILE_PATH_THERAPIES = "src/main/data/therapies";

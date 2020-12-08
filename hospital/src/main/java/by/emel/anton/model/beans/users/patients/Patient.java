@@ -1,7 +1,6 @@
 package by.emel.anton.model.beans.users.patients;
 
 import by.emel.anton.constants.Constans;
-import by.emel.anton.model.beans.therapy.Therapy;
 import by.emel.anton.model.beans.users.User;
 import by.emel.anton.model.beans.users.UserType;
 

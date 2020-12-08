@@ -1,6 +1,5 @@
 package by.emel.anton;
 
-import by.emel.anton.model.dao.exceptions.UserDAOException;
 import by.emel.anton.model.dao.implementation.FileDoctorDAO;
 import by.emel.anton.model.dao.implementation.FilePatientDAO;
 import by.emel.anton.model.dao.implementation.FileTherapyDAO;
@@ -20,6 +19,8 @@ public class Runner {
 
         TerminalProgramm terminalProgramm = new TerminalProgramm(userDAO,patientDAO,doctorDAO,therapyDAO);
         terminalProgramm.startProgramm();
+
+
 
     }
 }

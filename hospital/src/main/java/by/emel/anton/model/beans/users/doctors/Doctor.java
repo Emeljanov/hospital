@@ -14,8 +14,8 @@ import java.util.List;
 public abstract class Doctor extends User {
 
 
+
     public Doctor() {
-        this.patientsId = new ArrayList<>();
 
     }
 
@@ -24,7 +24,7 @@ public abstract class Doctor extends User {
         this.patientsId = new ArrayList<>();
     }
 
-    private List<Integer> patientsId;
+    private List<Integer> patientsId = new ArrayList<>();
 
     public void setPatientsId(List<Integer> patientsId) {
         this.patientsId = patientsId;

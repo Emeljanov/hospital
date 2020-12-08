@@ -1,7 +1,6 @@
 package by.emel.anton.model.dao.implementation;
 
 import by.emel.anton.constants.Constans;
-import by.emel.anton.model.beans.users.UserType;
 import by.emel.anton.model.beans.users.doctors.Doctor;
 import by.emel.anton.model.beans.users.doctors.GeneralDoctor;
 import by.emel.anton.model.beans.users.patients.Patient;
@@ -23,7 +22,7 @@ public class FileDoctorDAO implements DoctorDAO {
             while (line != null) {
                 String[] userData = line.split(Constans.SEPARATOR);
                 if(userData[1].equals(login) && userData[2].equals(password)) {
-                    int id = Integer.valueOf(userData[0]);
+                    int id = Integer.parseInt(userData[0]);
                     LocalDate birthday = LocalDate.parse(userData[5]);
                     String name = userData[4];
                     ArrayList<Integer> patients = StringToList.toIntegerList(userData[6]);
@@ -35,10 +34,8 @@ public class FileDoctorDAO implements DoctorDAO {
 
                 line = bufferedReader.readLine();
             }
-            throw new UserDAOException("Login or password are incorrect");
+            throw new UserDAOException(Constans.EXCEPTION_MESSAGE_LP_INCORRECT);
 
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
         } catch (IOException e) {
             e.printStackTrace();
         }
