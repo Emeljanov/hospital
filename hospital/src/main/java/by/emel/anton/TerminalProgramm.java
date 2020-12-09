@@ -1,6 +1,5 @@
 package by.emel.anton;
 
-import by.emel.anton.model.beans.therapy.OrdinaryTherapy;
 import by.emel.anton.model.beans.therapy.Therapy;
 import by.emel.anton.model.beans.users.User;
 import by.emel.anton.model.beans.users.UserType;
@@ -9,10 +8,7 @@ import by.emel.anton.model.beans.users.doctors.GeneralDoctor;
 import by.emel.anton.model.beans.users.patients.OrdinaryPatient;
 import by.emel.anton.model.beans.users.patients.Patient;
 import by.emel.anton.model.dao.exceptions.UserDAOException;
-import by.emel.anton.model.dao.interfaces.DoctorDAO;
-import by.emel.anton.model.dao.interfaces.PatientDAO;
-import by.emel.anton.model.dao.interfaces.TherapyDAO;
-import by.emel.anton.model.dao.interfaces.UserDAO;
+import by.emel.anton.service.UserService;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -21,16 +17,11 @@ import java.time.LocalDate;
 import java.util.Optional;
 
 public class TerminalProgramm {
-    UserDAO userDAO;
-    PatientDAO patientDAO;
-    DoctorDAO doctorDAO;
-    TherapyDAO therapyDAO;
 
-    public TerminalProgramm(UserDAO userDAO, PatientDAO patientDAO, DoctorDAO doctorDAO, TherapyDAO therapyDAO) {
-        this.userDAO = userDAO;
-        this.patientDAO = patientDAO;
-        this.doctorDAO = doctorDAO;
-        this.therapyDAO = therapyDAO;
+    private final UserService userService;
+
+    public TerminalProgramm(UserService userService) {
+        this.userService = userService;
     }
 
     public void startProgramm() {
@@ -54,9 +45,11 @@ public class TerminalProgramm {
                     createNewUser(bufferedReader);
                     break;
             }
+            startProgramm();
         } catch (IOException | UserDAOException e) {
             e.printStackTrace();
         }
+
     }
 
     private void createNewUser(BufferedReader bufferedReader) throws IOException {
@@ -68,15 +61,12 @@ public class TerminalProgramm {
         switch (answer) {
             case "d":
                 user = new GeneralDoctor();
-                user.setUserType(UserType.DOCTOR);
                 break;
             case "p":
                 user = new OrdinaryPatient();
-                user.setUserType(UserType.PATIENT);
                 break;
         }
 
-        int id = userDAO.getNextId(user);
         System.out.println("Enter login");
         String login = bufferedReader.readLine();
         System.out.println("Enter passwrod");
@@ -86,44 +76,36 @@ public class TerminalProgramm {
         System.out.println("Enter birthday yyyy-mm-dd");
         LocalDate birthdday = LocalDate.parse(bufferedReader.readLine());
 
-        user.setId(id);
-        user.setLogin(login);
-        user.setPassword(password);
-        user.setBirthday(birthdday);
-        user.setName(name);
-
-        userDAO.saveUser(user);
-        startProgramm();
+        userService.setUserData(user,login,password,name,birthdday);
+        userService.saveUser(user);
 
     }
 
     private void enterDoctor(BufferedReader bufferedReader) throws IOException, UserDAOException {
+
         System.out.println("Enter login and password");
         String answer = bufferedReader.readLine();
         String[] userData = answer.split(" ");
         String login = userData[0];
         String password = userData[1];
-//        Doctor doctor = doctorDAO.getDoctor(login,password);
-        Optional<Doctor> doctor = doctorDAO.getDoctor(login,password);
+
+        Optional<Doctor> doctor = userService.getDoctor(login,password);
 
         doctor.ifPresent(doc -> {
 
             System.out.println("Hi!" + doc.getName());
 
             try {
-                forDoctor(bufferedReader,doc);
+                processingDoctor(bufferedReader,doc);
             } catch (IOException | UserDAOException e) {
                 e.printStackTrace();
             }
 
         });
 
-//        System.out.println("Hi! " + doctor.getName());
-//        forDoctor(bufferedReader, doctor);
-
     }
 
-    private void forDoctor(BufferedReader bufferedReader, Doctor doctor) throws IOException, UserDAOException {
+    private void processingDoctor(BufferedReader bufferedReader, Doctor doctor) throws IOException, UserDAOException {
 
         System.out.println("What do you want? See your patients (see)/Add new patient(add)/set therapy(set)?/exit(exit)");
 
@@ -138,41 +120,32 @@ public class TerminalProgramm {
             case "see":
                 System.out.println("see");
                 System.out.println(doctor.getPatientsId());
-                forDoctor(bufferedReader, doctor);
                 break;
             case "set":
                 System.out.println("set");
-                setTherapyToPatinet(bufferedReader, doctor);
+                setTherapyToPatient(bufferedReader, doctor);
                 break;
             case "exit":
                 startProgramm();
                 break;
         }
+        processingDoctor(bufferedReader,doctor);
 
     }
 
-    private void setTherapyToPatinet(BufferedReader bufferedReader,Doctor doctor) throws IOException, UserDAOException {
+    private void setTherapyToPatient(BufferedReader bufferedReader, Doctor doctor) throws IOException, UserDAOException {
 
         System.out.println("Enter Patient ID");
         int patientId = Integer.parseInt(bufferedReader.readLine());
 
-        Optional<Patient> patient = patientDAO.getPatientById(patientId);
         System.out.println("Enter therapy description");
         String description = bufferedReader.readLine();
-        System.out.println("Enter end date (yyyy-mm-dd");
+
+        System.out.println("Enter end date (yyyy-mm-dd)");
         String endDate = bufferedReader.readLine();
 
-        patient.ifPresent(pat ->{
-
-            int id = therapyDAO.getNextID();
-            Therapy therapy = new OrdinaryTherapy(id,description, LocalDate.now(),LocalDate.parse(endDate));
-            doctor.setTherapy(pat,therapy);
-            userDAO.updateUser(pat);
-            therapyDAO.saveTherapy(therapy);
-
-        } );
-
-        forDoctor(bufferedReader,doctor);
+        Optional<Patient> patient = userService.getPatientById(patientId);
+        patient.ifPresent(pat -> userService.addTherapy(doctor,pat,description,LocalDate.parse(endDate)));
 
     }
 
@@ -182,18 +155,8 @@ public class TerminalProgramm {
 
         int patientId = Integer.parseInt(bufferedReader.readLine());
 
-        Optional<Patient> patient = patientDAO.getPatientById(patientId);
+        userService.addPatientToDoctor(doctor,patientId);
 
-        patient.ifPresent(pat -> {
-
-            doctor.setPatientId(patientId);
-            userDAO.updateUser(doctor);
-            pat.setDoctorId(doctor.getId());
-            userDAO.updateUser(pat);
-
-        });
-
-        forDoctor(bufferedReader,doctor);
     }
 
     private void enterPatient(BufferedReader bufferedReader) throws IOException, UserDAOException {
@@ -206,13 +169,13 @@ public class TerminalProgramm {
         String login = userData[0];
         String password = userData[1];
 
-        Optional<Patient> patient = patientDAO.getPatient(login,password);
+        Optional<Patient> patient = userService.getPatient(login,password);
 
         patient.ifPresent(pat -> {
 
             System.out.println("Hi! " + pat.getName());
             try {
-                forPatient(bufferedReader, pat);
+                processingPatient(bufferedReader, pat);
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -222,7 +185,7 @@ public class TerminalProgramm {
 
     }
 
-    private void forPatient(BufferedReader bufferedReader, Patient patient) throws IOException {
+    private void processingPatient(BufferedReader bufferedReader, Patient patient) throws IOException {
         System.out.println("What do you want? See your therapies (therapies)/See you therapy(therapy)?/exit(exit)");
 
         String answer = bufferedReader.readLine();
@@ -233,12 +196,12 @@ public class TerminalProgramm {
                 break;
             case "therapy":
                 System.out.println("Please, enter id therapy");
-                int id = Integer.parseInt(bufferedReader.readLine());
-                Optional<Therapy> therapy = therapyDAO.getTherapy(id);
+                int therapyId = Integer.parseInt(bufferedReader.readLine());
+                Optional<Therapy> therapy = userService.getTherapy(therapyId);
                 therapy.ifPresent(tp -> {
                     System.out.println(tp);
                     try {
-                        forPatient(bufferedReader, patient);
+                        processingPatient(bufferedReader, patient);
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
@@ -249,7 +212,7 @@ public class TerminalProgramm {
                 startProgramm();
                 break;
         }
-        forPatient(bufferedReader,patient);
+        processingPatient(bufferedReader,patient);
 
     }
 }
