@@ -11,11 +11,12 @@ import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
 import java.time.LocalDate;
-import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
 
 public class FilePatientDAO implements PatientDAO {
     @Override
-    public Patient getPatient(String login, String password) throws UserDAOException {
+    public Optional<Patient> getPatient(String login, String password) throws UserDAOException {
         try(BufferedReader bufferedReader = new BufferedReader(new FileReader(Constans.FILE_PATH_PATIENTS))) {
             String line = bufferedReader.readLine();
 
@@ -26,10 +27,10 @@ public class FilePatientDAO implements PatientDAO {
                     String name = userData[4];
                     LocalDate birthday = LocalDate.parse(userData[5]);
                     int doctorId = Integer.parseInt(userData[6]);
-                    ArrayList<Integer> therapiesId = StringToList.toIntegerList(userData[7]);
+                    List<Integer> therapiesId = StringToList.toIntegerList(userData[7]);
                     OrdinaryPatient ordinaryPatient = new OrdinaryPatient(id,login,password,name,birthday,doctorId);
                     ordinaryPatient.setTherapies(therapiesId);
-                    return ordinaryPatient;
+                    return Optional.of(ordinaryPatient);
                 }
 
                 line = bufferedReader.readLine();
@@ -43,11 +44,12 @@ public class FilePatientDAO implements PatientDAO {
             e.printStackTrace();
         }
 
-        return null;
+        return Optional.empty();
     }
 
     @Override
-    public Patient getPatientById(int id) throws UserDAOException {
+    public Optional<Patient> getPatientById(int id) throws UserDAOException {
+
         try(BufferedReader bufferedReader = new BufferedReader(new FileReader(Constans.FILE_PATH_PATIENTS))) {
             String line = bufferedReader.readLine();
 
@@ -59,10 +61,10 @@ public class FilePatientDAO implements PatientDAO {
                     String name = userData[4];
                     LocalDate birthday = LocalDate.parse(userData[5]);
                     int doctorId = Integer.parseInt(userData[6]);
-                    ArrayList<Integer> therapiesId = StringToList.toIntegerList(userData[7]);
+                    List<Integer> therapiesId = StringToList.toIntegerList(userData[7]);
                     OrdinaryPatient ordinaryPatient = new OrdinaryPatient(id,login,password,name,birthday,doctorId);
                     ordinaryPatient.setTherapies(therapiesId);
-                    return ordinaryPatient;
+                    return Optional.of(ordinaryPatient);
                 }
 
                 line = bufferedReader.readLine();
@@ -73,6 +75,6 @@ public class FilePatientDAO implements PatientDAO {
             e.printStackTrace();
         }
 
-        return null;
+        return Optional.empty();
     }
 }

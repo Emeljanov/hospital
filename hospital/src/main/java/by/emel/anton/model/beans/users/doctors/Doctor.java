@@ -21,7 +21,6 @@ public abstract class Doctor extends User {
 
     public Doctor(int id, String login, String password, String name, LocalDate birthday) {
         super(id,login, password, UserType.DOCTOR,name,birthday);
-        this.patientsId = new ArrayList<>();
     }
 
     private List<Integer> patientsId = new ArrayList<>();

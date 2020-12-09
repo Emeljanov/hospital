@@ -10,26 +10,29 @@ import by.emel.anton.service.StringToList;
 
 import java.io.*;
 import java.time.LocalDate;
-import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
 
 public class FileDoctorDAO implements DoctorDAO {
 
     @Override
-    public Doctor getDoctor(String login, String password) throws UserDAOException {
+    public Optional<Doctor> getDoctor(String login, String password) throws UserDAOException {
         try(BufferedReader bufferedReader = new BufferedReader(new FileReader(Constans.FILE_PATH_DOCTORS))) {
             String line = bufferedReader.readLine();
 
             while (line != null) {
+
                 String[] userData = line.split(Constans.SEPARATOR);
                 if(userData[1].equals(login) && userData[2].equals(password)) {
+
                     int id = Integer.parseInt(userData[0]);
                     LocalDate birthday = LocalDate.parse(userData[5]);
                     String name = userData[4];
-                    ArrayList<Integer> patients = StringToList.toIntegerList(userData[6]);
-
+                    List<Integer> patients = StringToList.toIntegerList(userData[6]);
                     GeneralDoctor generalDoctor = new GeneralDoctor(id,login,password,name,birthday);
-                    generalDoctor.setPatientsId(patients);
-                    return generalDoctor;
+                    patients.forEach(generalDoctor::setPatientId);
+
+                    return  Optional.of(generalDoctor);
                 }
 
                 line = bufferedReader.readLine();
@@ -40,7 +43,7 @@ public class FileDoctorDAO implements DoctorDAO {
             e.printStackTrace();
         }
 
-        return null;
+        return Optional.empty();
     }
 
     @Override

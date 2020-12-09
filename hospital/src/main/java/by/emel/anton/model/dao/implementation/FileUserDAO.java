@@ -10,19 +10,24 @@ import java.io.*;
 public class FileUserDAO implements UserDAO {
 
     public boolean isLoginExist(String login, String filePath) {
+
         try(BufferedReader br = new BufferedReader(new FileReader(filePath))) {
             String line = br.readLine();
+
             while (line != null) {
+
                 String[] userData = line.split(Constans.SEPARATOR);
                 if(userData[1].equals(login)) {
                     return true;
                 }
                 line = br.readLine();
+
             }
 
         } catch (IOException e) {
             e.printStackTrace();
         }
+
         return false;
     }
     @Override
@@ -30,34 +35,48 @@ public class FileUserDAO implements UserDAO {
 
         String login = user.getLogin();
 
-        if(user.getUserType().equals(UserType.DOCTOR)) {
-            if(!isLoginExist(login,Constans.FILE_PATH_DOCTORS)) {
-                try(FileWriter fw = new FileWriter(Constans.FILE_PATH_DOCTORS,true)) {
-                    fw.write(user.toString());
-                    fw.write(Constans.DESCENT);
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
+        if(UserType.DOCTOR == user.getUserType()) {
+
+            if (isLoginExist(login, Constans.FILE_PATH_DOCTORS)) {
+                return;
+            }
+
+            try(FileWriter fw = new FileWriter(Constans.FILE_PATH_DOCTORS,true)) {
+
+                fw.write(user.toString());
+                fw.write(Constans.DESCENT);
+
+            } catch (IOException e) {
+                e.printStackTrace();
             }
 
         }
         else if (user.getUserType().equals(UserType.PATIENT)) {
-            if(!isLoginExist(login,Constans.FILE_PATH_PATIENTS)) {
-                try(FileWriter fw = new FileWriter(Constans.FILE_PATH_PATIENTS,true)) {
-                    fw.write(user.toString());
-                    fw.write(Constans.DESCENT);
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
+
+            if(isLoginExist(login,Constans.FILE_PATH_PATIENTS)) {
+
+                return;
+
+            }
+
+            try(FileWriter fw = new FileWriter(Constans.FILE_PATH_PATIENTS,true)) {
+
+                fw.write(user.toString());
+                fw.write(Constans.DESCENT);
+
+            } catch (IOException e) {
+                e.printStackTrace();
             }
         }
     }
 
     @Override
     public int getNextId(User user) {
+
         int nextId = 1;
-        String filePath = "";
+        String filePath = Constans.EMPTY;
         UserType userType = user.getUserType();
+
         if(userType == UserType.DOCTOR) {
             filePath = Constans.FILE_PATH_DOCTORS;
         }
@@ -67,13 +86,17 @@ public class FileUserDAO implements UserDAO {
 
         try(BufferedReader bufferedReader = new BufferedReader(new FileReader(filePath))) {
             String line = bufferedReader.readLine();
+
             while (line != null) {
+
                 String[] userData = line.split(Constans.SEPARATOR);
                 int id = Integer.parseInt(userData[0]);
                 if(id >= nextId) {
                     nextId = id + 1;
                 }
-                line = bufferedReader.readLine();
+
+            line = bufferedReader.readLine();
+
             }
 
         } catch (IOException e) {
@@ -86,29 +109,38 @@ public class FileUserDAO implements UserDAO {
 
     @Override
     public void updateUser(User user) {
+
         int userId = user.getId();
         File tempFile = new File(Constans.FILE_PATH_TEMP);
 
-        File userFile;
+        File userFile = new File(Constans.EMPTY);
 
-        if(user.getUserType().equals(UserType.DOCTOR)) {
-           userFile = new File(Constans.FILE_PATH_DOCTORS);
+        if(UserType.DOCTOR.equals(user.getUserType())) {
+
+            userFile = new File(Constans.FILE_PATH_DOCTORS);
         }
-        else {
+
+        else if(UserType.PATIENT.equals(user.getUserType())) {
+
             userFile =  new File(Constans.FILE_PATH_PATIENTS);
         }
+
         try(BufferedReader bufferedReader = new BufferedReader(new FileReader(userFile))) {
 
             String line = bufferedReader.readLine();
             while (line != null) {
+
                 String[] userData = line.split(Constans.SEPARATOR);
+
                 if(userId != Integer.parseInt(userData[0])) {
+
                     try(FileWriter fw = new FileWriter(tempFile,true)) {
                         fw.write(line);
                         fw.write(Constans.DESCENT);
                     }
 
                 }
+
                 line = bufferedReader.readLine();
             }
 
