@@ -46,9 +46,9 @@ public class FileDoctorDAO implements DoctorDAO {
         return Optional.empty();
     }
 
-    @Override
-    public void setDoctorIdToPatient(Doctor doctor, Patient patient) {
-        patient.setDoctorId(doctor.getId());
-    }
+//    @Override
+//    public void setDoctorIdToPatient(Doctor doctor, Patient patient) {
+//        patient.setDoctorId(doctor.getId());
+//    }
 
 }

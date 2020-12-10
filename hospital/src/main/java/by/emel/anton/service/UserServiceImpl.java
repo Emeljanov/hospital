@@ -65,7 +65,6 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-
     public Optional<Therapy> getTherapy(int id) {
         return therapyDAO.getTherapy(id);
     }

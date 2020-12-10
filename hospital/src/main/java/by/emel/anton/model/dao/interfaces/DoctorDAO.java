@@ -10,7 +10,7 @@ public interface DoctorDAO {
 
     Optional<Doctor> getDoctor(String login, String password) throws UserDAOException;
 
-    void setDoctorIdToPatient(Doctor doctor, Patient patient);
+//    void setDoctorIdToPatient(Doctor doctor, Patient patient);
 
 
 }
