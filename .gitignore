@@ -4,6 +4,7 @@
 
 log/
 target/
+logs/
 
 *.class
 

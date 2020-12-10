@@ -21,8 +21,8 @@ public class Runner {
 
         UserService userService = new UserServiceImpl(userDAO,patientDAO,doctorDAO,therapyDAO);
 
-        TerminalProgramm terminalProgramm = new TerminalProgramm(userService);
-        terminalProgramm.startProgramm();
+        TerminalProgram terminalProgram = new TerminalProgram(userService);
+        terminalProgram.startProgram();
 
     }
 }
