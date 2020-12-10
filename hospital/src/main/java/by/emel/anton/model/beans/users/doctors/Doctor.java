@@ -1,6 +1,6 @@
 package by.emel.anton.model.beans.users.doctors;
 
-import by.emel.anton.constants.Constans;
+import by.emel.anton.constants.Constants;
 import by.emel.anton.model.beans.users.User;
 import by.emel.anton.model.beans.users.UserType;
 import by.emel.anton.model.beans.users.patients.*;
@@ -54,6 +54,6 @@ public abstract class Doctor extends User {
 
     @Override
     public String toString() {
-        return super.toString() + Constans.SEPARATOR + patientsId.toString();
+        return super.toString() + Constants.SEPARATOR + patientsId.toString();
     }
 }

@@ -1,6 +1,6 @@
 package by.emel.anton.model.beans.therapy;
 
-import by.emel.anton.constants.Constans;
+import by.emel.anton.constants.Constants;
 
 import java.time.LocalDate;
 
@@ -35,6 +35,6 @@ public abstract class Therapy {
 
     @Override
     public String toString() {
-        return id + Constans.SEPARATOR + description + Constans.SEPARATOR + startDate + Constans.SEPARATOR + endDate;
+        return id + Constants.SEPARATOR + description + Constants.SEPARATOR + startDate + Constants.SEPARATOR + endDate;
     }
 }

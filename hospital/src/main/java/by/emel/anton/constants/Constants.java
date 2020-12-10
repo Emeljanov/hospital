@@ -1,6 +1,6 @@
 package by.emel.anton.constants;
 
-public class Constans {
+public class Constants {
     public static final String EMPTY = "";
     public static final String SEPARATOR = "/";
     public static final String DESCENT = "\n";

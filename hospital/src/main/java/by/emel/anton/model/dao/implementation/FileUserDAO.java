@@ -1,6 +1,6 @@
 package by.emel.anton.model.dao.implementation;
 
-import by.emel.anton.constants.Constans;
+import by.emel.anton.constants.Constants;
 import by.emel.anton.model.beans.users.User;
 import by.emel.anton.model.beans.users.UserType;
 import by.emel.anton.model.dao.interfaces.UserDAO;
@@ -16,7 +16,7 @@ public class FileUserDAO implements UserDAO {
 
             while (line != null) {
 
-                String[] userData = line.split(Constans.SEPARATOR);
+                String[] userData = line.split(Constants.SEPARATOR);
                 if(userData[1].equals(login)) {
                     return true;
                 }
@@ -37,14 +37,14 @@ public class FileUserDAO implements UserDAO {
 
         if(UserType.DOCTOR == user.getUserType()) {
 
-            if (isLoginExist(login, Constans.FILE_PATH_DOCTORS)) {
+            if (isLoginExist(login, Constants.FILE_PATH_DOCTORS)) {
                 return;
             }
 
-            try(FileWriter fw = new FileWriter(Constans.FILE_PATH_DOCTORS,true)) {
+            try(FileWriter fw = new FileWriter(Constants.FILE_PATH_DOCTORS,true)) {
 
                 fw.write(user.toString());
-                fw.write(Constans.DESCENT);
+                fw.write(Constants.DESCENT);
 
             } catch (IOException e) {
                 e.printStackTrace();
@@ -53,16 +53,16 @@ public class FileUserDAO implements UserDAO {
         }
         else if (user.getUserType().equals(UserType.PATIENT)) {
 
-            if(isLoginExist(login,Constans.FILE_PATH_PATIENTS)) {
+            if(isLoginExist(login, Constants.FILE_PATH_PATIENTS)) {
 
                 return;
 
             }
 
-            try(FileWriter fw = new FileWriter(Constans.FILE_PATH_PATIENTS,true)) {
+            try(FileWriter fw = new FileWriter(Constants.FILE_PATH_PATIENTS,true)) {
 
                 fw.write(user.toString());
-                fw.write(Constans.DESCENT);
+                fw.write(Constants.DESCENT);
 
             } catch (IOException e) {
                 e.printStackTrace();
@@ -74,14 +74,14 @@ public class FileUserDAO implements UserDAO {
     public int getNextId(User user) {
 
         int nextId = 1;
-        String filePath = Constans.EMPTY;
+        String filePath = Constants.EMPTY;
         UserType userType = user.getUserType();
 
         if(userType == UserType.DOCTOR) {
-            filePath = Constans.FILE_PATH_DOCTORS;
+            filePath = Constants.FILE_PATH_DOCTORS;
         }
         else if(userType == UserType.PATIENT) {
-            filePath = Constans.FILE_PATH_PATIENTS;
+            filePath = Constants.FILE_PATH_PATIENTS;
         }
 
         try(BufferedReader bufferedReader = new BufferedReader(new FileReader(filePath))) {
@@ -89,7 +89,7 @@ public class FileUserDAO implements UserDAO {
 
             while (line != null) {
 
-                String[] userData = line.split(Constans.SEPARATOR);
+                String[] userData = line.split(Constants.SEPARATOR);
                 int id = Integer.parseInt(userData[0]);
                 if(id >= nextId) {
                     nextId = id + 1;
@@ -111,18 +111,18 @@ public class FileUserDAO implements UserDAO {
     public void updateUser(User user) {
 
         int userId = user.getId();
-        File tempFile = new File(Constans.FILE_PATH_TEMP);
+        File tempFile = new File(Constants.FILE_PATH_TEMP);
 
-        File userFile = new File(Constans.EMPTY);
+        File userFile = new File(Constants.EMPTY);
 
         if(UserType.DOCTOR.equals(user.getUserType())) {
 
-            userFile = new File(Constans.FILE_PATH_DOCTORS);
+            userFile = new File(Constants.FILE_PATH_DOCTORS);
         }
 
         else if(UserType.PATIENT.equals(user.getUserType())) {
 
-            userFile =  new File(Constans.FILE_PATH_PATIENTS);
+            userFile =  new File(Constants.FILE_PATH_PATIENTS);
         }
 
         try(BufferedReader bufferedReader = new BufferedReader(new FileReader(userFile))) {
@@ -130,13 +130,13 @@ public class FileUserDAO implements UserDAO {
             String line = bufferedReader.readLine();
             while (line != null) {
 
-                String[] userData = line.split(Constans.SEPARATOR);
+                String[] userData = line.split(Constants.SEPARATOR);
 
                 if(userId != Integer.parseInt(userData[0])) {
 
                     try(FileWriter fw = new FileWriter(tempFile,true)) {
                         fw.write(line);
-                        fw.write(Constans.DESCENT);
+                        fw.write(Constants.DESCENT);
                     }
 
                 }

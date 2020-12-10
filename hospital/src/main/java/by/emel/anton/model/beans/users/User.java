@@ -1,6 +1,6 @@
 package by.emel.anton.model.beans.users;
 
-import by.emel.anton.constants.Constans;
+import by.emel.anton.constants.Constants;
 
 import java.time.LocalDate;
 
@@ -75,11 +75,11 @@ public abstract class User {
     @Override
     public String toString() {
         String result =
-                        id + Constans.SEPARATOR +
-                        login + Constans.SEPARATOR +
-                        password + Constans.SEPARATOR +
-                        userType.toString() + Constans.SEPARATOR +
-                        name + Constans.SEPARATOR +
+                        id + Constants.SEPARATOR +
+                        login + Constants.SEPARATOR +
+                        password + Constants.SEPARATOR +
+                        userType.toString() + Constants.SEPARATOR +
+                        name + Constants.SEPARATOR +
                         birthday;
         return result;
     }

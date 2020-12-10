@@ -1,6 +1,6 @@
 package by.emel.anton.model.dao.implementation;
 
-import by.emel.anton.constants.Constans;
+import by.emel.anton.constants.Constants;
 import by.emel.anton.model.beans.therapy.OrdinaryTherapy;
 import by.emel.anton.model.beans.therapy.Therapy;
 import by.emel.anton.model.dao.interfaces.TherapyDAO;
@@ -13,10 +13,10 @@ public class FileTherapyDAO implements TherapyDAO {
     @Override
     public void saveTherapy(Therapy therapy) {
 
-        try(FileWriter fileWriter = new FileWriter(Constans.FILE_PATH_THERAPIES,true)) {
+        try(FileWriter fileWriter = new FileWriter(Constants.FILE_PATH_THERAPIES,true)) {
 
             fileWriter.write(therapy.toString());
-            fileWriter.write(Constans.DESCENT);
+            fileWriter.write(Constants.DESCENT);
 
         } catch (IOException e) {
             e.printStackTrace();
@@ -27,13 +27,13 @@ public class FileTherapyDAO implements TherapyDAO {
     public int getNextID() {
 
         int nextId = 1;
-        try(BufferedReader bufferedReader = new BufferedReader(new FileReader(Constans.FILE_PATH_THERAPIES))) {
+        try(BufferedReader bufferedReader = new BufferedReader(new FileReader(Constants.FILE_PATH_THERAPIES))) {
 
             String line = bufferedReader.readLine();
 
             while (line != null) {
 
-                String[] therapyDate = line.split(Constans.SEPARATOR);
+                String[] therapyDate = line.split(Constants.SEPARATOR);
                 int id = Integer.parseInt(therapyDate[0]);
 
                 if(id >= nextId) {
@@ -53,12 +53,12 @@ public class FileTherapyDAO implements TherapyDAO {
     @Override
     public Optional<Therapy> getTherapy(int id) {
 
-        try(BufferedReader bufferedReader = new BufferedReader(new FileReader(Constans.FILE_PATH_THERAPIES))) {
+        try(BufferedReader bufferedReader = new BufferedReader(new FileReader(Constants.FILE_PATH_THERAPIES))) {
 
             String line = bufferedReader.readLine();
             while (line != null) {
 
-                String[] therapyData = line.split(Constans.SEPARATOR);
+                String[] therapyData = line.split(Constants.SEPARATOR);
 
                 if(Integer.parseInt(therapyData[0]) == id) {
 

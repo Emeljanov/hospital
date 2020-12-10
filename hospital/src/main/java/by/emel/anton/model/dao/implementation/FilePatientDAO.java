@@ -1,6 +1,6 @@
 package by.emel.anton.model.dao.implementation;
 
-import by.emel.anton.constants.Constans;
+import by.emel.anton.constants.Constants;
 import by.emel.anton.model.beans.users.patients.OrdinaryPatient;
 import by.emel.anton.model.beans.users.patients.Patient;
 import by.emel.anton.model.dao.exceptions.UserDAOException;
@@ -17,11 +17,11 @@ import java.util.Optional;
 public class FilePatientDAO implements PatientDAO {
     @Override
     public Optional<Patient> getPatient(String login, String password) throws UserDAOException {
-        try(BufferedReader bufferedReader = new BufferedReader(new FileReader(Constans.FILE_PATH_PATIENTS))) {
+        try(BufferedReader bufferedReader = new BufferedReader(new FileReader(Constants.FILE_PATH_PATIENTS))) {
             String line = bufferedReader.readLine();
 
             while (line != null) {
-                String[] userData = line.split(Constans.SEPARATOR);
+                String[] userData = line.split(Constants.SEPARATOR);
                 if(userData[1].equals(login) && userData[2].equals(password)) {
                     int id = Integer.parseInt(userData[0]);
                     String name = userData[4];
@@ -35,7 +35,7 @@ public class FilePatientDAO implements PatientDAO {
 
                 line = bufferedReader.readLine();
             }
-            throw new UserDAOException(Constans.EXCEPTION_MESSAGE_LP_INCORRECT);
+            throw new UserDAOException(Constants.EXCEPTION_MESSAGE_LP_INCORRECT);
 
 
 
@@ -50,11 +50,11 @@ public class FilePatientDAO implements PatientDAO {
     @Override
     public Optional<Patient> getPatientById(int id) throws UserDAOException {
 
-        try(BufferedReader bufferedReader = new BufferedReader(new FileReader(Constans.FILE_PATH_PATIENTS))) {
+        try(BufferedReader bufferedReader = new BufferedReader(new FileReader(Constants.FILE_PATH_PATIENTS))) {
             String line = bufferedReader.readLine();
 
             while (line != null) {
-                String[] userData = line.split(Constans.SEPARATOR);
+                String[] userData = line.split(Constants.SEPARATOR);
                 if(Integer.parseInt(userData[0]) == id) {
                     String login = userData[1];
                     String password = userData[2];
@@ -69,7 +69,7 @@ public class FilePatientDAO implements PatientDAO {
 
                 line = bufferedReader.readLine();
             }
-            throw new UserDAOException(Constans.EXCEPTION_MESSAGE_LP_INCORRECT);
+            throw new UserDAOException(Constants.EXCEPTION_MESSAGE_LP_INCORRECT);
 
         } catch (IOException e) {
             e.printStackTrace();
