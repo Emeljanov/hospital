@@ -9,6 +9,7 @@ import by.emel.anton.model.dao.interfaces.PatientDAO;
 import by.emel.anton.model.dao.interfaces.TherapyDAO;
 import by.emel.anton.model.dao.interfaces.UserDAO;
 import by.emel.anton.service.UserService;
+import by.emel.anton.service.UserServiceImpl;
 
 public class Runner {
     public static void main(String[] args)  {
@@ -18,7 +19,7 @@ public class Runner {
         DoctorDAO doctorDAO = new FileDoctorDAO();
         TherapyDAO therapyDAO = new FileTherapyDAO();
 
-        UserService userService = new UserService(userDAO,patientDAO,doctorDAO,therapyDAO);
+        UserService userService = new UserServiceImpl(userDAO,patientDAO,doctorDAO,therapyDAO);
 
         TerminalProgramm terminalProgramm = new TerminalProgramm(userService);
         terminalProgramm.startProgramm();
