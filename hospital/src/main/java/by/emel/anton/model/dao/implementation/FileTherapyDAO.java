@@ -5,8 +5,12 @@ import by.emel.anton.model.beans.therapy.OrdinaryTherapy;
 import by.emel.anton.model.beans.therapy.Therapy;
 import by.emel.anton.model.dao.interfaces.TherapyDAO;
 
+
 import java.io.*;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.time.LocalDate;
+import java.util.List;
 import java.util.Optional;
 
 public class FileTherapyDAO implements TherapyDAO {
@@ -24,60 +28,31 @@ public class FileTherapyDAO implements TherapyDAO {
     }
 
     @Override
-    public int getNextID() {
+    public int getNextID() throws IOException {
 
-        int nextId = 1;
-        try(BufferedReader bufferedReader = new BufferedReader(new FileReader(Constants.FILE_PATH_THERAPIES))) {
-
-            String line = bufferedReader.readLine();
-
-            while (line != null) {
-
-                String[] therapyDate = line.split(Constants.SEPARATOR);
-                int id = Integer.parseInt(therapyDate[0]);
-
-                if(id >= nextId) {
-                    nextId = id + 1;
-
-                }
-                line = bufferedReader.readLine();
-
-            }
-
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        return nextId;
+        return FileService.getNextLineId(Constants.FILE_PATH_THERAPIES);
     }
 
     @Override
-    public Optional<Therapy> getTherapy(int id) {
+    public Optional<Therapy> getTherapy(int id) throws IOException {
 
-        try(BufferedReader bufferedReader = new BufferedReader(new FileReader(Constants.FILE_PATH_THERAPIES))) {
+        List<String> fileData = Files.readAllLines(Paths.get(Constants.FILE_PATH_THERAPIES));
 
-            String line = bufferedReader.readLine();
-            while (line != null) {
+        return fileData
+                .stream()
+                .filter(s -> FileService.findLineById(s,id))
+                .findFirst()
+                .map(this::createTherapyFromLine);
 
-                String[] therapyData = line.split(Constants.SEPARATOR);
+    }
+    private Therapy createTherapyFromLine(String lineData) {
 
-                if(Integer.parseInt(therapyData[0]) == id) {
+        String[] therapyData = lineData.split(Constants.SEPARATOR);
+        int id = Integer.parseInt(therapyData[0]);
+        String description = therapyData[1];
+        LocalDate startDate = LocalDate.parse(therapyData[2]);
+        LocalDate endDate = LocalDate.parse(therapyData[3]);
 
-                    String description = therapyData[1];
-                    LocalDate startDate = LocalDate.parse(therapyData[2]);
-                    LocalDate endDate = LocalDate.parse(therapyData[3]);
-
-                    return Optional.of(new OrdinaryTherapy(id,description,startDate,endDate));
-
-                }
-
-                line = bufferedReader.readLine();
-            }
-
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-        return Optional.empty();
-
+        return new OrdinaryTherapy(id,description,startDate,endDate);
     }
 }

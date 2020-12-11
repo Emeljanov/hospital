@@ -11,6 +11,7 @@ import by.emel.anton.model.dao.interfaces.PatientDAO;
 import by.emel.anton.model.dao.interfaces.TherapyDAO;
 import by.emel.anton.model.dao.interfaces.UserDAO;
 
+import java.io.IOException;
 import java.time.LocalDate;
 import java.util.Optional;
 
@@ -30,7 +31,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public void setUserData(User user, String login, String password, String name, LocalDate birthday) {
+    public void setUserData(User user, String login, String password, String name, LocalDate birthday) throws IOException {
         int id = userDAO.getNextId(user);
         user.setId(id);
         user.setLogin(login);
@@ -50,22 +51,22 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public Optional<Doctor> getDoctor(String login, String password) throws UserDAOException {
+    public Optional<Doctor> getDoctor(String login, String password) throws UserDAOException, IOException {
         return doctorDAO.getDoctor(login,password);
     }
 
     @Override
-    public Optional<Patient> getPatient(String login, String password) throws UserDAOException {
+    public Optional<Patient> getPatient(String login, String password) throws UserDAOException, IOException {
         return patientDAO.getPatient(login,password);
     }
 
     @Override
-    public Optional<Patient> getPatientById(int id) throws UserDAOException {
+    public Optional<Patient> getPatientById(int id) throws UserDAOException, IOException {
         return patientDAO.getPatientById(id);
     }
 
     @Override
-    public Optional<Therapy> getTherapy(int id) {
+    public Optional<Therapy> getTherapy(int id) throws IOException {
         return therapyDAO.getTherapy(id);
     }
 
@@ -75,7 +76,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public void addTherapy(Doctor doctor, Patient patient, String description, LocalDate endDate) {
+    public void addTherapy(Doctor doctor, Patient patient, String description, LocalDate endDate) throws IOException {
 
         int therapyId = therapyDAO.getNextID();
         Therapy therapy = new OrdinaryTherapy(therapyId,description,LocalDate.now(),endDate);
@@ -86,7 +87,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public void addPatientToDoctor(Doctor doctor, int patientId) throws UserDAOException {
+    public void addPatientToDoctor(Doctor doctor, int patientId) throws UserDAOException, IOException {
         Optional<Patient> patient = getPatientById(patientId);
         patient.ifPresent(pat -> {
             doctor.setPatientId(patientId);

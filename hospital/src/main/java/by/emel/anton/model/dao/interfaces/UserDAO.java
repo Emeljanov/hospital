@@ -4,6 +4,8 @@ package by.emel.anton.model.dao.interfaces;
 import by.emel.anton.model.beans.users.User;
 import by.emel.anton.model.beans.users.UserType;
 
+import java.io.IOException;
+
 
 public interface UserDAO {
 
@@ -13,7 +15,7 @@ public interface UserDAO {
 
     void saveUser(User user);
 
-    int getNextId(User user);
+    int getNextId(User user) throws IOException;
 
 
 }

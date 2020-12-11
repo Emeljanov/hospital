@@ -7,74 +7,52 @@ import by.emel.anton.model.dao.exceptions.UserDAOException;
 import by.emel.anton.model.dao.interfaces.PatientDAO;
 import by.emel.anton.service.StringToList;
 
-import java.io.BufferedReader;
-import java.io.FileReader;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
 public class FilePatientDAO implements PatientDAO {
     @Override
-    public Optional<Patient> getPatient(String login, String password) throws UserDAOException {
-        try(BufferedReader bufferedReader = new BufferedReader(new FileReader(Constants.FILE_PATH_PATIENTS))) {
-            String line = bufferedReader.readLine();
+    public Optional<Patient> getPatient(String login, String password) throws UserDAOException, IOException {
 
-            while (line != null) {
-                String[] userData = line.split(Constants.SEPARATOR);
-                if(userData[1].equals(login) && userData[2].equals(password)) {
-                    int id = Integer.parseInt(userData[0]);
-                    String name = userData[4];
-                    LocalDate birthday = LocalDate.parse(userData[5]);
-                    int doctorId = Integer.parseInt(userData[6]);
-                    List<Integer> therapiesId = StringToList.toIntegerList(userData[7]);
-                    OrdinaryPatient ordinaryPatient = new OrdinaryPatient(id,login,password,name,birthday,doctorId);
-                    ordinaryPatient.setTherapies(therapiesId);
-                    return Optional.of(ordinaryPatient);
-                }
+        List<String> fileData = Files.readAllLines(Paths.get(Constants.FILE_PATH_PATIENTS));
 
-                line = bufferedReader.readLine();
-            }
-            throw new UserDAOException(Constants.EXCEPTION_MESSAGE_LP_INCORRECT);
-
-
-
-
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-        return Optional.empty();
+        return fileData
+                .stream()
+                .filter(s -> FileService.isLoginPasswordCorrect(s,login,password))
+                .findFirst()
+                .map(this::createPatientFromLine);
     }
 
     @Override
-    public Optional<Patient> getPatientById(int id) throws UserDAOException {
+    public Optional<Patient> getPatientById(int id) throws UserDAOException, IOException {
 
-        try(BufferedReader bufferedReader = new BufferedReader(new FileReader(Constants.FILE_PATH_PATIENTS))) {
-            String line = bufferedReader.readLine();
+        List<String> fileData = Files.readAllLines(Paths.get(Constants.FILE_PATH_PATIENTS));
 
-            while (line != null) {
-                String[] userData = line.split(Constants.SEPARATOR);
-                if(Integer.parseInt(userData[0]) == id) {
-                    String login = userData[1];
-                    String password = userData[2];
-                    String name = userData[4];
-                    LocalDate birthday = LocalDate.parse(userData[5]);
-                    int doctorId = Integer.parseInt(userData[6]);
-                    List<Integer> therapiesId = StringToList.toIntegerList(userData[7]);
-                    OrdinaryPatient ordinaryPatient = new OrdinaryPatient(id,login,password,name,birthday,doctorId);
-                    ordinaryPatient.setTherapies(therapiesId);
-                    return Optional.of(ordinaryPatient);
-                }
-
-                line = bufferedReader.readLine();
-            }
-            throw new UserDAOException(Constants.EXCEPTION_MESSAGE_LP_INCORRECT);
-
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-        return Optional.empty();
+        return fileData
+                .stream()
+                .filter(s -> FileService.findLineById(s,id))
+                .findFirst()
+                .map(this::createPatientFromLine);
     }
+
+    private Patient createPatientFromLine(String lineData) {
+
+        String[] userData = lineData.split(Constants.SEPARATOR);
+        int id = Integer.parseInt(userData[0]);
+        String login = userData[1];
+        String password = userData[2];
+        String name = userData[4];
+        LocalDate birthday = LocalDate.parse(userData[5]);
+        int doctorId = Integer.parseInt(userData[6]);
+        List<Integer> therapiesId = StringToList.toIntegerList(userData[7]);
+        Patient patient = new OrdinaryPatient(id,login,password,name,birthday,doctorId);
+        patient.setTherapies(therapiesId);
+        return patient;
+
+    }
+
 }

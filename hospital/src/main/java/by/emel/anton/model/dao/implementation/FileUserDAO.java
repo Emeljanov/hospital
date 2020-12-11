@@ -71,9 +71,8 @@ public class FileUserDAO implements UserDAO {
     }
 
     @Override
-    public int getNextId(User user) {
+    public int getNextId(User user) throws IOException {
 
-        int nextId = 1;
         String filePath = Constants.EMPTY;
         UserType userType = user.getUserType();
 
@@ -84,26 +83,7 @@ public class FileUserDAO implements UserDAO {
             filePath = Constants.FILE_PATH_PATIENTS;
         }
 
-        try(BufferedReader bufferedReader = new BufferedReader(new FileReader(filePath))) {
-            String line = bufferedReader.readLine();
-
-            while (line != null) {
-
-                String[] userData = line.split(Constants.SEPARATOR);
-                int id = Integer.parseInt(userData[0]);
-                if(id >= nextId) {
-                    nextId = id + 1;
-                }
-
-            line = bufferedReader.readLine();
-
-            }
-
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-        return nextId;
+        return FileService.getNextLineId(filePath);
     }
 
 

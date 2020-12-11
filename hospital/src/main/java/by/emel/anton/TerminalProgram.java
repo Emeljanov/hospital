@@ -8,6 +8,8 @@ import by.emel.anton.model.beans.users.patients.OrdinaryPatient;
 import by.emel.anton.model.beans.users.patients.Patient;
 import by.emel.anton.model.dao.exceptions.UserDAOException;
 import by.emel.anton.service.UserService;
+
+import java.io.IOException;
 import java.time.LocalDate;
 import java.util.Optional;
 import java.util.Scanner;
@@ -73,13 +75,13 @@ public class TerminalProgram {
                     break;
             }
             startProgram();
-        } catch (UserDAOException e) {
+        } catch (UserDAOException | IOException e) {
             e.printStackTrace();
         }
 
     }
 
-    private void createNewUser(Scanner scanner)  {
+    private void createNewUser(Scanner scanner) throws IOException {
 
         logger.info(CREATE_NEW_USER);
         String answer = scanner.nextLine();
@@ -109,7 +111,7 @@ public class TerminalProgram {
 
     }
 
-    private void enterDoctor(Scanner scanner) throws UserDAOException {
+    private void enterDoctor(Scanner scanner) throws UserDAOException, IOException {
 
         logger.info(ENTER_LOG_PASSW);
 
@@ -123,7 +125,7 @@ public class TerminalProgram {
 
             try {
                 processingDoctor(scanner,doc);
-            } catch (UserDAOException e) {
+            } catch (UserDAOException | IOException e) {
                 e.printStackTrace();
             }
 
@@ -131,7 +133,7 @@ public class TerminalProgram {
 
     }
 
-    private void processingDoctor(Scanner scanner, Doctor doctor) throws  UserDAOException {
+    private void processingDoctor(Scanner scanner, Doctor doctor) throws UserDAOException, IOException {
 
         logger.info(PROCESSING_DOCTOR);
 
@@ -159,7 +161,7 @@ public class TerminalProgram {
 
     }
 
-    private void setTherapyToPatient(Scanner scanner, Doctor doctor) throws  UserDAOException {
+    private void setTherapyToPatient(Scanner scanner, Doctor doctor) throws UserDAOException, IOException {
 
         logger.info(ENTER_PATIENT_ID);
         int patientId = scanner.nextInt();
@@ -171,11 +173,17 @@ public class TerminalProgram {
         LocalDate endDate = LocalDate.parse(scanner.nextLine());
 
         Optional<Patient> patient = userService.getPatientById(patientId);
-        patient.ifPresent(pat -> userService.addTherapy(doctor,pat,description,endDate));
+        patient.ifPresent(pat -> {
+            try {
+                userService.addTherapy(doctor,pat,description,endDate);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        });
 
     }
 
-    private void addPatientToDoctor(Scanner scanner, Doctor doctor) throws  UserDAOException {
+    private void addPatientToDoctor(Scanner scanner, Doctor doctor) throws UserDAOException, IOException {
 
         logger.info(ENTER_PATIENT_ID);
 
@@ -185,7 +193,7 @@ public class TerminalProgram {
 
     }
 
-    private void enterPatient(Scanner scanner) throws  UserDAOException {
+    private void enterPatient(Scanner scanner) throws UserDAOException, IOException {
 
         logger.info(ENTER_LOG_PASSW);
 
@@ -197,14 +205,18 @@ public class TerminalProgram {
         patient.ifPresent(pat -> {
 
             logger.info(HI + pat.getName());
-            processingPatient(scanner, pat);
+            try {
+                processingPatient(scanner, pat);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
 
         });
 
 
     }
 
-    private void processingPatient(Scanner scanner, Patient patient) {
+    private void processingPatient(Scanner scanner, Patient patient) throws IOException {
 
         logger.info(PROCESSING_PATIENT);
 
@@ -220,7 +232,11 @@ public class TerminalProgram {
                 Optional<Therapy> therapy = userService.getTherapy(therapyId);
                 therapy.ifPresent(tp -> {
                     logger.info(tp.toString());
-                    processingPatient(scanner, patient);
+                    try {
+                        processingPatient(scanner, patient);
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
                 });
 
                 break;
