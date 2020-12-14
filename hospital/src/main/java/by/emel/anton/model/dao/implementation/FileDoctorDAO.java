@@ -5,7 +5,6 @@ import by.emel.anton.model.beans.users.doctors.Doctor;
 import by.emel.anton.model.beans.users.doctors.GeneralDoctor;
 import by.emel.anton.model.dao.interfaces.DoctorDAO;
 import by.emel.anton.service.StringToList;
-
 import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Paths;

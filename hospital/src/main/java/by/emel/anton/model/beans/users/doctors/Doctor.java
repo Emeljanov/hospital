@@ -4,16 +4,12 @@ import by.emel.anton.constants.Constants;
 import by.emel.anton.model.beans.users.User;
 import by.emel.anton.model.beans.users.UserType;
 import by.emel.anton.model.beans.users.patients.*;
-
 import by.emel.anton.model.beans.therapy.Therapy;
-
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
 public abstract class Doctor extends User {
-
-
 
     public Doctor() {
 

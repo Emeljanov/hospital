@@ -1,7 +1,6 @@
 package by.emel.anton.model.beans.therapy;
 
 import by.emel.anton.constants.Constants;
-
 import java.time.LocalDate;
 
 public abstract class Therapy {

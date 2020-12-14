@@ -1,19 +1,15 @@
 package by.emel.anton.model.dao.interfaces;
 
-
 import by.emel.anton.model.beans.users.User;
-import by.emel.anton.model.beans.users.UserType;
-
 import java.io.IOException;
-
 
 public interface UserDAO {
 
-    boolean isLoginExist(String login, String filePath);
+    boolean isLoginExist(String login, String filePath) throws IOException;
 
-    void updateUser(User user);
+    void updateUser(User user) throws IOException;
 
-    void saveUser(User user);
+    void saveUser(User user) throws IOException;
 
     int getNextId(User user) throws IOException;
 

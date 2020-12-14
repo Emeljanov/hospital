@@ -3,14 +3,13 @@ package by.emel.anton.model.beans.users.patients;
 import by.emel.anton.constants.Constants;
 import by.emel.anton.model.beans.users.User;
 import by.emel.anton.model.beans.users.UserType;
-
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
 public abstract class Patient extends User {
-    private int doctorId;
 
+    private int doctorId;
     private List<Integer> therapies = new ArrayList<>();
 
     public Patient() {
@@ -20,8 +19,6 @@ public abstract class Patient extends User {
         super(id, login, password, UserType.PATIENT, name, birthday);
         this.doctorId = doctorId;
     }
-
-
 
     public int getDoctorId() {
         return doctorId;

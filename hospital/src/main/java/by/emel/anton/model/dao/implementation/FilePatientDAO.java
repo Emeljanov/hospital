@@ -3,10 +3,8 @@ package by.emel.anton.model.dao.implementation;
 import by.emel.anton.constants.Constants;
 import by.emel.anton.model.beans.users.patients.OrdinaryPatient;
 import by.emel.anton.model.beans.users.patients.Patient;
-import by.emel.anton.model.dao.exceptions.UserDAOException;
 import by.emel.anton.model.dao.interfaces.PatientDAO;
 import by.emel.anton.service.StringToList;
-
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
@@ -16,7 +14,7 @@ import java.util.Optional;
 
 public class FilePatientDAO implements PatientDAO {
     @Override
-    public Optional<Patient> getPatient(String login, String password) throws UserDAOException, IOException {
+    public Optional<Patient> getPatient(String login, String password) throws IOException {
 
         List<String> fileData = Files.readAllLines(Paths.get(Constants.FILE_PATH_PATIENTS));
 
@@ -28,7 +26,7 @@ public class FilePatientDAO implements PatientDAO {
     }
 
     @Override
-    public Optional<Patient> getPatientById(int id) throws UserDAOException, IOException {
+    public Optional<Patient> getPatientById(int id) throws IOException {
 
         List<String> fileData = Files.readAllLines(Paths.get(Constants.FILE_PATH_PATIENTS));
 

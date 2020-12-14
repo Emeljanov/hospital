@@ -4,69 +4,49 @@ import by.emel.anton.constants.Constants;
 import by.emel.anton.model.beans.users.User;
 import by.emel.anton.model.beans.users.UserType;
 import by.emel.anton.model.dao.interfaces.UserDAO;
-
 import java.io.*;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.StandardOpenOption;
+import java.util.Collections;
+import java.util.List;
+import java.util.stream.Collectors;
 
 public class FileUserDAO implements UserDAO {
 
-    public boolean isLoginExist(String login, String filePath) {
+    public boolean isLoginExist(String login, String filePath) throws IOException {
 
-        try(BufferedReader br = new BufferedReader(new FileReader(filePath))) {
-            String line = br.readLine();
+        List<String> fileData = Files.readAllLines(Paths.get(filePath));
 
-            while (line != null) {
+        return  fileData.stream().anyMatch(s -> isLoginExistFilter(s,login));
 
-                String[] userData = line.split(Constants.SEPARATOR);
-                if(userData[1].equals(login)) {
-                    return true;
-                }
-                line = br.readLine();
-
-            }
-
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-        return false;
     }
+
     @Override
-    public void saveUser(User user) {
+    public void saveUser(User user) throws IOException {
 
         String login = user.getLogin();
+        UserType userType = user.getUserType();
 
-        if(UserType.DOCTOR == user.getUserType()) {
+        if(UserType.DOCTOR == userType) {
 
             if (isLoginExist(login, Constants.FILE_PATH_DOCTORS)) {
                 return;
             }
 
-            try(FileWriter fw = new FileWriter(Constants.FILE_PATH_DOCTORS,true)) {
-
-                fw.write(user.toString());
-                fw.write(Constants.DESCENT);
-
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
+            saveUserInFile(user,Constants.FILE_PATH_DOCTORS);
 
         }
-        else if (user.getUserType().equals(UserType.PATIENT)) {
+
+        else if (UserType.PATIENT == userType) {
 
             if(isLoginExist(login, Constants.FILE_PATH_PATIENTS)) {
-
                 return;
-
             }
 
-            try(FileWriter fw = new FileWriter(Constants.FILE_PATH_PATIENTS,true)) {
+            saveUserInFile(user,Constants.FILE_PATH_PATIENTS);
 
-                fw.write(user.toString());
-                fw.write(Constants.DESCENT);
-
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
         }
     }
 
@@ -86,56 +66,48 @@ public class FileUserDAO implements UserDAO {
         return FileService.getNextLineId(filePath);
     }
 
-
     @Override
-    public void updateUser(User user) {
+    public void updateUser(User user) throws IOException {
 
-        int userId = user.getId();
-        File tempFile = new File(Constants.FILE_PATH_TEMP);
+        String login = user.getLogin();
+        UserType userType = user.getUserType();
+        Path userFilePath = null;
 
-        File userFile = new File(Constants.EMPTY);
+        if(UserType.DOCTOR == userType) {
 
-        if(UserType.DOCTOR.equals(user.getUserType())) {
+            userFilePath = Paths.get(Constants.FILE_PATH_DOCTORS);
 
-            userFile = new File(Constants.FILE_PATH_DOCTORS);
         }
 
-        else if(UserType.PATIENT.equals(user.getUserType())) {
+        else if(UserType.PATIENT == userType) {
 
-            userFile =  new File(Constants.FILE_PATH_PATIENTS);
+            userFilePath = Paths.get(Constants.FILE_PATH_PATIENTS);
+
         }
 
-        try(BufferedReader bufferedReader = new BufferedReader(new FileReader(userFile))) {
+        List<String> fileData = Files.readAllLines(userFilePath);
 
-            String line = bufferedReader.readLine();
-            while (line != null) {
+        List<String> linesToWrite = fileData
+                .stream()
+                .filter(s -> !isLoginExistFilter(s,login))
+                .collect(Collectors.toList());
 
-                String[] userData = line.split(Constants.SEPARATOR);
-
-                if(userId != Integer.parseInt(userData[0])) {
-
-                    try(FileWriter fw = new FileWriter(tempFile,true)) {
-                        fw.write(line);
-                        fw.write(Constants.DESCENT);
-                    }
-
-                }
-
-                line = bufferedReader.readLine();
-            }
-
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-        String filePath = userFile.getPath();
-        userFile.delete();
-        tempFile.renameTo(new File(filePath));
-
+        Files.write(userFilePath,linesToWrite);
         saveUser(user);
-
 
     }
 
+    private boolean isLoginExistFilter(String line, String login) {
+
+        String[] lineData = line.split(Constants.SEPARATOR);
+        return login.equals(lineData[1]);
+
+    }
+
+    private void saveUserInFile(User user, String filePath) throws IOException {
+        List<String> lines = Collections.singletonList(user.toString());
+        Files.write(Paths.get(filePath), lines, StandardOpenOption.APPEND);
+
+    }
 
 }

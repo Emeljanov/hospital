@@ -1,7 +1,6 @@
 package by.emel.anton.model.dao.implementation;
 
 import by.emel.anton.constants.Constants;
-
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
@@ -12,18 +11,14 @@ public class FileService {
         String[] userData = data.split(Constants.SEPARATOR);
         String loginData = userData[1];
         String passwordData = userData[2];
-        if(loginData.equals(login) && passwordData.equals(password)) {
-            return true;
-        }
-        return false;
+
+        return loginData.equals(login) && passwordData.equals(password);
     }
     public static boolean findLineById(String data, int id) {
         String[] userData = data.split(Constants.SEPARATOR);
         int idData = Integer.parseInt(userData[0]);
-        if(id == idData) {
-            return true;
-        }
-        return false;
+
+        return id == idData;
     }
     public static int getNextLineId(String filePath) throws IOException {
 

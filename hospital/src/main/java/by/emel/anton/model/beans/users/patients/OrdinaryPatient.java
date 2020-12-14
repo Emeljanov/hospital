@@ -1,7 +1,6 @@
 package by.emel.anton.model.beans.users.patients;
 
 import by.emel.anton.model.beans.users.UserType;
-
 import java.time.LocalDate;
 
 

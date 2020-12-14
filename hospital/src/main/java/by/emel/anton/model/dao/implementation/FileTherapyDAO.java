@@ -4,33 +4,27 @@ import by.emel.anton.constants.Constants;
 import by.emel.anton.model.beans.therapy.OrdinaryTherapy;
 import by.emel.anton.model.beans.therapy.Therapy;
 import by.emel.anton.model.dao.interfaces.TherapyDAO;
-
-
 import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.nio.file.StandardOpenOption;
 import java.time.LocalDate;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 public class FileTherapyDAO implements TherapyDAO {
     @Override
-    public void saveTherapy(Therapy therapy) {
+    public void saveTherapy(Therapy therapy) throws IOException {
 
-        try(FileWriter fileWriter = new FileWriter(Constants.FILE_PATH_THERAPIES,true)) {
+        List<String> lines = Collections.singletonList(therapy.toString());
+        Files.write(Paths.get(Constants.FILE_PATH_THERAPIES), lines, StandardOpenOption.APPEND);
 
-            fileWriter.write(therapy.toString());
-            fileWriter.write(Constants.DESCENT);
-
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
     }
 
     @Override
     public int getNextID() throws IOException {
 
         return FileService.getNextLineId(Constants.FILE_PATH_THERAPIES);
+
     }
 
     @Override

@@ -1,4 +1,4 @@
-package by.emel.anton;
+package by.emel.anton.terminalprog;
 
 import by.emel.anton.model.beans.therapy.Therapy;
 import by.emel.anton.model.beans.users.User;
@@ -8,7 +8,6 @@ import by.emel.anton.model.beans.users.patients.OrdinaryPatient;
 import by.emel.anton.model.beans.users.patients.Patient;
 import by.emel.anton.model.dao.exceptions.UserDAOException;
 import by.emel.anton.service.UserService;
-
 import java.io.IOException;
 import java.time.LocalDate;
 import java.util.Optional;
@@ -16,38 +15,33 @@ import java.util.Scanner;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+
+
 public class TerminalProgram {
 
-    private static final String START_PROGRAM = "Hi, you are a doctor or patient? (d/p). If you are new user - create account(new)";
-    private static final String ANSWER_D = "d";
-    private static final String ANSWER_P = "p";
-    private static final String ANSWER_N = "n";
+    private static final String START_PROGRAM = "Hi, you are a doctor or patient? (D/P). If you are new user - create account(N). Exit(EXIT)";
     private static final String ANSWER_DOCTOR = "You are the doctor.";
     private static final String ANSWER_PATIENT = "You are the patient";
-    private static final String CREATE_NEW_USER = "Create doctor(d) or patient(p)?";
+    private static final String CREATE_NEW_USER = "Create doctor(D) or patient(P)?";
     private static final String ENTER_LOGIN = "Enter your login";
     private static final String ENTER_PASSWORD = "Enter your password";
-    private static final String ENTER_LOG_PASSW = "Enter your login and password";
     private static final String ENTER_NAME = "Enter your name";
     private static final String ENTER_BIRTHDAY = "Enter you birthday yyyy-mm-dd";
     private static final String HI = "Hi!";
-    private static final String PROCESSING_DOCTOR = "What do you want? See your patients (see)/Add new patient(add)/set therapy(set)?/exit(exit)";
-    private static final String ADD = "add";
-    private static final String SEE = "see";
-    private static final String SET = "set";
-    private static final String EXIT = "exit";
+    private static final String PROCESSING_DOCTOR = "What do you want? See your patients (SEE)/Add new patient(ADD)/set therapy(SET)?/exit(EXIT)";
     private static final String ENTER_PATIENT_ID = "Enter patient id";
     private static final String ENTER_THERAPY_DESCR = "Enter therapy description";
     private static final String ENTER_ENDDATE = "Enter end date (yyyy-mm-dd)";
-    private static final String PROCESSING_PATIENT = "What do you want? See your therapies (ts)/See you therapy(t)?/exit(exit)";
-    private static final String TS = "ts";
-    private static final String T = "t";
+    private static final String PROCESSING_PATIENT = "What do you want? See your therapies (TS)/See you therapy(T)?/exit(EXIT)";
     private static final String ENTER_ID_THERAPY = "Please, enter id therapy";
     private static final String LOGGER_NAME = "LoggerForTerminal";
-
-
     private final Logger logger = LoggerFactory.getLogger(LOGGER_NAME);
     private final UserService userService;
+
+    private boolean flag_program = true;
+    private boolean flag_doctor = true;
+    private boolean flag_patient = true;
+
 
     public TerminalProgram(UserService userService) {
         this.userService = userService;
@@ -55,28 +49,39 @@ public class TerminalProgram {
 
     public void startProgram() {
 
-        logger.info(START_PROGRAM);
-
         try(Scanner scanner = new Scanner(System.in)) {
-
-            String answer = scanner.nextLine();
-
-            switch (answer) {
-                case ANSWER_D:
-                    logger.info(ANSWER_DOCTOR);
-                    enterDoctor(scanner);
-                    break;
-                case ANSWER_P:
-                    logger.info(ANSWER_PATIENT);
-                    enterPatient(scanner);
-                    break;
-                case ANSWER_N:
-                    createNewUser(scanner);
-                    break;
+            while (flag_program) {
+                try {
+                    processingProgram(scanner);
+                } catch (IOException | UserDAOException e) {
+                    e.printStackTrace();
+                }
             }
-            startProgram();
-        } catch (UserDAOException | IOException e) {
-            e.printStackTrace();
+        }
+    }
+
+    public void processingProgram(Scanner scanner) throws IOException, UserDAOException {
+
+        logger.info(START_PROGRAM);
+        flag_doctor = true;
+        flag_patient = true;
+        AnswerType answer = AnswerType.valueOf(scanner.nextLine());
+
+        switch (answer) {
+            case D:
+                logger.info(ANSWER_DOCTOR);
+                enterDoctor(scanner);
+                break;
+            case P:
+                logger.info(ANSWER_PATIENT);
+                enterPatient(scanner);
+                break;
+            case N:
+                createNewUser(scanner);
+                break;
+            case EXIT:
+                flag_program = false;
+                break;
         }
 
     }
@@ -84,15 +89,14 @@ public class TerminalProgram {
     private void createNewUser(Scanner scanner) throws IOException {
 
         logger.info(CREATE_NEW_USER);
-        String answer = scanner.nextLine();
-
+        AnswerType answer = AnswerType.valueOf(scanner.nextLine());
         User user = null;
 
         switch (answer) {
-            case ANSWER_D:
+            case D:
                 user = new GeneralDoctor();
                 break;
-            case ANSWER_P:
+            case P:
                 user = new OrdinaryPatient();
                 break;
         }
@@ -106,17 +110,15 @@ public class TerminalProgram {
         logger.info(ENTER_BIRTHDAY);
         LocalDate birthday = LocalDate.parse(scanner.nextLine());
 
-        userService.setUserData(user,login,password,name,birthday);
-        userService.saveUser(user);
-
+        userService.createUser(user,login,password,name,birthday,true);
     }
 
     private void enterDoctor(Scanner scanner) throws UserDAOException, IOException {
 
-        logger.info(ENTER_LOG_PASSW);
-
-        String login = scanner.next();
-        String password = scanner.next();
+        logger.info(ENTER_LOGIN);
+        String login = scanner.nextLine();
+        logger.info(ENTER_PASSWORD);
+        String password = scanner.nextLine();
 
         Optional<Doctor> doctor = userService.getDoctor(login,password);
         doctor.ifPresent(doc -> {
@@ -124,47 +126,51 @@ public class TerminalProgram {
             logger.info(HI + doc.getName());
 
             try {
-                processingDoctor(scanner,doc);
+                startProcessingDoctor(scanner,doc);
             } catch (UserDAOException | IOException e) {
                 e.printStackTrace();
             }
-
         });
-
     }
+
+    private void startProcessingDoctor(Scanner scanner, Doctor doctor) throws IOException, UserDAOException {
+        while (flag_doctor) {
+            processingDoctor(scanner,doctor);
+        }
+        processingProgram(scanner);
+    }
+
 
     private void processingDoctor(Scanner scanner, Doctor doctor) throws UserDAOException, IOException {
 
         logger.info(PROCESSING_DOCTOR);
-
-        String answer = scanner.nextLine();
+        AnswerType answer = AnswerType.valueOf(scanner.nextLine());
 
         switch (answer) {
             case ADD:
-                logger.info(ADD);
+                logger.info(AnswerType.ADD.toString());
                 addPatientToDoctor(scanner, doctor);
                 break;
             case SEE:
-                logger.info(SEE);
+                logger.info(AnswerType.SEE.toString());
                 System.out.println(doctor.getPatientsId());
                 break;
             case SET:
-                logger.info(SET);
+                logger.info(AnswerType.SET.toString());
                 setTherapyToPatient(scanner, doctor);
                 break;
             case EXIT:
-                logger.info(EXIT);
-                startProgram();
+                logger.info(AnswerType.EXIT.toString());
+                flag_doctor = false;
                 break;
         }
-        processingDoctor(scanner,doctor);
 
     }
 
     private void setTherapyToPatient(Scanner scanner, Doctor doctor) throws UserDAOException, IOException {
 
         logger.info(ENTER_PATIENT_ID);
-        int patientId = scanner.nextInt();
+        int patientId = Integer.parseInt(scanner.nextLine().trim());
 
         logger.info(ENTER_THERAPY_DESCR);
         String description = scanner.nextLine();
@@ -186,41 +192,43 @@ public class TerminalProgram {
     private void addPatientToDoctor(Scanner scanner, Doctor doctor) throws UserDAOException, IOException {
 
         logger.info(ENTER_PATIENT_ID);
-
         int patientId = scanner.nextInt();
-
         userService.addPatientToDoctor(doctor,patientId);
 
     }
 
     private void enterPatient(Scanner scanner) throws UserDAOException, IOException {
 
-        logger.info(ENTER_LOG_PASSW);
-
-        String login = scanner.next();
-        String password = scanner.next();
-
+        logger.info(ENTER_LOGIN);
+        String login = scanner.nextLine();
+        logger.info(ENTER_PASSWORD);
+        String password = scanner.nextLine();
         Optional<Patient> patient = userService.getPatient(login,password);
 
         patient.ifPresent(pat -> {
 
             logger.info(HI + pat.getName());
             try {
-                processingPatient(scanner, pat);
-            } catch (IOException e) {
+                startProcessingPatient(scanner, pat);
+            } catch (IOException | UserDAOException e) {
                 e.printStackTrace();
             }
-
         });
 
+    }
 
+    private void startProcessingPatient(Scanner scanner, Patient patient) throws IOException, UserDAOException {
+        while (flag_patient) {
+            processingPatient(scanner,patient);
+        }
+        processingProgram(scanner);
     }
 
     private void processingPatient(Scanner scanner, Patient patient) throws IOException {
 
         logger.info(PROCESSING_PATIENT);
-
-        String answer = scanner.next();
+        String line = scanner.nextLine();
+        AnswerType answer = AnswerType.valueOf(line);
 
         switch (answer) {
             case TS:
@@ -228,23 +236,13 @@ public class TerminalProgram {
                 break;
             case T:
                 logger.info(ENTER_ID_THERAPY);
-                int therapyId = scanner.nextInt();
+                int therapyId = Integer.parseInt(scanner.nextLine().trim());
                 Optional<Therapy> therapy = userService.getTherapy(therapyId);
-                therapy.ifPresent(tp -> {
-                    logger.info(tp.toString());
-                    try {
-                        processingPatient(scanner, patient);
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-                });
-
+                therapy.ifPresent(tp -> logger.info(tp.toString()));
                 break;
             case EXIT:
-                startProgram();
+                flag_patient = false;
                 break;
         }
-        processingPatient(scanner,patient);
-
     }
 }

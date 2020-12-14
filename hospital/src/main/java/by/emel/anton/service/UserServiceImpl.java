@@ -31,22 +31,25 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public void setUserData(User user, String login, String password, String name, LocalDate birthday) throws IOException {
+    public void createUser(User user, String login, String password, String name, LocalDate birthday, boolean isSave) throws IOException {
         int id = userDAO.getNextId(user);
         user.setId(id);
         user.setLogin(login);
         user.setPassword(password);
         user.setName(name);
         user.setBirthday(birthday);
+        if(isSave) {
+            saveUser(user);
+        }
     }
 
     @Override
-    public void saveUser(User user) {
+    public void saveUser(User user) throws IOException {
         userDAO.saveUser(user);
     }
 
     @Override
-    public void saveTherapy(Therapy therapy) {
+    public void saveTherapy(Therapy therapy) throws IOException {
         therapyDAO.saveTherapy(therapy);
     }
 
@@ -71,7 +74,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public void updateUser(User user) {
+    public void updateUser(User user) throws IOException {
         userDAO.updateUser(user);
     }
 
@@ -92,8 +95,13 @@ public class UserServiceImpl implements UserService {
         patient.ifPresent(pat -> {
             doctor.setPatientId(patientId);
             pat.setDoctorId(doctor.getId());
-            updateUser(doctor);
-            updateUser(pat);
+            try {
+                updateUser(doctor);
+                updateUser(pat);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
         });
     }
 
