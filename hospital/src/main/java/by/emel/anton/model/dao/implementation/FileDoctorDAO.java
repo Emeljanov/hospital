@@ -28,6 +28,7 @@ public class FileDoctorDAO implements DoctorDAO {
     }
 
     private Doctor createDoctorFromLine(String lineData) {
+
         String[] userData = lineData.split(Constants.SEPARATOR);
         int id = Integer.parseInt(userData[0]);
         String login = userData[1];
@@ -38,5 +39,6 @@ public class FileDoctorDAO implements DoctorDAO {
         Doctor Doctor = new GeneralDoctor(id,login,password,name,birthday);
         patients.forEach(Doctor::setPatientId);
         return Doctor;
+
     }
 }

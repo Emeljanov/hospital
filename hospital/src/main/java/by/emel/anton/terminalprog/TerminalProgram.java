@@ -15,8 +15,6 @@ import java.util.Scanner;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-
-
 public class TerminalProgram {
 
     private static final String START_PROGRAM = "Hi, you are a doctor or patient? (D/P). If you are new user - create account(N). Exit(EXIT)";
@@ -41,7 +39,6 @@ public class TerminalProgram {
     private boolean flag_program = true;
     private boolean flag_doctor = true;
     private boolean flag_patient = true;
-
 
     public TerminalProgram(UserService userService) {
         this.userService = userService;
@@ -139,7 +136,6 @@ public class TerminalProgram {
         }
         processingProgram(scanner);
     }
-
 
     private void processingDoctor(Scanner scanner, Doctor doctor) throws UserDAOException, IOException {
 

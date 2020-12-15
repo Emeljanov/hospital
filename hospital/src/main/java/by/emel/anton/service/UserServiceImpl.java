@@ -10,7 +10,6 @@ import by.emel.anton.model.dao.interfaces.DoctorDAO;
 import by.emel.anton.model.dao.interfaces.PatientDAO;
 import by.emel.anton.model.dao.interfaces.TherapyDAO;
 import by.emel.anton.model.dao.interfaces.UserDAO;
-
 import java.io.IOException;
 import java.time.LocalDate;
 import java.util.Optional;
@@ -21,7 +20,6 @@ public class UserServiceImpl implements UserService {
     private final PatientDAO patientDAO;
     private final DoctorDAO doctorDAO;
     private final TherapyDAO therapyDAO;
-
 
     public UserServiceImpl(UserDAO userDAO, PatientDAO patientDAO, DoctorDAO doctorDAO, TherapyDAO therapyDAO) {
         this.userDAO = userDAO;

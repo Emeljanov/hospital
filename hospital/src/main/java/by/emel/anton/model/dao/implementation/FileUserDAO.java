@@ -105,6 +105,7 @@ public class FileUserDAO implements UserDAO {
     }
 
     private void saveUserInFile(User user, String filePath) throws IOException {
+
         List<String> lines = Collections.singletonList(user.toString());
         Files.write(Paths.get(filePath), lines, StandardOpenOption.APPEND);
 
