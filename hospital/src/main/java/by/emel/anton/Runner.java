@@ -13,6 +13,7 @@ import by.emel.anton.service.UserServiceImpl;
 import by.emel.anton.terminalprog.TerminalProgram;
 
 public class Runner {
+
     public static void main(String[] args) {
 
         UserDAO userDAO = new FileUserDAO();
