@@ -4,7 +4,9 @@ import by.emel.anton.constants.Constants;
 import by.emel.anton.model.beans.users.User;
 import by.emel.anton.model.beans.users.UserType;
 import by.emel.anton.model.dao.interfaces.UserDAO;
-import java.io.*;
+import org.springframework.stereotype.Repository;
+
+import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -13,6 +15,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
+@Repository
 public class FileUserDAO implements UserDAO {
 
     public boolean isLoginExist(String login, String filePath) throws IOException {

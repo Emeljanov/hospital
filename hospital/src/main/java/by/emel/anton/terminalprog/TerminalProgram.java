@@ -8,13 +8,17 @@ import by.emel.anton.model.beans.users.patients.OrdinaryPatient;
 import by.emel.anton.model.beans.users.patients.Patient;
 import by.emel.anton.model.dao.exceptions.UserDAOException;
 import by.emel.anton.service.UserService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+
 import java.io.IOException;
 import java.time.LocalDate;
 import java.util.Optional;
 import java.util.Scanner;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
+@Component
 public class TerminalProgram {
 
     private static final String START_PROGRAM = "Hi, you are a doctor or patient? (D/P). If you are new user - create account(N). Exit(EXIT)";
@@ -34,15 +38,14 @@ public class TerminalProgram {
     private static final String ENTER_ID_THERAPY = "Please, enter id therapy";
     private static final String LOGGER_NAME = "LoggerForTerminal";
     private final Logger logger = LoggerFactory.getLogger(LOGGER_NAME);
-    private final UserService userService;
+
+
+    @Autowired
+    private UserService userService;
 
     private boolean flag_program = true;
     private boolean flag_doctor = true;
     private boolean flag_patient = true;
-
-    public TerminalProgram(UserService userService) {
-        this.userService = userService;
-    }
 
     public void startProgram() {
 
@@ -214,6 +217,7 @@ public class TerminalProgram {
     }
 
     private void startProcessingPatient(Scanner scanner, Patient patient) throws IOException, UserDAOException {
+
         while (flag_patient) {
             processingPatient(scanner,patient);
         }

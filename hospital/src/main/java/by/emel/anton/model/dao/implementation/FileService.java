@@ -1,11 +1,14 @@
 package by.emel.anton.model.dao.implementation;
 
 import by.emel.anton.constants.Constants;
+import org.springframework.stereotype.Service;
+
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.List;
 
+@Service
 public class FileService {
     public static boolean isLoginPasswordCorrect(String data, String login, String password) {
         String[] userData = data.split(Constants.SEPARATOR);

@@ -4,14 +4,20 @@ import by.emel.anton.constants.Constants;
 import by.emel.anton.model.beans.therapy.OrdinaryTherapy;
 import by.emel.anton.model.beans.therapy.Therapy;
 import by.emel.anton.model.dao.interfaces.TherapyDAO;
-import java.io.*;
+import org.springframework.stereotype.Repository;
+
+import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.nio.file.StandardOpenOption;
 import java.time.LocalDate;
-import java.util.*;
+import java.util.Collections;
+import java.util.List;
+import java.util.Optional;
 
+@Repository
 public class FileTherapyDAO implements TherapyDAO {
+
     @Override
     public void saveTherapy(Therapy therapy) throws IOException {
 

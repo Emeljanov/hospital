@@ -5,6 +5,8 @@ import by.emel.anton.model.beans.users.patients.OrdinaryPatient;
 import by.emel.anton.model.beans.users.patients.Patient;
 import by.emel.anton.model.dao.interfaces.PatientDAO;
 import by.emel.anton.service.StringToList;
+import org.springframework.stereotype.Repository;
+
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
@@ -12,7 +14,9 @@ import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
+@Repository
 public class FilePatientDAO implements PatientDAO {
+
     @Override
     public Optional<Patient> getPatient(String login, String password) throws IOException {
 

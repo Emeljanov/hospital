@@ -5,15 +5,16 @@ import by.emel.anton.model.beans.users.doctors.Doctor;
 import by.emel.anton.model.beans.users.doctors.GeneralDoctor;
 import by.emel.anton.model.dao.interfaces.DoctorDAO;
 import by.emel.anton.service.StringToList;
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Repository;
 
-import java.io.*;
+import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
+@Repository
 public class FileDoctorDAO implements DoctorDAO {
 
     @Override

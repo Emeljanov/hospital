@@ -10,23 +10,25 @@ import by.emel.anton.model.dao.interfaces.DoctorDAO;
 import by.emel.anton.model.dao.interfaces.PatientDAO;
 import by.emel.anton.model.dao.interfaces.TherapyDAO;
 import by.emel.anton.model.dao.interfaces.UserDAO;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
 import java.io.IOException;
 import java.time.LocalDate;
 import java.util.Optional;
 
+
+@Service
 public class UserServiceImpl implements UserService {
 
-    private final UserDAO userDAO;
-    private final PatientDAO patientDAO;
-    private final DoctorDAO doctorDAO;
-    private final TherapyDAO therapyDAO;
-
-    public UserServiceImpl(UserDAO userDAO, PatientDAO patientDAO, DoctorDAO doctorDAO, TherapyDAO therapyDAO) {
-        this.userDAO = userDAO;
-        this.patientDAO = patientDAO;
-        this.doctorDAO = doctorDAO;
-        this.therapyDAO = therapyDAO;
-    }
+    @Autowired
+    private UserDAO userDAO;
+    @Autowired
+    private PatientDAO patientDAO;
+    @Autowired
+    private DoctorDAO doctorDAO;
+    @Autowired
+    private TherapyDAO therapyDAO;
 
     @Override
     public void createUser(User user, String login, String password, String name, LocalDate birthday, boolean isSave) throws IOException {
