@@ -21,14 +21,18 @@ import java.util.Optional;
 @Service
 public class UserServiceImpl implements UserService {
 
-    @Autowired
     private UserDAO userDAO;
-    @Autowired
     private PatientDAO patientDAO;
-    @Autowired
     private DoctorDAO doctorDAO;
-    @Autowired
     private TherapyDAO therapyDAO;
+
+    @Autowired
+    public UserServiceImpl(UserDAO userDAO, PatientDAO patientDAO, DoctorDAO doctorDAO, TherapyDAO therapyDAO) {
+        this.userDAO = userDAO;
+        this.patientDAO = patientDAO;
+        this.doctorDAO = doctorDAO;
+        this.therapyDAO = therapyDAO;
+    }
 
     @Override
     public void createUser(User user, String login, String password, String name, LocalDate birthday, boolean isSave) throws IOException {

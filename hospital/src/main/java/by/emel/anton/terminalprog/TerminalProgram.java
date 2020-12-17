@@ -40,8 +40,13 @@ public class TerminalProgram {
     private final Logger logger = LoggerFactory.getLogger(LOGGER_NAME);
 
 
+
+    private final UserService userService;
+
     @Autowired
-    private UserService userService;
+    public TerminalProgram(UserService userService) {
+        this.userService = userService;
+    }
 
     private boolean flag_program = true;
     private boolean flag_doctor = true;
