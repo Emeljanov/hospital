@@ -1,4 +1,4 @@
-package by.emel.anton.model.dao.implementation;
+package by.emel.anton.model.dao.implementation.filedoa;
 
 import by.emel.anton.constants.Constants;
 import by.emel.anton.model.beans.therapy.OrdinaryTherapy;
