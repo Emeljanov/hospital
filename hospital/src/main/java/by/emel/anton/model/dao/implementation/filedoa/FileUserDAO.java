@@ -15,7 +15,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
-@Repository
+//@Repository
 public class FileUserDAO implements UserDAO {
 
     public boolean isLoginExist(String login, String filePath) throws IOException {
