@@ -27,7 +27,8 @@ public class Runner implements CommandLineRunner  {
     public void run(String... args) throws Exception {
 
 //        terminalProgram.startProgram();
-//        System.out.println(jdbcTemplateUserDao.getStr());
+//        test connection
+        System.out.println(jdbcTemplateUserDao.getStr());
 
 
     }
