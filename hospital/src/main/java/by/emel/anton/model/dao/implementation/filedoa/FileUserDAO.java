@@ -15,14 +15,20 @@ import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
-//@Repository
+@Repository("UserFromFile")
 public class FileUserDAO implements UserDAO {
 
-    public boolean isLoginExist(String login, String filePath) throws IOException {
+    public boolean isLoginExist(String login) throws IOException {
 
-        List<String> fileData = Files.readAllLines(Paths.get(filePath));
+        List<String> fileDataDoctors = Files.readAllLines(Paths.get(Constants.FILE_PATH_DOCTORS));
+        boolean answer = fileDataDoctors.stream().anyMatch(s -> isLoginExistFilter(s,login));
 
-        return  fileData.stream().anyMatch(s -> isLoginExistFilter(s,login));
+        if(answer) return true;
+
+        else {
+            List<String> fileDataPatients = Files.readAllLines(Paths.get(Constants.FILE_PATH_PATIENTS));
+            return fileDataPatients.stream().anyMatch(s -> isLoginExistFilter(s,login));
+        }
 
     }
 
@@ -34,7 +40,7 @@ public class FileUserDAO implements UserDAO {
 
         if(UserType.DOCTOR == userType) {
 
-            if (isLoginExist(login, Constants.FILE_PATH_DOCTORS)) {
+            if (isLoginExist(login)) {
                 return;
             }
 
@@ -44,7 +50,7 @@ public class FileUserDAO implements UserDAO {
 
         else if (UserType.PATIENT == userType) {
 
-            if(isLoginExist(login, Constants.FILE_PATH_PATIENTS)) {
+            if(isLoginExist(login)) {
                 return;
             }
 

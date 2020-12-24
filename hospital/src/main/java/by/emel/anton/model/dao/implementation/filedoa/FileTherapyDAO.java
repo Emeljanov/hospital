@@ -15,7 +15,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
-@Repository
+@Repository("TherapyFromFile")
 public class FileTherapyDAO implements TherapyDAO {
 
     @Override

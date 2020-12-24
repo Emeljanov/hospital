@@ -14,7 +14,7 @@ import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
-@Repository
+@Repository("DoctorFromFile")
 public class FileDoctorDAO implements DoctorDAO {
 
     @Override

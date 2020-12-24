@@ -10,3 +10,4 @@ create table therapies (
         references patients (id_patient)
 ) engine=InnoDB
 
+

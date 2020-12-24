@@ -6,7 +6,8 @@ import java.io.IOException;
 
 public interface UserDAO {
 
-    boolean isLoginExist(String login, String filePath) throws IOException;
+//    boolean isLoginExist(String login, String filePath) throws IOException;
+    boolean isLoginExist(String login) throws IOException;
 
     void updateUser(User user) throws IOException;
 

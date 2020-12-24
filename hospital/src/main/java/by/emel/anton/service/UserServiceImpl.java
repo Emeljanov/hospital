@@ -11,8 +11,10 @@ import by.emel.anton.model.dao.interfaces.PatientDAO;
 import by.emel.anton.model.dao.interfaces.TherapyDAO;
 import by.emel.anton.model.dao.interfaces.UserDAO;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
+import javax.annotation.Resource;
 import java.io.IOException;
 import java.time.LocalDate;
 import java.util.Optional;
@@ -27,7 +29,12 @@ public class UserServiceImpl implements UserService {
     private TherapyDAO therapyDAO;
 
     @Autowired
-    public UserServiceImpl(UserDAO userDAO, PatientDAO patientDAO, DoctorDAO doctorDAO, TherapyDAO therapyDAO) {
+    public UserServiceImpl(
+            @Qualifier("UserFromFile") UserDAO userDAO,
+            @Qualifier("PatientFromFile")PatientDAO patientDAO,
+            @Qualifier("DoctorFromFile")DoctorDAO doctorDAO,
+            @Qualifier("TherapyFromFile")TherapyDAO therapyDAO) {
+
         this.userDAO = userDAO;
         this.patientDAO = patientDAO;
         this.doctorDAO = doctorDAO;

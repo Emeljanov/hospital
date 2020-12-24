@@ -1,29 +1,24 @@
 package by.emel.anton.model.dao.implementation.jdbctemplatedao;
 
 import by.emel.anton.model.beans.users.User;
+import by.emel.anton.model.beans.users.patients.Patient;
 import by.emel.anton.model.dao.interfaces.UserDAO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
 import java.io.IOException;
-import java.util.List;
-import java.util.Map;
 
-@Repository
+@Repository("UserJdbcTemplate")
 
 public class JdbcTemplateUserDao implements UserDAO {
 
-
     private JdbcTemplate jdbcTemplate;
-
 
     @Autowired
     public JdbcTemplateUserDao(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
     }
-
-
 
 //this method only for testing connection
     public String getStr() {
@@ -33,9 +28,11 @@ public class JdbcTemplateUserDao implements UserDAO {
     }
 
     @Override
-    public boolean isLoginExist(String login, String filePath) throws IOException {
-
-        return false;
+    public boolean isLoginExist(String login) throws IOException {
+        String sqlisLoginExist = "select count(*) from users where login = ? and id = ?";
+        int id = 2;
+        int count = jdbcTemplate.queryForObject(sqlisLoginExist, new Object[]{login,id},Integer.class);
+        return count >= 1;
     }
 
     @Override
@@ -45,6 +42,7 @@ public class JdbcTemplateUserDao implements UserDAO {
 
     @Override
     public void saveUser(User user) throws IOException {
+
 
     }
 

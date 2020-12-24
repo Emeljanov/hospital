@@ -14,7 +14,7 @@ import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
-@Repository
+@Repository("PatientFromFile")
 public class FilePatientDAO implements PatientDAO {
 
     @Override
