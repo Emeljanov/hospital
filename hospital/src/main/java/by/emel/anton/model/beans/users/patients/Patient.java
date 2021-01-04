@@ -9,7 +9,7 @@ import java.util.List;
 
 public abstract class Patient extends User {
 
-    private int doctorId;
+    private int doctorId = 0;
     private List<Integer> therapies = new ArrayList<>();
 
     public Patient() {
