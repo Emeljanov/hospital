@@ -8,6 +8,6 @@ import java.util.Optional;
 
 public interface DoctorDAO {
 
-    Optional<Doctor> getDoctor(String login, String password) throws UserDAOException, IOException;
+    Optional<Doctor> getDoctor(String login, String password) throws UserDAOException;
 
 }

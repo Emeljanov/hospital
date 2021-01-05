@@ -3,6 +3,7 @@ package by.emel.anton.model.dao.implementation.filedoa;
 import by.emel.anton.constants.Constants;
 import by.emel.anton.model.beans.users.patients.OrdinaryPatient;
 import by.emel.anton.model.beans.users.patients.Patient;
+import by.emel.anton.model.dao.exceptions.UserDAOException;
 import by.emel.anton.model.dao.interfaces.PatientDAO;
 import by.emel.anton.service.StringToList;
 import org.springframework.stereotype.Repository;
@@ -18,27 +19,39 @@ import java.util.Optional;
 public class FilePatientDAO implements PatientDAO {
 
     @Override
-    public Optional<Patient> getPatient(String login, String password) throws IOException {
+    public Optional<Patient> getPatient(String login, String password) throws UserDAOException {
 
-        List<String> fileData = Files.readAllLines(Paths.get(Constants.FILE_PATH_PATIENTS));
+        try {
+            List<String> fileData = Files.readAllLines(Paths.get(Constants.FILE_PATH_PATIENTS));
 
-        return fileData
-                .stream()
-                .filter(s -> FileService.isLoginPasswordCorrect(s,login,password))
-                .findFirst()
-                .map(this::createPatientFromLine);
+            return fileData
+                    .stream()
+                    .filter(s -> FileService.isLoginPasswordCorrect(s,login,password))
+                    .findFirst()
+                    .map(this::createPatientFromLine);
+        }
+        catch (IOException e) {
+            throw new UserDAOException("ERROR getPatient from file");
+        }
+
+
     }
 
     @Override
-    public Optional<Patient> getPatientById(int id) throws IOException {
+    public Optional<Patient> getPatientById(int id) throws UserDAOException {
 
-        List<String> fileData = Files.readAllLines(Paths.get(Constants.FILE_PATH_PATIENTS));
+        try {
+            List<String> fileData = Files.readAllLines(Paths.get(Constants.FILE_PATH_PATIENTS));
 
-        return fileData
-                .stream()
-                .filter(s -> FileService.findLineById(s,id))
-                .findFirst()
-                .map(this::createPatientFromLine);
+            return fileData
+                    .stream()
+                    .filter(s -> FileService.findLineById(s,id))
+                    .findFirst()
+                    .map(this::createPatientFromLine);
+        }
+        catch (IOException e) {
+            throw new UserDAOException("ERROR get Patient by ID from FILE");
+        }
     }
 
     private Patient createPatientFromLine(String lineData) {

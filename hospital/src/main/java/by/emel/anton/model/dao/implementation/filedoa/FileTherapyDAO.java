@@ -3,6 +3,7 @@ package by.emel.anton.model.dao.implementation.filedoa;
 import by.emel.anton.constants.Constants;
 import by.emel.anton.model.beans.therapy.OrdinaryTherapy;
 import by.emel.anton.model.beans.therapy.Therapy;
+import by.emel.anton.model.dao.exceptions.TherapyDAOException;
 import by.emel.anton.model.dao.interfaces.TherapyDAO;
 import org.springframework.stereotype.Repository;
 
@@ -19,30 +20,47 @@ import java.util.Optional;
 public class FileTherapyDAO implements TherapyDAO {
 
     @Override
-    public void saveTherapy(Therapy therapy) throws IOException {
+    public void saveTherapy(Therapy therapy) throws TherapyDAOException {
 
-        List<String> lines = Collections.singletonList(therapy.toString());
-        Files.write(Paths.get(Constants.FILE_PATH_THERAPIES), lines, StandardOpenOption.APPEND);
+        try {
+            List<String> lines = Collections.singletonList(therapy.toString());
+            Files.write(Paths.get(Constants.FILE_PATH_THERAPIES), lines, StandardOpenOption.APPEND);
+        }
+        catch (IOException e) {
+            throw new TherapyDAOException("ERROR save Therapy in file");
+        }
+    }
+
+    @Override
+    public int getNextID() throws TherapyDAOException {
+
+        try {
+            return FileService.getNextLineId(Constants.FILE_PATH_THERAPIES);
+        }
+        catch (IOException e)
+        {
+            throw new TherapyDAOException("ERROR get Next if from file");
+        }
 
     }
 
     @Override
-    public int getNextID() throws IOException {
+    public Optional<Therapy> getTherapy(int id) throws TherapyDAOException {
 
-        return FileService.getNextLineId(Constants.FILE_PATH_THERAPIES);
+        try {
+            List<String> fileData = Files.readAllLines(Paths.get(Constants.FILE_PATH_THERAPIES));
 
-    }
+            return fileData
+                    .stream()
+                    .filter(s -> FileService.findLineById(s,id))
+                    .findFirst()
+                    .map(this::createTherapyFromLine);
+        }
+        catch (IOException e) {
 
-    @Override
-    public Optional<Therapy> getTherapy(int id) throws IOException {
+            throw new TherapyDAOException("Error get therapy from file");
 
-        List<String> fileData = Files.readAllLines(Paths.get(Constants.FILE_PATH_THERAPIES));
-
-        return fileData
-                .stream()
-                .filter(s -> FileService.findLineById(s,id))
-                .findFirst()
-                .map(this::createTherapyFromLine);
+        }
 
     }
     private Therapy createTherapyFromLine(String lineData) {

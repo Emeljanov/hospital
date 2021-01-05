@@ -7,6 +7,7 @@ import by.emel.anton.model.dao.implementation.jdbctemplatedao.rowmappers.Patient
 import by.emel.anton.model.dao.implementation.jdbctemplatedao.rowmappers.TherapyIDMapper;
 import by.emel.anton.model.dao.interfaces.PatientDAO;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
@@ -30,23 +31,41 @@ public class JdbcTemplatePatientDAO implements PatientDAO {
     }
 
     @Override
-    public Optional<Patient> getPatient(String login, String password) throws UserDAOException, IOException {
-        Patient patient = jdbcTemplate.queryForObject(SQL_GET_PATIENT, new Object[]{login,password},new PatientMapper());
-        addDoctorAndTherapiesToPatient(patient);
-        return Optional.of(patient);
+    public Optional<Patient> getPatient(String login, String password) throws UserDAOException{
+        try {
+            Patient patient = jdbcTemplate.queryForObject(SQL_GET_PATIENT, new Object[]{login,password},new PatientMapper());
+            addDoctorAndTherapiesToPatient(patient);
+            return Optional.of(patient);
+        }
+        catch (DataAccessException e) {
+            throw new UserDAOException("ERROR getPatient");
+        }
+
     }
 
     @Override
-    public Optional<Patient> getPatientById(int id) throws UserDAOException, IOException {
-        Patient patient = jdbcTemplate.queryForObject(SQL_GET_PATIENT_BY_ID, new Object[]{id}, new PatientMapper());
-        addDoctorAndTherapiesToPatient(patient);
-        return Optional.of(patient);
+    public Optional<Patient> getPatientById(int id) throws UserDAOException {
+        try {
+            Patient patient = jdbcTemplate.queryForObject(SQL_GET_PATIENT_BY_ID, new Object[]{id}, new PatientMapper());
+            addDoctorAndTherapiesToPatient(patient);
+            return Optional.of(patient);
+        }
+        catch (DataAccessException e) {
+            throw new UserDAOException("ERROR getPatientByID");
+        }
+
     }
 
-    private void addDoctorAndTherapiesToPatient(Patient patient) {
-        int id_doctor = jdbcTemplate.queryForObject(SQL_GET_DOCTOR_ID, new Object[]{patient.getId()},new DoctorIDMapper());
-        patient.setDoctorId(id_doctor);
-        List<Integer> therapies_id = jdbcTemplate.query(SQL_GET_THERAPIY_ID, new TherapyIDMapper(),patient.getId());
-        patient.setTherapies(therapies_id);
+    private void addDoctorAndTherapiesToPatient(Patient patient) throws UserDAOException {
+        try {
+            int id_doctor = jdbcTemplate.queryForObject(SQL_GET_DOCTOR_ID, new Object[]{patient.getId()},new DoctorIDMapper());
+            patient.setDoctorId(id_doctor);
+            List<Integer> therapies_id = jdbcTemplate.query(SQL_GET_THERAPIY_ID, new TherapyIDMapper(),patient.getId());
+            patient.setTherapies(therapies_id);
+        }
+        catch (DataAccessException e) {
+            throw  new UserDAOException("ERROR add Doc to Pat");
+        }
+
     }
 }

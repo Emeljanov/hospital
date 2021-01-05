@@ -3,6 +3,7 @@ package by.emel.anton.model.dao.implementation.filedoa;
 import by.emel.anton.constants.Constants;
 import by.emel.anton.model.beans.users.doctors.Doctor;
 import by.emel.anton.model.beans.users.doctors.GeneralDoctor;
+import by.emel.anton.model.dao.exceptions.UserDAOException;
 import by.emel.anton.model.dao.interfaces.DoctorDAO;
 import by.emel.anton.service.StringToList;
 import org.springframework.stereotype.Repository;
@@ -18,15 +19,20 @@ import java.util.Optional;
 public class FileDoctorDAO implements DoctorDAO {
 
     @Override
-    public Optional<Doctor> getDoctor(String login, String password) throws IOException {
+    public Optional<Doctor> getDoctor(String login, String password) throws UserDAOException {
 
-        List<String> fileData = Files.readAllLines(Paths.get(Constants.FILE_PATH_DOCTORS));
+        try {
+            List<String> fileData = Files.readAllLines(Paths.get(Constants.FILE_PATH_DOCTORS));
 
-        return fileData
-                .stream()
-                .filter(s -> FileService.isLoginPasswordCorrect(s,login,password))
-                .map(this::createDoctorFromLine)
-                .findFirst();
+            return fileData
+                    .stream()
+                    .filter(s -> FileService.isLoginPasswordCorrect(s,login,password))
+                    .map(this::createDoctorFromLine)
+                    .findFirst();
+        }
+        catch (IOException e) {
+            throw new UserDAOException("ERROR getDoctor from file");
+        }
 
     }
 
