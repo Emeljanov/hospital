@@ -8,8 +8,12 @@ public abstract class Therapy {
     private String description;
     private LocalDate startDate;
     private LocalDate endDate;
+    private int id_patient;
 
-    public Therapy(int id ,String description, LocalDate startDate, LocalDate endDate) {
+    public Therapy() {
+    }
+
+    public Therapy(int id , String description, LocalDate startDate, LocalDate endDate) {
         this.id = id;
         this.description = description;
         this.startDate = startDate;
@@ -32,8 +36,32 @@ public abstract class Therapy {
         return endDate;
     }
 
+    public int getId_patient() {
+        return id_patient;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public void setStartDate(LocalDate startDate) {
+        this.startDate = startDate;
+    }
+
+    public void setEndDate(LocalDate endDate) {
+        this.endDate = endDate;
+    }
+
+    public void setId_patient(int id_patient) {
+        this.id_patient = id_patient;
+    }
+
     @Override
     public String toString() {
-        return id + Constants.SEPARATOR + description + Constants.SEPARATOR + startDate + Constants.SEPARATOR + endDate;
+        return id + Constants.SEPARATOR + description + Constants.SEPARATOR + startDate + Constants.SEPARATOR + endDate + Constants.SEPARATOR + id_patient;
     }
 }

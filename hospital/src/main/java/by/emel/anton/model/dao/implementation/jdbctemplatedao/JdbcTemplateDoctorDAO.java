@@ -2,6 +2,8 @@ package by.emel.anton.model.dao.implementation.jdbctemplatedao;
 
 import by.emel.anton.model.beans.users.doctors.Doctor;
 import by.emel.anton.model.dao.exceptions.UserDAOException;
+import by.emel.anton.model.dao.implementation.jdbctemplatedao.rowmappers.DoctorMapper;
+import by.emel.anton.model.dao.implementation.jdbctemplatedao.rowmappers.PatientIDMapper;
 import by.emel.anton.model.dao.interfaces.DoctorDAO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -15,7 +17,8 @@ import java.util.Optional;
 @Repository("DoctorJdbcTemplate")
 public class JdbcTemplateDoctorDAO implements DoctorDAO {
 
-    private static String SQL_GET_DOCTOR = "select * from users where login = ? and password = ?";
+    private static final String SQL_GET_DOCTOR = "select * from users where login = ? and password = ?";
+    private static final String SQL_GET_PATIENT_IDS = "select id_patient from patients where id_doctor = ?";
 
     private JdbcTemplate jdbcTemplate;
 
@@ -29,7 +32,9 @@ public class JdbcTemplateDoctorDAO implements DoctorDAO {
     public Optional<Doctor> getDoctor(String login, String password) throws UserDAOException, IOException {
 
      Doctor doctor = jdbcTemplate.queryForObject(SQL_GET_DOCTOR,new Object[]{login,password}, new DoctorMapper());
+     List<Integer> patient_ids = jdbcTemplate.query(SQL_GET_PATIENT_IDS,new PatientIDMapper(),doctor.getId());
+     doctor.setPatientsId(patient_ids);
 
-     return Optional.ofNullable(doctor);
+     return Optional.of(doctor);
     }
 }

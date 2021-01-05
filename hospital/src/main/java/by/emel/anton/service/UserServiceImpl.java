@@ -14,7 +14,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
-import javax.annotation.Resource;
 import java.io.IOException;
 import java.time.LocalDate;
 import java.util.Optional;
@@ -28,7 +27,7 @@ public class UserServiceImpl implements UserService {
     private DoctorDAO doctorDAO;
     private TherapyDAO therapyDAO;
 
-    @Autowired
+  /*  @Autowired
     public UserServiceImpl(
             @Qualifier("UserFromFile") UserDAO userDAO,
             @Qualifier("PatientFromFile")PatientDAO patientDAO,
@@ -39,7 +38,20 @@ public class UserServiceImpl implements UserService {
         this.patientDAO = patientDAO;
         this.doctorDAO = doctorDAO;
         this.therapyDAO = therapyDAO;
+    }*/
+    @Autowired
+    public UserServiceImpl(
+            @Qualifier("UserJdbcTemplate") UserDAO userDAO,
+            @Qualifier("PatientJdbcTemplate")PatientDAO patientDAO,
+            @Qualifier("DoctorJdbcTemplate")DoctorDAO doctorDAO,
+            @Qualifier("TherapyJdbcTemplate")TherapyDAO therapyDAO) {
+
+        this.userDAO = userDAO;
+        this.patientDAO = patientDAO;
+        this.doctorDAO = doctorDAO;
+        this.therapyDAO = therapyDAO;
     }
+
 
     @Override
     public void createUser(User user, String login, String password, String name, LocalDate birthday, boolean isSave) throws IOException {
@@ -94,6 +106,7 @@ public class UserServiceImpl implements UserService {
 
         int therapyId = therapyDAO.getNextID();
         Therapy therapy = new OrdinaryTherapy(therapyId,description,LocalDate.now(),endDate);
+        therapy.setId_patient(patient.getId());
         doctor.setTherapy(patient,therapy);
         updateUser(patient);
         saveTherapy(therapy);
@@ -112,7 +125,6 @@ public class UserServiceImpl implements UserService {
             } catch (IOException e) {
                 e.printStackTrace();
             }
-
         });
     }
 

@@ -1,4 +1,4 @@
-package by.emel.anton.model.dao.implementation.jdbctemplatedao;
+package by.emel.anton.model.dao.implementation.jdbctemplatedao.rowmappers;
 
 
 import by.emel.anton.model.beans.users.doctors.Doctor;
