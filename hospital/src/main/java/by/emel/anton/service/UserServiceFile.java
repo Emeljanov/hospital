@@ -21,7 +21,7 @@ import java.util.Optional;
 
 
 @Service("FromFile")
-public class UserServiceImpl implements UserService {
+public class UserServiceFile implements UserService {
 
     private final UserDAO userDAO;
     private final PatientDAO patientDAO;
@@ -29,7 +29,7 @@ public class UserServiceImpl implements UserService {
     private final TherapyDAO therapyDAO;
 
     @Autowired
-    public UserServiceImpl(
+    public UserServiceFile(
             @Qualifier("UserFromFile") UserDAO userDAO,
             @Qualifier("PatientFromFile")PatientDAO patientDAO,
             @Qualifier("DoctorFromFile")DoctorDAO doctorDAO,

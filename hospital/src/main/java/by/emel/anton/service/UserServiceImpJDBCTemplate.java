@@ -9,7 +9,7 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 //JdbcTemplateUserSerive
 @Service("FromJDBCTemplate")
-public class UserServiceImpJDBCTemplate extends UserServiceImpl {
+public class UserServiceImpJDBCTemplate extends UserServiceFile {
 
     @Autowired
     public UserServiceImpJDBCTemplate( @Qualifier("UserJdbcTemplate") UserDAO userDAO,

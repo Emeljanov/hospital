@@ -10,8 +10,8 @@ import by.emel.anton.model.beans.users.patients.Patient;
 import by.emel.anton.model.dao.exceptions.TerminalException;
 import by.emel.anton.model.dao.exceptions.TherapyDAOException;
 import by.emel.anton.model.dao.exceptions.UserDAOException;
-import by.emel.anton.service.UserServiceResolver;
 import by.emel.anton.service.UserService;
+import by.emel.anton.service.UserServiceResolver;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -39,7 +39,6 @@ public class TerminalProgram {
     private static final String ENTER_ENDDATE = "Enter end date (yyyy-mm-dd)";
     private static final String PROCESSING_PATIENT = "What do you want? See your therapies (TS)/See you therapy(T)?/exit(EXIT)";
     private static final String ENTER_ID_THERAPY = "Please, enter id therapy";
-    private static final String LOGGER_NAME = "LoggerForTerminal";
     private static final String ERROR_ENTER_DOCTOR = "ERROR: doctor -> login or password is incorrect";
     private static final String ERROR_NO_PATIENT_F_BY_ID = "ERROR: no patient found with this id";
     private static final String ERROR_ENTER_PATIENT = "ERROR: patient -> login or password is incorrect";
@@ -51,7 +50,7 @@ public class TerminalProgram {
     private static final Logger LOGGER = LoggerFactory.getLogger(TerminalProgram.class);
 
     private UserService userService;
-    private UserServiceResolver userServiceResolver;
+    private final UserServiceResolver userServiceResolver;
 
     @Autowired
     public TerminalProgram(UserServiceResolver userServiceResolver) {
@@ -299,7 +298,7 @@ public class TerminalProgram {
             return AnswerType.valueOf(line);
         }
         catch (IllegalArgumentException e) {
-            throw new TerminalException("ERROR: argument is incorrect");
+            throw new TerminalException(ERROR_ARG_INC);
         }
     }
 
