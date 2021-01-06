@@ -1,11 +1,13 @@
 package by.emel.anton.terminalprog;
 
+import by.emel.anton.constants.Constants;
 import by.emel.anton.model.beans.therapy.Therapy;
 import by.emel.anton.model.beans.users.User;
 import by.emel.anton.model.beans.users.doctors.Doctor;
 import by.emel.anton.model.beans.users.doctors.GeneralDoctor;
 import by.emel.anton.model.beans.users.patients.OrdinaryPatient;
 import by.emel.anton.model.beans.users.patients.Patient;
+import by.emel.anton.model.dao.exceptions.TerminalIllegalArgumentException;
 import by.emel.anton.model.dao.exceptions.TherapyDAOException;
 import by.emel.anton.model.dao.exceptions.UserDAOException;
 import by.emel.anton.service.UserService;
@@ -37,10 +39,12 @@ public class TerminalProgram {
     private static final String PROCESSING_PATIENT = "What do you want? See your therapies (TS)/See you therapy(T)?/exit(EXIT)";
     private static final String ENTER_ID_THERAPY = "Please, enter id therapy";
     private static final String LOGGER_NAME = "LoggerForTerminal";
+    private static final String ERROR_ENTER_DOCTOR = "ERROR: doctor -> login or password is incorrect";
+    private static final String ERROR_NO_PATIENT_F_BY_ID = "ERROR: no patient found with this id";
+    private static final String ERROR_ENTER_PATIENT = "ERROR: patient -> login or password is incorrect";
+    private static final String ERROR_ARG_INC = "ERROR: argument is incorrect";
+
     private final Logger logger = LoggerFactory.getLogger(LOGGER_NAME);
-
-
-
     private final UserService userService;
 
     @Autowired
@@ -58,19 +62,27 @@ public class TerminalProgram {
             while (flag_program) {
                 try {
                     processingProgram(scanner);
-                } catch ( UserDAOException e) {
-                    logger.error(e.getMessage());
+                } catch (UserDAOException | TherapyDAOException e) {
+                    logger.error(e.getClass().getSimpleName() + Constants.SPACE + e.getMessage());
                 }
             }
         }
     }
 
-    public void processingProgram(Scanner scanner) throws  UserDAOException {
+    public void processingProgram(Scanner scanner) throws  UserDAOException, TherapyDAOException {
 
         logger.info(START_PROGRAM);
         flag_doctor = true;
         flag_patient = true;
-        AnswerType answer = AnswerType.valueOf(scanner.nextLine());
+        AnswerType answer;
+
+        try {
+            answer = getAnswerAndCheckIllegalArgExp(scanner.nextLine());
+        }
+        catch (TerminalIllegalArgumentException e) {
+            logger.error(e.getClass().getSimpleName() + Constants.SPACE + e.getMessage());
+            return;
+        }
 
         switch (answer) {
             case D:
@@ -94,8 +106,16 @@ public class TerminalProgram {
     private void createNewUser(Scanner scanner) throws UserDAOException {
 
         logger.info(CREATE_NEW_USER);
-        AnswerType answer = AnswerType.valueOf(scanner.nextLine());
+        AnswerType answer;
         User user = null;
+
+        try {
+            answer = getAnswerAndCheckIllegalArgExp(scanner.nextLine());
+        }
+        catch (TerminalIllegalArgumentException e) {
+            logger.error(e.getClass().getSimpleName() + Constants.SPACE + e.getMessage());
+            return;
+        }
 
         switch (answer) {
             case D:
@@ -118,44 +138,41 @@ public class TerminalProgram {
         userService.createUser(user,login,password,name,birthday,true);
     }
 
-    private void enterDoctor(Scanner scanner) throws UserDAOException {
+    private void enterDoctor(Scanner scanner) throws UserDAOException, TherapyDAOException {
 
         logger.info(ENTER_LOGIN);
         String login = scanner.nextLine();
         logger.info(ENTER_PASSWORD);
         String password = scanner.nextLine();
-        Optional<Doctor> doctor = userService.getDoctor(login,password);
-
-
-    /*    doctor.ifPresent(doc -> {
-            logger.info(HI + doc.getName());
-            startProcessingDoctor(scanner,doc);
-        });*/
-        doctor.ifPresentOrElse(doc -> {}, () ->  );
+        Doctor doctor = userService
+                .getDoctor(login,password)
+                .orElseThrow(() -> new UserDAOException(ERROR_ENTER_DOCTOR));
+        logger.info(HI + doctor.getName());
+        startProcessingDoctor(scanner,doctor);
 
     }
 
-    private void startProcessingDoctor(Scanner scanner, Doctor doctor)  {
-        try {
-            while (flag_doctor) {
-                processingDoctor(scanner,doctor);
-            }
-            processingProgram(scanner);
+    private void startProcessingDoctor(Scanner scanner, Doctor doctor) throws UserDAOException, TherapyDAOException {
+
+        while (flag_doctor) {
+            processingDoctor(scanner,doctor);
         }
-        catch (UserDAOException e) {
-            logger.error(e.getMessage());
-        }
-
-
-
-
+        processingProgram(scanner);
 
     }
 
-    private void processingDoctor(Scanner scanner, Doctor doctor) throws UserDAOException {
+    private void processingDoctor(Scanner scanner, Doctor doctor) throws UserDAOException, TherapyDAOException {
 
         logger.info(PROCESSING_DOCTOR);
-        AnswerType answer = AnswerType.valueOf(scanner.nextLine());
+        AnswerType answer;
+
+        try {
+             answer = getAnswerAndCheckIllegalArgExp(scanner.nextLine());
+        }
+        catch (TerminalIllegalArgumentException e) {
+            logger.error(e.getClass().getSimpleName() + Constants.SPACE + e.getMessage());
+            return;
+        }
 
         switch (answer) {
             case ADD:
@@ -178,25 +195,18 @@ public class TerminalProgram {
 
     }
 
-    private void setTherapyToPatient(Scanner scanner, Doctor doctor) throws UserDAOException {
+    private void setTherapyToPatient(Scanner scanner, Doctor doctor) throws UserDAOException, TherapyDAOException {
 
         logger.info(ENTER_PATIENT_ID);
         int patientId = Integer.parseInt(scanner.nextLine().trim());
-
+        Patient patient = userService
+                .getPatientById(patientId)
+                .orElseThrow(() -> new UserDAOException(ERROR_NO_PATIENT_F_BY_ID));
         logger.info(ENTER_THERAPY_DESCR);
         String description = scanner.nextLine();
-
         logger.info(ENTER_ENDDATE);
         LocalDate endDate = LocalDate.parse(scanner.nextLine());
-
-        Optional<Patient> patient = userService.getPatientById(patientId);
-        patient.ifPresent(pat -> {
-            try {
-                userService.addTherapy(doctor,pat,description,endDate);
-            } catch (TherapyDAOException | UserDAOException e) {
-                e.printStackTrace();
-            }
-        });
+        userService.addTherapy(doctor,patient,description,endDate);
 
     }
 
@@ -208,23 +218,17 @@ public class TerminalProgram {
 
     }
 
-    private void enterPatient(Scanner scanner) throws UserDAOException {
+    private void enterPatient(Scanner scanner) throws UserDAOException, TherapyDAOException {
 
         logger.info(ENTER_LOGIN);
         String login = scanner.nextLine();
         logger.info(ENTER_PASSWORD);
         String password = scanner.nextLine();
-        Optional<Patient> patient = userService.getPatient(login,password);
-//else throws
-        patient.ifPresent(pat -> {
-            logger.info(HI + pat.getName());
-            try {
-                startProcessingPatient(scanner, pat);
-            } catch ( UserDAOException | TherapyDAOException e) {
-                e.printStackTrace();
-            }
-        });
-
+        Patient patient = userService
+                .getPatient(login,password)
+                .orElseThrow(() -> new UserDAOException(ERROR_ENTER_PATIENT));
+        logger.info(HI + patient.getName());
+        startProcessingPatient(scanner, patient);
 
     }
 
@@ -239,8 +243,15 @@ public class TerminalProgram {
     private void processingPatient(Scanner scanner, Patient patient) throws TherapyDAOException {
 
         logger.info(PROCESSING_PATIENT);
-        String line = scanner.nextLine();
-        AnswerType answer = AnswerType.valueOf(line);
+        AnswerType answer;
+
+        try {
+            answer = getAnswerAndCheckIllegalArgExp(scanner.nextLine());
+        }
+        catch (TerminalIllegalArgumentException e) {
+            logger.error(e.getClass().getSimpleName() + Constants.SPACE + e.getMessage());
+            return;
+        }
 
         switch (answer) {
             case TS:
@@ -255,6 +266,14 @@ public class TerminalProgram {
             case EXIT:
                 flag_patient = false;
                 break;
+        }
+    }
+    private AnswerType getAnswerAndCheckIllegalArgExp(String line) {
+        try{
+            return AnswerType.valueOf(line);
+        }
+        catch (IllegalArgumentException e) {
+            throw new TerminalIllegalArgumentException(ERROR_ARG_INC);
         }
     }
 }
