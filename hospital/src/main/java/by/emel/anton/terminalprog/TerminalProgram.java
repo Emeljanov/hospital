@@ -213,7 +213,7 @@ public class TerminalProgram {
     private void addPatientToDoctor(Scanner scanner, Doctor doctor) throws UserDAOException  {
 
         logger.info(ENTER_PATIENT_ID);
-        int patientId = scanner.nextInt();
+        int patientId = Integer.parseInt(scanner.nextLine().trim());
         userService.addPatientToDoctor(doctor,patientId);
 
     }

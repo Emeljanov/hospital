@@ -1,5 +1,6 @@
 package by.emel.anton.service;
 
+import by.emel.anton.constants.Constants;
 import by.emel.anton.model.beans.therapy.OrdinaryTherapy;
 import by.emel.anton.model.beans.therapy.Therapy;
 import by.emel.anton.model.beans.users.User;
@@ -15,7 +16,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
-import java.io.IOException;
 import java.time.LocalDate;
 import java.util.Optional;
 
@@ -116,17 +116,12 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public void addPatientToDoctor(Doctor doctor, int patientId) throws UserDAOException {
-        Optional<Patient> patient = getPatientById(patientId);
-        patient.ifPresent(pat -> {
-            doctor.setPatientId(patientId);
-            pat.setDoctorId(doctor.getId());
-            try {
-                updateUser(doctor);
-                updateUser(pat);
-            } catch (UserDAOException e) {
-                e.printStackTrace();
-            }
-        });
+        Patient patient = getPatientById(patientId)
+                .orElseThrow(() -> new UserDAOException(Constants.EXCEPTION_NO_ID));
+        doctor.setPatientId(patientId);
+        patient.setDoctorId(doctor.getId());
+        updateUser(doctor);
+        updateUser(patient);
     }
 
 }
