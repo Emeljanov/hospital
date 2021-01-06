@@ -9,6 +9,7 @@ public enum AnswerType {
    SET,
    EXIT,
    T,
-   TS
+   TS,
+   F
 
 }

@@ -10,11 +10,13 @@ import by.emel.anton.model.beans.users.patients.Patient;
 import by.emel.anton.model.dao.exceptions.TerminalException;
 import by.emel.anton.model.dao.exceptions.TherapyDAOException;
 import by.emel.anton.model.dao.exceptions.UserDAOException;
+import by.emel.anton.service.DataStorageService;
 import by.emel.anton.service.UserService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
 import java.time.LocalDate;
@@ -47,10 +49,16 @@ public class TerminalProgram {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(TerminalProgram.class);
 
-    private final UserService userService;
-    private final UserService userServiceJDBC;
+    private UserService userService;
+//    private final UserService userServiceJDBC;
+    private DataStorageService dataStorageService;
 
     @Autowired
+    public TerminalProgram(DataStorageService dataStorageService) {
+        this.dataStorageService = dataStorageService;
+    }
+
+  /*  @Autowired
     public TerminalProgram(
             @Qualifier("FromFile")UserService userService,
             @Qualifier("FromJDBCTemplate") UserService userServiceJDBC) {
@@ -58,7 +66,7 @@ public class TerminalProgram {
         this.userService = userService;
         this.userServiceJDBC = userServiceJDBC;
 
-    }
+    }*/
 
     private boolean flag_program = true;
     private boolean flag_doctor = true;
@@ -69,11 +77,32 @@ public class TerminalProgram {
         try(Scanner scanner = new Scanner(System.in)) {
             while (flag_program) {
                 try {
+                    chooseDataStorage(scanner);
                     processingProgram(scanner);
                 } catch (UserDAOException | TherapyDAOException e) {
                     LOGGER.error(e.getClass().getSimpleName() + Constants.SPACE + e.getMessage());
                 }
             }
+        }
+    }
+    private void chooseDataStorage(Scanner scanner) {
+        LOGGER.info("Choose data storage: file(F), jdbcTemplate(T)");
+        try {
+            AnswerType answer = getAnswerAndCheckIllegalArgExp(scanner.nextLine());
+            switch (answer) {
+                case F:
+                    LOGGER.info("from file");
+                    userService = dataStorageService.getUserServiceFile();
+                    break;
+                case T:
+                    LOGGER.info("from JDBCTemplate");
+                    userService = dataStorageService.getUserServiceJDBCTemplate();
+                    break;
+            }
+
+        }
+        catch (TerminalException e) {
+            LOGGER.error(e.getClass().getSimpleName() + Constants.SPACE + e.getMessage());
         }
     }
 
