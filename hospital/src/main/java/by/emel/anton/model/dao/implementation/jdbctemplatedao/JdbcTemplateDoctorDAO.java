@@ -1,5 +1,6 @@
 package by.emel.anton.model.dao.implementation.jdbctemplatedao;
 
+import by.emel.anton.constants.Constants;
 import by.emel.anton.model.beans.users.doctors.Doctor;
 import by.emel.anton.model.dao.exceptions.UserDAOException;
 import by.emel.anton.model.dao.implementation.jdbctemplatedao.rowmappers.DoctorMapper;
@@ -7,11 +8,9 @@ import by.emel.anton.model.dao.implementation.jdbctemplatedao.rowmappers.Patient
 import by.emel.anton.model.dao.interfaces.DoctorDAO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
-import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
-import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
 
@@ -42,7 +41,7 @@ public class JdbcTemplateDoctorDAO implements DoctorDAO {
 
      }
      catch (DataAccessException e) {
-         throw new UserDAOException("ERROR with login or password");
+         throw new UserDAOException(Constants.EXCEPTION_MESSAGE_LP_INCORRECT);
      }
     }
 }
