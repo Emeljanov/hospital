@@ -17,6 +17,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.time.DateTimeException;
 import java.time.LocalDate;
 import java.util.Optional;
 import java.util.Scanner;
@@ -156,7 +157,7 @@ public class TerminalProgram {
             LOGGER.info(ENTER_NAME);
             String name = scanner.nextLine();
             LOGGER.info(ENTER_BIRTHDAY);
-            LocalDate birthday = LocalDate.parse(scanner.nextLine());
+            LocalDate birthday = getDateAndCheckDateTimeExp(scanner.nextLine());
 
             userService.createUser(user,login,password,name,birthday,true);
         }
@@ -221,7 +222,7 @@ public class TerminalProgram {
 
     }
 
-    private void setTherapyToPatient(Scanner scanner, Doctor doctor) throws UserDAOException, TherapyDAOException {
+    private void setTherapyToPatient(Scanner scanner, Doctor doctor) throws UserDAOException, TherapyDAOException, TerminalException {
 
         LOGGER.info(ENTER_PATIENT_ID);
         int patientId = Integer.parseInt(scanner.nextLine().trim());
@@ -231,7 +232,7 @@ public class TerminalProgram {
         LOGGER.info(ENTER_THERAPY_DESCR);
         String description = scanner.nextLine();
         LOGGER.info(ENTER_ENDDATE);
-        LocalDate endDate = LocalDate.parse(scanner.nextLine());
+        LocalDate endDate = getDateAndCheckDateTimeExp(scanner.nextLine());
         userService.addTherapy(doctor,patient,description,endDate);
 
     }
@@ -297,6 +298,14 @@ public class TerminalProgram {
             return AnswerType.valueOf(line);
         }
         catch (IllegalArgumentException e) {
+            throw new TerminalException(ERROR_ARG_INC);
+        }
+    }
+    private LocalDate getDateAndCheckDateTimeExp(String line) throws TerminalException {
+        try {
+            return LocalDate.parse(line);
+        }
+        catch (DateTimeException e) {
             throw new TerminalException(ERROR_ARG_INC);
         }
     }
