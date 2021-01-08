@@ -40,19 +40,6 @@ public class UserServiceFile implements UserService {
         this.doctorDAO = doctorDAO;
         this.therapyDAO = therapyDAO;
     }
-  /*  @Autowired
-    public UserServiceImpl(
-            @Qualifier("UserJdbcTemplate") UserDAO userDAO,
-            @Qualifier("PatientJdbcTemplate")PatientDAO patientDAO,
-            @Qualifier("DoctorJdbcTemplate")DoctorDAO doctorDAO,
-            @Qualifier("TherapyJdbcTemplate")TherapyDAO therapyDAO) {
-
-        this.userDAO = userDAO;
-        this.patientDAO = patientDAO;
-        this.doctorDAO = doctorDAO;
-        this.therapyDAO = therapyDAO;
-    }*/
-
 
     @Override
     public void createUser(User user, String login, String password, String name, LocalDate birthday, boolean isSave) throws UserDAOException {

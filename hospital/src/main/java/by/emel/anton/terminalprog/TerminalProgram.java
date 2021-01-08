@@ -141,7 +141,7 @@ public class TerminalProgram {
         LOGGER.info(CREATE_NEW_USER);
 
         try {
-            User user = null;
+            User user;
             AnswerType answer = getAnswerAndCheckIllegalArgExp(scanner.nextLine());
             switch (answer) {
                 case D:

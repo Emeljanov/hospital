@@ -7,7 +7,7 @@ import by.emel.anton.model.dao.interfaces.UserDAO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
-//JdbcTemplateUserSerive
+
 @Service("FromJDBCTemplate")
 public class UserServiceImpJDBCTemplate extends UserServiceFile {
 
