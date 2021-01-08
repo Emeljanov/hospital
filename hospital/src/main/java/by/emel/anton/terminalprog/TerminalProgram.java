@@ -99,12 +99,12 @@ public class TerminalProgram {
     }
     public void processingProgram(Scanner scanner) {
         while (flag_processing_program) {
-            processingProgram1(scanner);
+            enterUser(scanner);
         }
     }
 
 
-    public void processingProgram1(Scanner scanner) {
+    public void enterUser(Scanner scanner) {
 
         LOGGER.info(START_PROGRAM);
         flag_doctor = true;
@@ -137,9 +137,9 @@ public class TerminalProgram {
     private void createNewUser(Scanner scanner) throws UserDAOException {
 
         LOGGER.info(CREATE_NEW_USER);
-        User user = null;
 
         try {
+            User user = null;
             AnswerType answer = getAnswerAndCheckIllegalArgExp(scanner.nextLine());
             switch (answer) {
                 case D:
@@ -149,22 +149,20 @@ public class TerminalProgram {
                     user = new OrdinaryPatient();
                     break;
             }
+            LOGGER.info(ENTER_LOGIN);
+            String login = scanner.nextLine();
+            LOGGER.info(ENTER_PASSWORD);
+            String password = scanner.nextLine();
+            LOGGER.info(ENTER_NAME);
+            String name = scanner.nextLine();
+            LOGGER.info(ENTER_BIRTHDAY);
+            LocalDate birthday = LocalDate.parse(scanner.nextLine());
+
+            userService.createUser(user,login,password,name,birthday,true);
         }
         catch (TerminalException e) {
             LOGGER.error(e.getClass().getSimpleName() + Constants.SPACE + e.getMessage());
-            return;
         }
-
-        LOGGER.info(ENTER_LOGIN);
-        String login = scanner.nextLine();
-        LOGGER.info(ENTER_PASSWORD);
-        String password = scanner.nextLine();
-        LOGGER.info(ENTER_NAME);
-        String name = scanner.nextLine();
-        LOGGER.info(ENTER_BIRTHDAY);
-        LocalDate birthday = LocalDate.parse(scanner.nextLine());
-
-        userService.createUser(user,login,password,name,birthday,true);
     }
 
     private void enterDoctor(Scanner scanner) throws UserDAOException, TherapyDAOException {
@@ -260,7 +258,7 @@ public class TerminalProgram {
 
     }
 
-    private void startProcessingPatient(Scanner scanner, Patient patient) throws  UserDAOException, TherapyDAOException {
+    private void startProcessingPatient(Scanner scanner, Patient patient) throws TherapyDAOException {
 
         while (flag_patient) {
             processingPatient(scanner,patient);
