@@ -18,8 +18,8 @@ public class UserServiceResolverImp implements UserServiceResolver{
             @Qualifier("FromFile")UserService userServiceFile,
             @Qualifier("FromJDBCTemplate")UserService userServiceJDBCTemplate) {
         map = new HashMap<>();
-        map.put(AnswerType.F,userServiceFile);
-        map.put(AnswerType.T,userServiceJDBCTemplate);
+        map.put(AnswerType.FILE,userServiceFile);
+        map.put(AnswerType.THERAPY,userServiceJDBCTemplate);
     }
 
     @Override

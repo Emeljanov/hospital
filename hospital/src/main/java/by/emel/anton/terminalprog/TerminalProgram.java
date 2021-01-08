@@ -25,26 +25,26 @@ import java.util.Scanner;
 @Component
 public class TerminalProgram {
 
-    private static final String START_PROGRAM = "Hi, you are a doctor or patient? (D/P). If you are new user - create account(N). Exit(EXIT)";
+    private static final String START_PROGRAM = "Hi, you are a doctor or patient? (DOCTOR/PATIENT). If you are new user - create account(NEW). Back(BACK)";
     private static final String ANSWER_DOCTOR = "You are the doctor.";
     private static final String ANSWER_PATIENT = "You are the patient";
-    private static final String CREATE_NEW_USER = "Create doctor(D) or patient(P)?";
+    private static final String CREATE_NEW_USER = "Create doctor(DOCTOR) or patient(PATIENT)?";
     private static final String ENTER_LOGIN = "Enter your login";
     private static final String ENTER_PASSWORD = "Enter your password";
     private static final String ENTER_NAME = "Enter your name";
     private static final String ENTER_BIRTHDAY = "Enter you birthday yyyy-mm-dd";
     private static final String HI = "Hi!";
-    private static final String PROCESSING_DOCTOR = "What do you want? See your patients (SEE)/Add new patient(ADD)/set therapy(SET)?/exit(EXIT)";
+    private static final String PROCESSING_DOCTOR = "What do you want? See your patients (SEE)/Add new patient(ADD)/set therapy(SET)?/back(BACK)";
     private static final String ENTER_PATIENT_ID = "Enter patient id";
     private static final String ENTER_THERAPY_DESCR = "Enter therapy description";
     private static final String ENTER_ENDDATE = "Enter end date (yyyy-mm-dd)";
-    private static final String PROCESSING_PATIENT = "What do you want? See your therapies (TS)/See you therapy(T)?/exit(EXIT)";
+    private static final String PROCESSING_PATIENT = "What do you want? See your therapies (THERAPIES)/See you therapy(THERAPY)?/Back(BACK)";
     private static final String ENTER_ID_THERAPY = "Please, enter id therapy";
     private static final String ERROR_ENTER_DOCTOR = "ERROR: doctor -> login or password is incorrect";
     private static final String ERROR_NO_PATIENT_F_BY_ID = "ERROR: no patient found with this id";
     private static final String ERROR_ENTER_PATIENT = "ERROR: patient -> login or password is incorrect";
     private static final String ERROR_ARG_INC = "ERROR: argument is incorrect";
-    private static final String SELECT_DATA_STORAGE = "Select data storage: file(F), jdbcTemplate(T) or EXIT";
+    private static final String SELECT_DATA_STORAGE = "Select data storage: file(FILE), jdbcTemplate(TEMPLATE) or EXIT";
     private static final String DATA_FROM_FILE = "Data from file";
     private static final String DATA_FROM_JDBC_TEMPLATE = "Data from jdbcTemplate";
 
@@ -77,12 +77,12 @@ public class TerminalProgram {
         try {
             AnswerType answer = getAnswerAndCheckIllegalArgExp(scanner.nextLine());
             switch (answer) {
-                case F:
+                case FILE:
                     LOGGER.info(DATA_FROM_FILE);
                     setUserService(userServiceResolver.resolveUserService(answer));
                     processingProgram(scanner);
                     break;
-                case T:
+                case TEMPLATE:
                     LOGGER.info(DATA_FROM_JDBC_TEMPLATE);
                     setUserService(userServiceResolver.resolveUserService(answer));
                     processingProgram(scanner);
@@ -114,18 +114,18 @@ public class TerminalProgram {
         try {
             AnswerType answer = getAnswerAndCheckIllegalArgExp(scanner.nextLine());
             switch (answer) {
-                case D:
+                case DOCTOR:
                     LOGGER.info(ANSWER_DOCTOR);
                     enterDoctor(scanner);
                     break;
-                case P:
+                case PATIENT:
                     LOGGER.info(ANSWER_PATIENT);
                     enterPatient(scanner);
                     break;
-                case N:
+                case NEW:
                     createNewUser(scanner);
                     break;
-                case EXIT:
+                case BACK:
                     flag_processing_program = false;
                     break;
                 default:throw new TerminalException(ERROR_ARG_INC);
@@ -144,10 +144,10 @@ public class TerminalProgram {
             User user;
             AnswerType answer = getAnswerAndCheckIllegalArgExp(scanner.nextLine());
             switch (answer) {
-                case D:
+                case DOCTOR:
                     user = new GeneralDoctor();
                     break;
-                case P:
+                case PATIENT:
                     user = new OrdinaryPatient();
                     break;
                 default:throw new TerminalException(ERROR_ARG_INC);
@@ -211,7 +211,7 @@ public class TerminalProgram {
                     LOGGER.info(AnswerType.SET.toString());
                     setTherapyToPatient(scanner, doctor);
                     break;
-                case EXIT:
+                case BACK:
                     LOGGER.info(AnswerType.EXIT.toString());
                     flag_doctor = false;
                     break;
@@ -277,16 +277,16 @@ public class TerminalProgram {
         try {
             AnswerType answer = getAnswerAndCheckIllegalArgExp(scanner.nextLine());
             switch (answer) {
-                case TS:
+                case THERAPIES:
                     LOGGER.info(patient.getTherapies().toString());
                     break;
-                case T:
+                case THERAPY:
                     LOGGER.info(ENTER_ID_THERAPY);
                     int therapyId = Integer.parseInt(scanner.nextLine().trim());
                     Optional<Therapy> therapy = userService.getTherapy(therapyId);
                     therapy.ifPresent(tp -> LOGGER.info(tp.toString()));
                     break;
-                case EXIT:
+                case BACK:
                     flag_patient = false;
                     break;
                 default:throw new TerminalException(ERROR_ARG_INC);

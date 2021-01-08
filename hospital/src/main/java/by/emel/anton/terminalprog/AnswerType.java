@@ -1,15 +1,17 @@
 package by.emel.anton.terminalprog;
 
 public enum AnswerType {
-   D,
-   P,
-   N,
+   DOCTOR,
+   PATIENT,
+   NEW,
    ADD,
    SEE,
    SET,
    EXIT,
-   T,
-   TS,
-   F
+   THERAPY,
+   THERAPIES,
+   FILE,
+   TEMPLATE,
+   BACK
 
 }
