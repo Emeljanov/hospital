@@ -128,6 +128,7 @@ public class TerminalProgram {
                 case EXIT:
                     flag_processing_program = false;
                     break;
+                default:throw new TerminalException(ERROR_ARG_INC);
             }
         }
         catch (TerminalException | UserDAOException | TherapyDAOException e) {
@@ -149,6 +150,7 @@ public class TerminalProgram {
                 case P:
                     user = new OrdinaryPatient();
                     break;
+                default:throw new TerminalException(ERROR_ARG_INC);
             }
             LOGGER.info(ENTER_LOGIN);
             String login = scanner.nextLine();
@@ -213,6 +215,7 @@ public class TerminalProgram {
                     LOGGER.info(AnswerType.EXIT.toString());
                     flag_doctor = false;
                     break;
+                default:throw new TerminalException(ERROR_ARG_INC);
             }
 
         }
@@ -286,6 +289,7 @@ public class TerminalProgram {
                 case EXIT:
                     flag_patient = false;
                     break;
+                default:throw new TerminalException(ERROR_ARG_INC);
             }
         }
         catch (TerminalException e) {
