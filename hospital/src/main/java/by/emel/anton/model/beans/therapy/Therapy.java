@@ -1,13 +1,26 @@
 package by.emel.anton.model.beans.therapy;
 
 import by.emel.anton.constants.Constants;
+
+import javax.persistence.*;
 import java.time.LocalDate;
 
+@Entity
+@Table(name = "therapies")
 public abstract class Therapy {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id_therapy")
     private int id;
+    @Column(unique = true, nullable = false)
     private String description;
+    @Column(name = "start_date", nullable = false)
     private LocalDate startDate;
+    @Column(name = "end_date", nullable = false)
     private LocalDate endDate;
+    @Column(name = "id_patient", nullable = false)
+
     private int idPatient;
 
     public Therapy() {
