@@ -94,7 +94,7 @@ public class UserServiceFile implements UserService {
 
         int therapyId = therapyDAO.getNextID();
         Therapy therapy = new OrdinaryTherapy(therapyId,description,LocalDate.now(),endDate);
-        therapy.setId_patient(patient.getId());
+        therapy.setIdPatient(patient.getId());
         doctor.setTherapy(patient,therapy);
         updateUser(patient);
         saveTherapy(therapy);

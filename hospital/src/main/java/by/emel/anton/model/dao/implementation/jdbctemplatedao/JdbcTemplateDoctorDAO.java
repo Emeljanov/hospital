@@ -21,11 +21,16 @@ public class JdbcTemplateDoctorDAO implements DoctorDAO {
     private static final String SQL_GET_DOCTOR = "select * from users where login = ? and password = ?";
     private static final String SQL_GET_PATIENT_IDS = "select id_patient from patients where id_doctor = ?";
 
+
     private JdbcTemplate jdbcTemplate;
+    private DoctorMapper doctorMapper;
+    private PatientIDMapper patientIDMapper;
 
     @Autowired
-    public void JdbcTemplateUserDao(JdbcTemplate jdbcTemplate) {
+    public void JdbcTemplateUserDao(JdbcTemplate jdbcTemplate,DoctorMapper doctorMapper, PatientIDMapper patientIDMapper) {
         this.jdbcTemplate = jdbcTemplate;
+        this.doctorMapper = doctorMapper;
+        this.patientIDMapper = patientIDMapper;
     }
 
 
@@ -33,8 +38,8 @@ public class JdbcTemplateDoctorDAO implements DoctorDAO {
     public Optional<Doctor> getDoctor(String login, String password) throws UserDAOException {
 
      try {
-         Doctor doctor = jdbcTemplate.queryForObject(SQL_GET_DOCTOR,new Object[]{login,password}, new DoctorMapper());
-         List<Integer> patient_ids = jdbcTemplate.query(SQL_GET_PATIENT_IDS,new PatientIDMapper(),doctor.getId());
+         Doctor doctor = jdbcTemplate.queryForObject(SQL_GET_DOCTOR,new Object[]{login,password},doctorMapper);
+         List<Integer> patient_ids = jdbcTemplate.query(SQL_GET_PATIENT_IDS,patientIDMapper,doctor.getId());
          doctor.setPatientsId(patient_ids);
 
          return Optional.of(doctor);

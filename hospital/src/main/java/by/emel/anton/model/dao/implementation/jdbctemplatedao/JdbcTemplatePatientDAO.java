@@ -11,7 +11,6 @@ import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
-import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
 
@@ -24,16 +23,22 @@ public class JdbcTemplatePatientDAO implements PatientDAO {
     private static final String SQL_GET_THERAPIY_ID = "select id_therapy from therapies where id_patient = ?";
 
     private JdbcTemplate jdbcTemplate;
+    private PatientMapper patientMapper;
+    private DoctorIDMapper doctorIDMapper;
+    private TherapyIDMapper therapyIDMapper;
 
     @Autowired
-    public JdbcTemplatePatientDAO(JdbcTemplate jdbcTemplate) {
+    public JdbcTemplatePatientDAO(JdbcTemplate jdbcTemplate, PatientMapper patientMapper, DoctorIDMapper doctorIDMapper, TherapyIDMapper therapyIDMapper) {
         this.jdbcTemplate = jdbcTemplate;
+        this.patientMapper = patientMapper;
+        this.doctorIDMapper = doctorIDMapper;
+        this.therapyIDMapper = therapyIDMapper;
     }
 
     @Override
     public Optional<Patient> getPatient(String login, String password) throws UserDAOException{
         try {
-            Patient patient = jdbcTemplate.queryForObject(SQL_GET_PATIENT, new Object[]{login,password},new PatientMapper());
+            Patient patient = jdbcTemplate.queryForObject(SQL_GET_PATIENT, new Object[]{login,password},patientMapper);
             addDoctorAndTherapiesToPatient(patient);
             return Optional.of(patient);
         }
@@ -46,7 +51,7 @@ public class JdbcTemplatePatientDAO implements PatientDAO {
     @Override
     public Optional<Patient> getPatientById(int id) throws UserDAOException {
         try {
-            Patient patient = jdbcTemplate.queryForObject(SQL_GET_PATIENT_BY_ID, new Object[]{id}, new PatientMapper());
+            Patient patient = jdbcTemplate.queryForObject(SQL_GET_PATIENT_BY_ID, new Object[]{id}, patientMapper);
             addDoctorAndTherapiesToPatient(patient);
             return Optional.of(patient);
         }
@@ -58,10 +63,10 @@ public class JdbcTemplatePatientDAO implements PatientDAO {
 
     private void addDoctorAndTherapiesToPatient(Patient patient) throws UserDAOException {
         try {
-            int id_doctor = jdbcTemplate.queryForObject(SQL_GET_DOCTOR_ID, new Object[]{patient.getId()},new DoctorIDMapper());
+            int id_doctor = jdbcTemplate.queryForObject(SQL_GET_DOCTOR_ID, new Object[]{patient.getId()},doctorIDMapper);
             patient.setDoctorId(id_doctor);
-            List<Integer> therapies_id = jdbcTemplate.query(SQL_GET_THERAPIY_ID, new TherapyIDMapper(),patient.getId());
-            patient.setTherapies(therapies_id);
+            List<Integer> therapyIds = jdbcTemplate.query(SQL_GET_THERAPIY_ID, therapyIDMapper,patient.getId());
+            patient.setTherapies(therapyIds);
         }
         catch (DataAccessException e) {
             throw  new UserDAOException("ERROR add Doc to Pat");

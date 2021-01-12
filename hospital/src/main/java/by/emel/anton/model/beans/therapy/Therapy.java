@@ -8,7 +8,7 @@ public abstract class Therapy {
     private String description;
     private LocalDate startDate;
     private LocalDate endDate;
-    private int id_patient;
+    private int idPatient;
 
     public Therapy() {
     }
@@ -36,8 +36,8 @@ public abstract class Therapy {
         return endDate;
     }
 
-    public int getId_patient() {
-        return id_patient;
+    public int getIdPatient() {
+        return idPatient;
     }
 
     public void setId(int id) {
@@ -56,12 +56,12 @@ public abstract class Therapy {
         this.endDate = endDate;
     }
 
-    public void setId_patient(int id_patient) {
-        this.id_patient = id_patient;
+    public void setIdPatient(int idPatient) {
+        this.idPatient = idPatient;
     }
 
     @Override
     public String toString() {
-        return id + Constants.SEPARATOR + description + Constants.SEPARATOR + startDate + Constants.SEPARATOR + endDate + Constants.SEPARATOR + id_patient;
+        return id + Constants.SEPARATOR + description + Constants.SEPARATOR + startDate + Constants.SEPARATOR + endDate + Constants.SEPARATOR + idPatient;
     }
 }

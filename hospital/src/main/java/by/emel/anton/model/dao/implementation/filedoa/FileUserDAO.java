@@ -27,10 +27,9 @@ public class FileUserDAO implements UserDAO {
 
             if(answer) return true;
 
-            else {
-                List<String> fileDataPatients = Files.readAllLines(Paths.get(Constants.FILE_PATH_PATIENTS));
-                return fileDataPatients.stream().anyMatch(s -> isLoginExistFilter(s,login));
-            }
+            List<String> fileDataPatients = Files.readAllLines(Paths.get(Constants.FILE_PATH_PATIENTS));
+            return fileDataPatients.stream().anyMatch(s -> isLoginExistFilter(s,login));
+
         }
         catch (IOException e) {
             throw new UserDAOException("ERROR in method isLoginExist in file");

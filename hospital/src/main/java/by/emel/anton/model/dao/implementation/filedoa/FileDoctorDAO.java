@@ -45,9 +45,9 @@ public class FileDoctorDAO implements DoctorDAO {
         LocalDate birthday = LocalDate.parse(userData[5]);
         String name = userData[4];
         List<Integer> patients = StringToList.toIntegerList(userData[6]);
-        Doctor Doctor = new GeneralDoctor(id,login,password,name,birthday);
-        patients.forEach(Doctor::setPatientId);
-        return Doctor;
+        Doctor doctor = new GeneralDoctor(id,login,password,name,birthday);
+        patients.forEach(doctor::setPatientId);
+        return doctor;
 
     }
 }

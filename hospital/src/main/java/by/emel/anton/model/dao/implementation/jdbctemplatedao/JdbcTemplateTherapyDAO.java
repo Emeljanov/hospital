@@ -29,7 +29,7 @@ public class JdbcTemplateTherapyDAO implements TherapyDAO {
         String desc = therapy.getDescription();
         LocalDate startDate = therapy.getStartDate();
         LocalDate endDate = therapy.getEndDate();
-        int id_patient = therapy.getId_patient();
+        int id_patient = therapy.getIdPatient();
 
         jdbcTemplate.update(SQL_SAVE_THERAPY,desc,startDate,endDate,id_patient);
     }
@@ -50,6 +50,6 @@ public class JdbcTemplateTherapyDAO implements TherapyDAO {
 
         Therapy therapy = jdbcTemplate.queryForObject(SQL_GET_THERAPY_BY_ID, new Object[]{id}, new TherapyMapper());
 
-        return Optional.of(therapy);
+        return Optional.ofNullable(therapy);
     }
 }
