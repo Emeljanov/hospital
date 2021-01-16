@@ -12,7 +12,6 @@ import java.util.List;
 public abstract class Doctor extends User {
 
     public Doctor() {
-
     }
 
     public Doctor(int id, String login, String password, String name, LocalDate birthday) {

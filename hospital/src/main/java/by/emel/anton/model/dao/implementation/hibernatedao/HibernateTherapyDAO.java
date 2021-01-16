@@ -11,19 +11,27 @@ import org.hibernate.cfg.Configuration;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.jpa.provider.HibernateUtils;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
+import javax.persistence.EntityManager;
+import java.util.List;
 import java.util.Optional;
 
 @Repository("TherapyHibernate")
+@Transactional
 public class HibernateTherapyDAO implements TherapyDAO {
 
-    @Autowired
-    HibbRepo hibbRepo;
 
+    EntityManager entityManager;
+
+    @Autowired
+    public HibernateTherapyDAO(EntityManager entityManager) {
+        this.entityManager = entityManager;
+    }
 
     @Override
     public void saveTherapy(Therapy therapy) throws TherapyDAOException {
-
+        entityManager.persist(therapy);
     }
 
     @Override
@@ -34,10 +42,12 @@ public class HibernateTherapyDAO implements TherapyDAO {
     @Override
     public Optional<Therapy> getTherapy(int id) throws TherapyDAOException {
 
-        return Optional.of(null);
+       /* return Optional.ofNullable(entityManager.find(OrdinaryTherapy.class,id));*/
+        return Optional.empty();
     }
 
-    public Optional<OrdinaryTherapy> getOrdTh(int id) {
-        return  hibbRepo.findById(id);
-    }
+//    public Optional<OrdinaryTherapy> getOrdTh(int id) {
+//        return  hibbRepo.findById(id);
+//    }
+
 }

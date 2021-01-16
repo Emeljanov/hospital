@@ -1,13 +1,15 @@
-create table therapies (
-   id_therapy INT not null auto_increment,
-   description varchar(45) not null,
-   start_date DATE not null,
-   end_date DATE not null,
-   id_patient INT not null,
-   primary key(id_therapy),
+create table therapy (
+   dtype VARCHAR(31) NOT NULL,
+   id INT NOT NULL auto_increment,
+   description VARCHAR(255) not null,
+   start_date DATE NOT NULL,
+   end_date DATE NOT NULL,
+   patient_id INT NOT NULL,
+   primary key(id),
    constraint idpatient_thr
-        foreign key (id_patient)
-        references patients (id_patient)
+--        foreign key (id_patient)
+          foreign key (patient_id)
+        references patient (patient_id)
 ) engine=InnoDB
 
 
