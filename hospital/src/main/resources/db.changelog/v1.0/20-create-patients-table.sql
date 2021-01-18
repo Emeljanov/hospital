@@ -1,15 +1,13 @@
 create table patient (
-    patient_id INT not null,
-    doctor_id INT not null,
-    primary key (patient_id),
+    id INT not null,
+    doctor_id INT,
+    primary key (id),
     constraint idpatient
---        foreign key(id_patient)
-        foreign key(patient_id)
+        foreign key(id)
         references user(id),
     constraint iddoctortopat
---        foreign key(id_doctor)
           foreign key(doctor_id)
-        references doctor(doctor_id)
+        references doctor(id)
 
 ) engine=InnoDB
 

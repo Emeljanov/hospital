@@ -7,9 +7,8 @@ create table therapy (
    patient_id INT NOT NULL,
    primary key(id),
    constraint idpatient_thr
---        foreign key (id_patient)
           foreign key (patient_id)
-        references patient (patient_id)
+        references patient (id)
 ) engine=InnoDB
 
 

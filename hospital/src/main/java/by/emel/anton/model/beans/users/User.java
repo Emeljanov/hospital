@@ -2,27 +2,31 @@ package by.emel.anton.model.beans.users;
 
 import by.emel.anton.constants.Constants;
 
+import javax.persistence.*;
 import java.time.LocalDate;
 
+@Entity
+@Inheritance(strategy = InheritanceType.JOINED)
 public abstract class User {
 
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
+
+    @Column(unique = true)
     private String login;
+    @Column
     private String password;
+//    @Column
+    @Enumerated(EnumType.STRING)
+    @Column(name = "user_type", columnDefinition ="ENUM('DOCTOR','PATIENT')", nullable = false)
     private UserType userType;
+    @Column
     private String name;
+    @Column
     private LocalDate birthday;
 
     public User() {
-    }
-
-    public User(int id, String login, String password, UserType userType, String name, LocalDate birthday) {
-        this.id =id;
-        this.login = login;
-        this.password = password;
-        this.userType = userType;
-        this.name = name;
-        this.birthday = birthday;
     }
 
     public int getId() {
@@ -75,13 +79,11 @@ public abstract class User {
 
     @Override
     public String toString() {
-        String result =
-                        id + Constants.SEPARATOR +
-                        login + Constants.SEPARATOR +
-                        password + Constants.SEPARATOR +
-                        userType.toString() + Constants.SEPARATOR +
-                        name + Constants.SEPARATOR +
-                        birthday;
-        return result;
+        return id + Constants.SEPARATOR +
+        login + Constants.SEPARATOR +
+        password + Constants.SEPARATOR +
+        userType.toString() + Constants.SEPARATOR +
+        name + Constants.SEPARATOR +
+        birthday;
     }
 }

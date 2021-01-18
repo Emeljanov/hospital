@@ -42,9 +42,11 @@ public class TerminalProgram {
     private static final String ERROR_NO_PATIENT_F_BY_ID = "ERROR: no patient found with this id";
     private static final String ERROR_ENTER_PATIENT = "ERROR: patient -> login or password is incorrect";
     private static final String ERROR_ARG_INC = "ERROR: argument is incorrect";
-    private static final String SELECT_DATA_STORAGE = "Select data storage: file(FILE), jdbcTemplate(TEMPLATE) or EXIT";
+    private static final String SELECT_DATA_STORAGE = "Select data storage: file(FILE), jdbcTemplate(TEMPLATE)," +
+            " hibernate(HIBERNATE) or EXIT";
     private static final String DATA_FROM_FILE = "Data from file";
     private static final String DATA_FROM_JDBC_TEMPLATE = "Data from jdbcTemplate";
+    private static final String DATA_FROM_HIBERNATE = "Data from hibernate";
 
     private static final Logger LOGGER = LoggerFactory.getLogger(TerminalProgram.class);
 
@@ -82,6 +84,11 @@ public class TerminalProgram {
                     break;
                 case TEMPLATE:
                     LOGGER.info(DATA_FROM_JDBC_TEMPLATE);
+                    setUserService(userServiceResolver.resolveUserService(answer));
+                    processingProgram(scanner);
+                    break;
+                case HIBERNATE:
+                    LOGGER.info(DATA_FROM_HIBERNATE);
                     setUserService(userServiceResolver.resolveUserService(answer));
                     processingProgram(scanner);
                     break;
@@ -235,7 +242,6 @@ public class TerminalProgram {
         LOGGER.info(ENTER_ENDDATE);
         LocalDate endDate = getDateAndCheckDateTimeExp(scanner.nextLine());
         userService.addTherapy(doctor,patient,description,endDate);
-
     }
 
     private void addPatientToDoctor(Scanner scanner, Doctor doctor) throws UserDAOException  {
@@ -276,7 +282,7 @@ public class TerminalProgram {
             AnswerType answer = getAnswerAndCheckIllegalArgExp(scanner.nextLine());
             switch (answer) {
                 case THERAPIES:
-                    LOGGER.info(patient.getTherapies().toString());
+                    LOGGER.info(patient.getTherapies().toString() + "\n");
                     break;
                 case THERAPY:
                     LOGGER.info(ENTER_ID_THERAPY);

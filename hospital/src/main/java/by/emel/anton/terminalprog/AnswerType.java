@@ -12,6 +12,7 @@ public enum AnswerType {
    THERAPIES,
    FILE,
    TEMPLATE,
-   BACK
+   BACK,
+   HIBERNATE
 
 }

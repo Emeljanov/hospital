@@ -33,6 +33,7 @@ public class JdbcTemplateUserDao implements UserDAO {
 
     @Override
     public boolean isLoginExist(String login) {
+//        id ??
         int id = 2;
         int count = jdbcTemplate.queryForObject(SQL_IS_LOGIN_EXIST, new Object[]{login,id},Integer.class);
         return count >= 1;
