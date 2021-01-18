@@ -26,7 +26,6 @@ public class HibernateTherapyDAO implements TherapyDAO {
     @Override
     public void saveTherapy(Therapy therapy) throws TherapyDAOException {
         entityManager.persist(therapy);
-//        entityManager.flush();
     }
 
     @Override

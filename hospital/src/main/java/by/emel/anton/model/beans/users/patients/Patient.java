@@ -13,7 +13,7 @@ import java.util.stream.Collectors;
 @Entity
 public class Patient extends User {
 
-    @ManyToOne(fetch = FetchType.EAGER, cascade = {CascadeType.MERGE, CascadeType.PERSIST})
+    @ManyToOne(fetch = FetchType.LAZY, cascade = {CascadeType.MERGE, CascadeType.PERSIST})
     @JoinColumn(name = "doctor_id")
     private Doctor doctor;
 

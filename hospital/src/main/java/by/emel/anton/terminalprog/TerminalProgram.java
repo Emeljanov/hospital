@@ -19,6 +19,7 @@ import java.time.DateTimeException;
 import java.time.LocalDate;
 import java.util.Optional;
 import java.util.Scanner;
+import java.util.stream.Collectors;
 
 @Component
 public class TerminalProgram {
@@ -282,7 +283,11 @@ public class TerminalProgram {
             AnswerType answer = getAnswerAndCheckIllegalArgExp(scanner.nextLine());
             switch (answer) {
                 case THERAPIES:
-                    LOGGER.info(patient.getTherapies().toString() + "\n");
+                    LOGGER.info(patient.getTherapies()
+                            .stream()
+                            .map(Therapy::getId)
+                            .collect(Collectors.toList())
+                            .toString());
                     break;
                 case THERAPY:
                     LOGGER.info(ENTER_ID_THERAPY);

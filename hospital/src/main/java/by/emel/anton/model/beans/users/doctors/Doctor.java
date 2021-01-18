@@ -19,7 +19,7 @@ public class Doctor extends User {
         setUserType(UserType.DOCTOR);
     }
 
-    @OneToMany(fetch = FetchType.EAGER, mappedBy = "doctor")
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "doctor")
     private List<Patient> patients;
 
     public List<Patient> getPatients() {
