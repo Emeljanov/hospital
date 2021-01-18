@@ -17,7 +17,7 @@ public class Patient extends User {
     @JoinColumn(name = "doctor_id")
     private Doctor doctor;
 
-    @OneToMany(fetch = FetchType.EAGER,mappedBy = "patient",cascade = CascadeType.ALL)
+    @OneToMany(fetch = FetchType.LAZY,mappedBy = "patient",cascade = CascadeType.ALL)
     private List<Therapy> therapies;
 
     public Patient() {
