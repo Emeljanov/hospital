@@ -4,8 +4,6 @@ import by.emel.anton.constants.Constants;
 import by.emel.anton.model.beans.therapy.Therapy;
 import by.emel.anton.model.beans.users.User;
 import by.emel.anton.model.beans.users.doctors.Doctor;
-import by.emel.anton.model.beans.users.doctors.GeneralDoctor;
-import by.emel.anton.model.beans.users.patients.OrdinaryPatient;
 import by.emel.anton.model.beans.users.patients.Patient;
 import by.emel.anton.model.dao.exceptions.TerminalException;
 import by.emel.anton.model.dao.exceptions.TherapyDAOException;
@@ -145,10 +143,10 @@ public class TerminalProgram {
             AnswerType answer = getAnswerAndCheckIllegalArgExp(scanner.nextLine());
             switch (answer) {
                 case DOCTOR:
-                    user = new GeneralDoctor();
+                    user = new Doctor();
                     break;
                 case PATIENT:
-                    user = new OrdinaryPatient();
+                    user = new Patient();
                     break;
                 default:throw new TerminalException(ERROR_ARG_INC);
             }

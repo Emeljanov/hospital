@@ -4,18 +4,13 @@ import by.emel.anton.model.beans.therapy.OrdinaryTherapy;
 import by.emel.anton.model.beans.therapy.Therapy;
 import by.emel.anton.model.dao.exceptions.TherapyDAOException;
 import by.emel.anton.model.dao.implementation.hibernatedao.HibernateTherapyDAO;
-import by.emel.anton.model.dao.interfaces.TherapyDAO;
-import by.emel.anton.terminalprog.TerminalProgram;
-import org.aspectj.weaver.ast.Or;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.boot.autoconfigure.domain.EntityScan;
 
 import java.time.LocalDate;
-import java.util.List;
 
 @SpringBootApplication
 //@EntityScan(basePackages = {"by/emel/anton/model/beans"})

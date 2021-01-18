@@ -1,7 +1,6 @@
 package by.emel.anton.model.dao.implementation.filedoa;
 
 import by.emel.anton.constants.Constants;
-import by.emel.anton.model.beans.users.patients.OrdinaryPatient;
 import by.emel.anton.model.beans.users.patients.Patient;
 import by.emel.anton.model.dao.exceptions.UserDAOException;
 import by.emel.anton.model.dao.interfaces.PatientDAO;
@@ -64,7 +63,7 @@ public class FilePatientDAO implements PatientDAO {
         LocalDate birthday = LocalDate.parse(userData[5]);
         int doctorId = Integer.parseInt(userData[6]);
         List<Integer> therapiesId = StringToList.toIntegerList(userData[7]);
-        Patient patient = new OrdinaryPatient(id,login,password,name,birthday,doctorId);
+        Patient patient = new Patient(id,login,password,name,birthday,doctorId);
         patient.setTherapies(therapiesId);
         return patient;
 

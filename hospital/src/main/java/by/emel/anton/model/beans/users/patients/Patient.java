@@ -7,12 +7,13 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
-public abstract class Patient extends User {
+public class Patient extends User {
 
     private int doctorId = 0;
     private List<Integer> therapies = new ArrayList<>();
 
     public Patient() {
+        setUserType(UserType.PATIENT);
     }
 
     public Patient(int id, String login, String password, String name, LocalDate birthday, int doctorId) {

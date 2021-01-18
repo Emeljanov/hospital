@@ -9,9 +9,10 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
-public abstract class Doctor extends User {
+public class Doctor extends User {
 
     public Doctor() {
+        setUserType(UserType.DOCTOR);
     }
 
     public Doctor(int id, String login, String password, String name, LocalDate birthday) {

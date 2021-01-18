@@ -2,7 +2,6 @@ package by.emel.anton.model.dao.implementation.filedoa;
 
 import by.emel.anton.constants.Constants;
 import by.emel.anton.model.beans.users.doctors.Doctor;
-import by.emel.anton.model.beans.users.doctors.GeneralDoctor;
 import by.emel.anton.model.dao.exceptions.UserDAOException;
 import by.emel.anton.model.dao.interfaces.DoctorDAO;
 import by.emel.anton.service.StringToList;
@@ -45,7 +44,7 @@ public class FileDoctorDAO implements DoctorDAO {
         LocalDate birthday = LocalDate.parse(userData[5]);
         String name = userData[4];
         List<Integer> patients = StringToList.toIntegerList(userData[6]);
-        Doctor doctor = new GeneralDoctor(id,login,password,name,birthday);
+        Doctor doctor = new Doctor(id,login,password,name,birthday);
         patients.forEach(doctor::setPatientId);
         return doctor;
 
