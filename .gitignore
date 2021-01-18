@@ -11,3 +11,5 @@ logs/
 *.zip
 *.tar.gz
 *.rar
+
+src/main/java/by/emel/anton/model/dao/implementation/filedoa/
