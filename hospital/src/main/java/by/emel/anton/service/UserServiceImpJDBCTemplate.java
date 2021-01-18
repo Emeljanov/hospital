@@ -12,10 +12,10 @@ import org.springframework.stereotype.Service;
 public class UserServiceImpJDBCTemplate extends UserServiceFile {
 
     @Autowired
-    public UserServiceImpJDBCTemplate( @Qualifier("UserJdbcTemplate") UserDAO userDAO,
-                                       @Qualifier("PatientJdbcTemplate")PatientDAO patientDAO,
-                                       @Qualifier("DoctorJdbcTemplate")DoctorDAO doctorDAO,
-                                       @Qualifier("TherapyJdbcTemplate")TherapyDAO therapyDAO) {
+    public UserServiceImpJDBCTemplate( /*@Qualifier("UserJdbcTemplate")*/ UserDAO userDAO,
+                                       /*@Qualifier("PatientJdbcTemplate")*/PatientDAO patientDAO,
+                                       /*@Qualifier("DoctorJdbcTemplate")*/DoctorDAO doctorDAO,
+                                       /*@Qualifier("TherapyJdbcTemplate")*/TherapyDAO therapyDAO) {
         super(userDAO, patientDAO, doctorDAO, therapyDAO);
     }
 }

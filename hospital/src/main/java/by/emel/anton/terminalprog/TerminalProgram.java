@@ -203,7 +203,7 @@ public class TerminalProgram {
                     break;
                 case SEE:
                     LOGGER.info(AnswerType.SEE.toString());
-                    System.out.println(doctor.getPatientsId());
+                    System.out.println(doctor.getPatients());
                     break;
                 case SET:
                     LOGGER.info(AnswerType.SET.toString());

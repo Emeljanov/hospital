@@ -28,12 +28,12 @@ public class UserServiceFile implements UserService {
     private final DoctorDAO doctorDAO;
     private final TherapyDAO therapyDAO;
 
-    @Autowired
+//    @Autowired
     public UserServiceFile(
-            @Qualifier("UserFromFile") UserDAO userDAO,
-            @Qualifier("PatientFromFile")PatientDAO patientDAO,
-            @Qualifier("DoctorFromFile")DoctorDAO doctorDAO,
-            @Qualifier("TherapyFromFile")TherapyDAO therapyDAO) {
+            /*@Qualifier("UserFromFile")*/ UserDAO userDAO,
+            /*@Qualifier("PatientFromFile")*/PatientDAO patientDAO,
+            /*@Qualifier("DoctorFromFile")*/DoctorDAO doctorDAO,
+            /*@Qualifier("TherapyFromFile")*/TherapyDAO therapyDAO) {
 
         this.userDAO = userDAO;
         this.patientDAO = patientDAO;
@@ -103,12 +103,14 @@ public class UserServiceFile implements UserService {
 
     @Override
     public void addPatientToDoctor(Doctor doctor, int patientId) throws UserDAOException {
-        Patient patient = getPatientById(patientId)
+//        refactor
+    }
+      /*  Patient patient = getPatientById(patientId)
                 .orElseThrow(() -> new UserDAOException(Constants.EXCEPTION_NO_ID));
         doctor.setPatientId(patientId);
         patient.setDoctorId(doctor.getId());
         updateUser(doctor);
         updateUser(patient);
-    }
+    }*/
 
 }
