@@ -42,9 +42,9 @@ public class Patient extends User {
 
     @Override
     public String toString() {
-        String s = (null != doctor) ? String.valueOf(doctor.getId()) : "no doctor";
+        String doctorId = (null != doctor) ? String.valueOf(doctor.getId()) : "no doctor";
 
-        return super.toString() + Constants.SEPARATOR + s + Constants.SEPARATOR
+        return super.toString() + Constants.SEPARATOR + doctorId + Constants.SEPARATOR
                 + therapies.stream().map(Therapy::getId).collect(Collectors.toList());
     }
 }

@@ -1,15 +1,15 @@
 package by.emel.anton.model.dao.implementation.hibernatedao;
 
+import by.emel.anton.constants.Constants;
 import by.emel.anton.model.beans.users.User;
 import by.emel.anton.model.dao.exceptions.UserDAOException;
 import by.emel.anton.model.dao.interfaces.UserDAO;
-import org.hibernate.query.internal.NativeQueryImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
-import javax.persistence.Query;
+import javax.persistence.NoResultException;
 
 @Repository("UserHibernate")
 @Transactional
@@ -39,5 +39,18 @@ public class HibernateUserDAO implements UserDAO {
     @Override
     public void saveUser(User user) throws UserDAOException {
         entityManager.persist(user);
+    }
+
+    protected static int getUserId(String login, String password, EntityManager entityManager) throws UserDAOException {
+        String queryGetDoctorId = "select id from User where login = ?0 and password = ?1";
+        try {
+            return (int) entityManager
+                    .createQuery(queryGetDoctorId)
+                    .setParameter(0, login)
+                    .setParameter(1, password)
+                    .getSingleResult();
+        } catch (NoResultException e) {
+            throw new UserDAOException(Constants.EXCEPTION_MESSAGE_LP_INCORRECT);
+        }
     }
 }

@@ -16,15 +16,12 @@ import by.emel.anton.model.dao.interfaces.UserDAO;
 import java.time.LocalDate;
 import java.util.Optional;
 
-
-
 public class UserServiceImp implements UserService {
 
     private final UserDAO userDAO;
     private final PatientDAO patientDAO;
     private final DoctorDAO doctorDAO;
     private final TherapyDAO therapyDAO;
-
 
     public UserServiceImp(
             UserDAO userDAO,
@@ -92,9 +89,6 @@ public class UserServiceImp implements UserService {
         therapy.setStartDate(LocalDate.now());
         therapy.setEndDate(endDate);
         therapy.setPatient(patient);
-        //FOR what?
-        /*doctor.setTherapy(patient,therapy);
-        updateUser(patient);*/
         saveTherapy(therapy);
 
     }

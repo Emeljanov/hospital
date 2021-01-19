@@ -15,14 +15,17 @@ public abstract class User {
 
     @Column(unique = true)
     private String login;
+
     @Column
     private String password;
-//    @Column
+
     @Enumerated(EnumType.STRING)
     @Column(name = "user_type", columnDefinition ="ENUM('DOCTOR','PATIENT')", nullable = false)
     private UserType userType;
+
     @Column
     private String name;
+
     @Column
     private LocalDate birthday;
 
