@@ -4,7 +4,6 @@ import by.emel.anton.model.dao.interfaces.DoctorDAO;
 import by.emel.anton.model.dao.interfaces.PatientDAO;
 import by.emel.anton.model.dao.interfaces.TherapyDAO;
 import by.emel.anton.model.dao.interfaces.UserDAO;
-import by.emel.anton.service.UserService;
 import by.emel.anton.service.UserServiceImp;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
