@@ -14,15 +14,15 @@ import java.time.LocalDate;
 
 public class JdbcTemplateUserDao implements UserDAO {
 
-    private static final String SQL_IS_LOGIN_EXIST = "select count(*) from users where login = ? and id = ?";
+    private static final String SQL_IS_LOGIN_EXIST = "select count(*) from user where login = ?";
     private static final String SQL_SAVE_USER =
-    "insert into users (login,password,name,birthday,user_type) values (?,?,?, ?,?)";
-    private static final String SQL_GET_USER_ID = "select id from users where login = ?";
-    private static final String SQL_SAVE_DOCTOR = "insert into doctors (id_doctor) values (?)";
-    private static final String SQL_SAVE_PATIENT = "insert into patients (id_patient, id_doctor) values (?,?)";
-    private static final String SQL_UPDATE_USER = "update users set password = ?, name = ?, birthday = ? where id = ?";
-    private static final String SQL_UPDATE_PATIENT = "update patients set id_doctor = ? where id_patient = ?";
-    private static final String SQL_MAX_ID = "select max(id) from users";
+    "insert into user (login,password,name,birthday,user_type) values (?,?,?, ?,?)";
+    private static final String SQL_GET_USER_ID = "select id from user where login = ?";
+    private static final String SQL_SAVE_DOCTOR = "insert into doctor (id) values (?)";
+    private static final String SQL_SAVE_PATIENT = "insert into patient (id, doctor_id) values (?,?)";
+    private static final String SQL_UPDATE_USER = "update user set password = ?, name = ?, birthday = ? where id = ?";
+    private static final String SQL_UPDATE_PATIENT = "update patient set doctor_id = ? where id = ?";
+    private static final String SQL_MAX_ID = "select max(id) from user";
 
     private JdbcTemplate jdbcTemplate;
 
@@ -33,9 +33,8 @@ public class JdbcTemplateUserDao implements UserDAO {
 
     @Override
     public boolean isLoginExist(String login) {
-//        id ??
-        int id = 2;
-        int count = jdbcTemplate.queryForObject(SQL_IS_LOGIN_EXIST, new Object[]{login,id},Integer.class);
+
+        int count = jdbcTemplate.queryForObject(SQL_IS_LOGIN_EXIST,new Object[]{login},Integer.class);
         return count >= 1;
     }
 
@@ -50,7 +49,7 @@ public class JdbcTemplateUserDao implements UserDAO {
         jdbcTemplate.update(SQL_UPDATE_USER, password,name,birthday,userId);
         if(UserType.PATIENT == userType) {
             Patient patient = (Patient)user;
-            int doctorId = patient.getDoctorId();
+            int doctorId = patient.getDoctor().getId();
             jdbcTemplate.update(SQL_UPDATE_PATIENT,doctorId,userId);
         }
     }
@@ -77,14 +76,13 @@ public class JdbcTemplateUserDao implements UserDAO {
         else  if(UserType.PATIENT == userType) {
             Patient patient = (Patient) user;
             jdbcTemplate.update(SQL_SAVE_USER,login,password,name,birthday.toString(),userType.toString());
-            int doctorId = patient.getDoctorId();
+            int doctorId = patient.getDoctor().getId();
             int patientId = getUsersId(user);
             jdbcTemplate.update(SQL_SAVE_PATIENT,patientId,doctorId);
         }
 
     }
 
-    @Override
     public int getNextId(User user) {
         Integer id =jdbcTemplate.queryForObject(SQL_MAX_ID,Integer.class);
         if( id == null) {

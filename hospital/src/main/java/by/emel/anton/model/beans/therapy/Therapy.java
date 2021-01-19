@@ -6,8 +6,6 @@ import by.emel.anton.model.beans.users.patients.Patient;
 import javax.persistence.*;
 import java.time.LocalDate;
 
-
-
 @Entity
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
 public abstract class Therapy {

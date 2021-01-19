@@ -10,6 +10,6 @@ import java.sql.SQLException;
 public class TherapyIDMapper implements RowMapper<Integer> {
     @Override
     public Integer mapRow(ResultSet resultSet, int i) throws SQLException {
-        return resultSet.getInt("id_therapy");
+        return resultSet.getInt("id");
     }
 }
