@@ -54,9 +54,17 @@ public class JdbcTemplatePatientDAO implements PatientDAO {
     }
 
     private void addDoctorAndTherapiesToPatient(Patient patient,JdbcTemplate jdbcTemplate)  {
-        Doctor doctor = jdbcTemplateDoctorDAO.getDoctorById(patient.getDoctor().getId());
-        patient.setDoctor(doctor);
+
+        Optional<Doctor> optionalDoctor = Optional.ofNullable(patient.getDoctor());
+        optionalDoctor.ifPresent( doctor -> {
+            try {
+                jdbcTemplateDoctorDAO.getDoctorById(doctor.getId()).ifPresent(patient::setDoctor);
+            } catch (UserDAOException e) {
+                e.printStackTrace();
+            }
+        });
         JdbcTemplateService.addTherapiesToPatient(patient,jdbcTemplate);
+
     }
 
 }

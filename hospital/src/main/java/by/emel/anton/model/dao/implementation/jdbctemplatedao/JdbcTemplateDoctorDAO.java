@@ -50,10 +50,16 @@ public class JdbcTemplateDoctorDAO implements DoctorDAO {
          throw new UserDAOException(Constants.EXCEPTION_MESSAGE_LP_INCORRECT);
      }
     }
-    public Doctor getDoctorById (int id) {
-        Doctor doctor = jdbcTemplate.queryForObject(SQL_GET_DOCTOR_BY_ID, new Object[]{id},doctorMapper);
-        addPatients(doctor);
-        return doctor;
+    public Optional<Doctor> getDoctorById (int id) throws UserDAOException {
+        try {
+            Optional<Doctor> doctor = Optional.ofNullable(jdbcTemplate.queryForObject(SQL_GET_DOCTOR_BY_ID, new Object[]{id},doctorMapper));
+            doctor.ifPresent(this::addPatients);
+            return doctor;
+        }
+        catch (DataAccessException e) {
+            throw new UserDAOException("ERROR getDoctorByID");
+        }
+
     }
 
     private void addPatients(Doctor doctor) {

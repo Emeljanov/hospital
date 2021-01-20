@@ -7,6 +7,7 @@ import org.springframework.stereotype.Component;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.Optional;
 
 @Component
 public class PatientMapper implements RowMapper<Patient> {
@@ -18,11 +19,13 @@ public class PatientMapper implements RowMapper<Patient> {
         patient.setPassword(resultSet.getString("password"));
         patient.setName(resultSet.getString("name"));
         patient.setBirthday(resultSet.getDate("birthday").toLocalDate());
-//this is only for doctor ID, then it will be replace by the real doctor
-        Doctor doctor = new Doctor();
-        doctor.setId(resultSet.getInt("doctor_id"));
-        patient.setDoctor(doctor);
-
+//this is only for doctor ID, then it will be replace by the real doctor <code 0!!!!!!!!!!!>
+        int doctorId = resultSet.getInt("doctor_id");
+        if (doctorId != 0) {
+            Doctor doctor = new Doctor();
+            doctor.setId(doctorId);
+            patient.setDoctor(doctor);
+        }
         return patient;
     }
 }
