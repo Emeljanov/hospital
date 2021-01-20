@@ -8,6 +8,7 @@ import by.emel.anton.model.dao.implementation.jdbctemplatedao.JdbcTemplateDoctor
 import by.emel.anton.model.dao.implementation.jdbctemplatedao.JdbcTemplatePatientDAO;
 import by.emel.anton.model.dao.implementation.jdbctemplatedao.JdbcTemplateTherapyDAO;
 import by.emel.anton.model.dao.interfaces.TherapyDAO;
+import by.emel.anton.terminalprog.TerminalProgram;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
@@ -20,15 +21,14 @@ import java.util.Optional;
 @Transactional
 public class Runner implements CommandLineRunner  {
 
-    /*@Autowired
-    private TerminalProgram terminalProgram;
-*/
     @Autowired
+    private TerminalProgram terminalProgram;
+   /* @Autowired
     private JdbcTemplateDoctorDAO doctorDAO;
     @Autowired
     JdbcTemplatePatientDAO patientDAO;
     @Autowired
-    JdbcTemplateTherapyDAO therapyDAO;
+    JdbcTemplateTherapyDAO therapyDAO;*/
     public static void main(String[] args) {
 
         SpringApplication.run(Runner.class,args);
@@ -37,16 +37,16 @@ public class Runner implements CommandLineRunner  {
     @Override
     public void run(String... args)  {
 
-        /*terminalProgram.startProgram();*/
-        try {
-          /* Optional<Patient> patient = patientDAO.getPatientById(3);
-           patient.ifPresent(patient1 -> System.out.println(patient1.getTherapies().toString()));*/
+        terminalProgram.startProgram();
+        /*try {
+          *//* Optional<Patient> patient = patientDAO.getPatientById(3);
+           patient.ifPresent(patient1 -> System.out.println(patient1.getTherapies().toString()));*//*
             Optional<Therapy> therapy = therapyDAO.getTherapy(2);
             therapy.ifPresent(th -> System.out.println(th.getPatient().getDoctor().getPatients().toString()));
 
         } catch (UserDAOException e) {
             e.printStackTrace();
-        }
+        }*/
 
     }
 }

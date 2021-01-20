@@ -28,7 +28,7 @@ public interface UserService {
 
     void updateUser(User user) throws UserDAOException;
 
-    void addTherapy(Doctor doctor, Patient patient, String description, LocalDate endDate) throws TherapyDAOException, UserDAOException;
+    void addTherapy(Patient patient, String description, LocalDate endDate) throws TherapyDAOException, UserDAOException;
 
     void addPatientToDoctor(Doctor doctor, int patientId) throws UserDAOException;
 

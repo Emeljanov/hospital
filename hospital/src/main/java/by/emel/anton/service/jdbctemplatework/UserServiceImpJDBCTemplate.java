@@ -19,4 +19,5 @@ public class UserServiceImpJDBCTemplate extends UserServiceImp {
                                        @Qualifier("TherapyJdbcTemplate")TherapyDAO therapyDAO) {
         super(userDAO, patientDAO, doctorDAO, therapyDAO);
     }
+
 }

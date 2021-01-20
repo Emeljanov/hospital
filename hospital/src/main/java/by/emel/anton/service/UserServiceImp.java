@@ -82,13 +82,14 @@ public class UserServiceImp implements UserService {
     }
 
     @Override
-    public void addTherapy(Doctor doctor, Patient patient, String description, LocalDate endDate) throws UserDAOException, TherapyDAOException {
+    public void addTherapy(Patient patient, String description, LocalDate endDate) throws UserDAOException, TherapyDAOException {
 
         Therapy therapy = new OrdinaryTherapy();
         therapy.setDescription(description);
         therapy.setStartDate(LocalDate.now());
         therapy.setEndDate(endDate);
         therapy.setPatient(patient);
+        patient.addTherapy(therapy);
         saveTherapy(therapy);
 
     }
@@ -101,7 +102,7 @@ public class UserServiceImp implements UserService {
         patient.setDoctor(doctor);
         doctor.addPatient(patient);
         updateUser(patient);
-        updateUser(doctor);
+
     }
 
 }

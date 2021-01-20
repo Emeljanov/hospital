@@ -1,6 +1,5 @@
 package by.emel.anton.model.dao.implementation.jdbctemplatedao.rowmappers;
 
-
 import by.emel.anton.model.beans.users.doctors.Doctor;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Component;

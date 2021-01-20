@@ -40,6 +40,10 @@ public class Patient extends User {
         this.therapies = therapies;
     }
 
+    public void addTherapy(Therapy therapy) {
+        therapies.add(therapy);
+    }
+
     @Override
     public String toString() {
         String doctorId = (null != doctor) ? String.valueOf(doctor.getId()) : "no doctor";

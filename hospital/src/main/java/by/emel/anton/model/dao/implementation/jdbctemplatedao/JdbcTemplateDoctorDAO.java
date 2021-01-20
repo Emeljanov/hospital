@@ -6,7 +6,6 @@ import by.emel.anton.model.beans.users.patients.Patient;
 import by.emel.anton.model.dao.exceptions.UserDAOException;
 import by.emel.anton.model.dao.implementation.jdbctemplatedao.rowmappers.DoctorMapper;
 import by.emel.anton.model.dao.implementation.jdbctemplatedao.rowmappers.PatientMapper;
-import by.emel.anton.model.dao.implementation.jdbctemplatedao.rowmappers.TherapyMapper;
 import by.emel.anton.model.dao.interfaces.DoctorDAO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
@@ -23,23 +22,19 @@ public class JdbcTemplateDoctorDAO implements DoctorDAO {
     private static final String SQL_GET_DOCTOR = "select * from user where login = ? and password = ?";
     private static final String SQL_GET_DOCTOR_BY_ID = "select * from user where id = ?";
     private static final String SQL_GET_PATIENT = "select u.*, p.doctor_id from user u inner join patient p ON p.id = u.id and p.doctor_id = ?";
-    private static final String SQL_GET_THERAPIES = "select * from therapy where patient_id = ?";
 
     private JdbcTemplate jdbcTemplate;
     private DoctorMapper doctorMapper;
     private PatientMapper patientMapper;
-    private TherapyMapper therapyMapper;
 
     @Autowired
     public void JdbcTemplateUserDao(
             JdbcTemplate jdbcTemplate,
             DoctorMapper doctorMapper,
-            PatientMapper patientMapper,
-            TherapyMapper therapyMapper) {
+            PatientMapper patientMapper) {
         this.jdbcTemplate = jdbcTemplate;
         this.doctorMapper = doctorMapper;
         this.patientMapper = patientMapper;
-        this.therapyMapper = therapyMapper;
     }
 
     @Override
