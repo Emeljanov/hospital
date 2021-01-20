@@ -19,7 +19,7 @@ public class PatientMapper implements RowMapper<Patient> {
         patient.setPassword(resultSet.getString("password"));
         patient.setName(resultSet.getString("name"));
         patient.setBirthday(resultSet.getDate("birthday").toLocalDate());
-//this is only for doctor ID, then it will be replace by the real doctor <code 0!!!!!!!!!!!>
+//this is only for doctor ID, then it will be replace by the real doctor
         int doctorId = resultSet.getInt("doctor_id");
         if (doctorId != 0) {
             Doctor doctor = new Doctor();

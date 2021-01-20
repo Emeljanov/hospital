@@ -64,7 +64,5 @@ public class JdbcTemplatePatientDAO implements PatientDAO {
             }
         });
         JdbcTemplateService.addTherapiesToPatient(patient,jdbcTemplate);
-
     }
-
 }

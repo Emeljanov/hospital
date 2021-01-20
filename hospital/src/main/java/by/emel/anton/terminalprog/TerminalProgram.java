@@ -215,7 +215,7 @@ public class TerminalProgram {
                     break;
                 case SET:
                     LOGGER.info(AnswerType.SET.toString());
-                    setTherapyToPatient(scanner);
+                    setTherapyToPatient(doctor,scanner);
                     break;
                 case BACK:
                     LOGGER.info(AnswerType.EXIT.toString());
@@ -231,13 +231,17 @@ public class TerminalProgram {
 
     }
 
-    private void setTherapyToPatient(Scanner scanner) throws UserDAOException, TherapyDAOException, TerminalException {
+    private void setTherapyToPatient(Doctor doctor,Scanner scanner) throws UserDAOException, TherapyDAOException, TerminalException {
 
         LOGGER.info(ENTER_PATIENT_ID);
         int patientId = Integer.parseInt(scanner.nextLine().trim());
-        Patient patient = userService
+        /*Patient patient = userService
                 .getPatientById(patientId)
-                .orElseThrow(() -> new UserDAOException(ERROR_NO_PATIENT_F_BY_ID));
+                .orElseThrow(() -> new UserDAOException(ERROR_NO_PATIENT_F_BY_ID));*/
+        Optional<Patient> optPatient = doctor.getPatients().stream().filter(pat -> pat.getId() == patientId).findFirst();
+        //or throw, id therapy hz
+        if(!optPatient.isPresent()) return;
+        Patient patient = optPatient.get();
         LOGGER.info(ENTER_THERAPY_DESCR);
         String description = scanner.nextLine();
         LOGGER.info(ENTER_ENDDATE);
