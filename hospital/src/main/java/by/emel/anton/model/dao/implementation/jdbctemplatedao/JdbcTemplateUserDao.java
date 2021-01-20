@@ -83,16 +83,6 @@ public class JdbcTemplateUserDao implements UserDAO {
 
     }
 
-    public int getNextId(User user) {
-        Integer id =jdbcTemplate.queryForObject(SQL_MAX_ID,Integer.class);
-        if( id == null) {
-            return 1;
-        }
-        else {
-            return id+1;
-        }
-    }
-
     private int getUsersId(User user) {
         String login = user.getLogin();
         return jdbcTemplate.queryForObject(SQL_GET_USER_ID, new Object[]{login},Integer.class);

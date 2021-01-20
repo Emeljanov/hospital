@@ -267,7 +267,7 @@ public class TerminalProgram {
 
     }
 
-    private void startProcessingPatient(Scanner scanner, Patient patient) throws TherapyDAOException {
+    private void startProcessingPatient(Scanner scanner, Patient patient) throws TherapyDAOException, UserDAOException {
 
         while (flag_patient) {
             processingPatient(scanner,patient);
@@ -275,7 +275,7 @@ public class TerminalProgram {
         processingProgram(scanner);
     }
 
-    private void processingPatient(Scanner scanner, Patient patient) throws TherapyDAOException {
+    private void processingPatient(Scanner scanner, Patient patient) throws TherapyDAOException, UserDAOException {
 
         LOGGER.info(PROCESSING_PATIENT);
 

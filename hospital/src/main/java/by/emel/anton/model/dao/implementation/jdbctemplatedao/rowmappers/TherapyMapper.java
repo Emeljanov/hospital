@@ -15,15 +15,14 @@ public class TherapyMapper implements RowMapper<Therapy> {
     public Therapy mapRow(ResultSet resultSet, int i) throws SQLException {
         Therapy therapy = new OrdinaryTherapy();
         therapy.setId(resultSet.getInt("id"));
-
-        Patient patient = new Patient();
-        patient.setId(resultSet.getInt("patient_id"));
-
-        therapy.setPatient(patient);
-
         therapy.setStartDate(resultSet.getDate("start_date").toLocalDate());
         therapy.setEndDate(resultSet.getDate("end_date").toLocalDate());
         therapy.setDescription(resultSet.getString("description"));
+//this is only for patient ID, then it will be replace by the real doctor
+        Patient patient = new Patient();
+        patient.setId(resultSet.getInt("patient_id"));
+        therapy.setPatient(patient);
+
         return therapy;
     }
 }

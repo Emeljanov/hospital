@@ -1,6 +1,8 @@
 package by.emel.anton.model.dao.implementation.jdbctemplatedao;
 
 import by.emel.anton.model.beans.therapy.Therapy;
+import by.emel.anton.model.beans.users.patients.Patient;
+import by.emel.anton.model.dao.exceptions.UserDAOException;
 import by.emel.anton.model.dao.implementation.jdbctemplatedao.rowmappers.TherapyMapper;
 import by.emel.anton.model.dao.interfaces.TherapyDAO;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,13 +19,14 @@ public class JdbcTemplateTherapyDAO implements TherapyDAO {
     private static final String SQL_SAVE_THERAPY =
             "insert into therapy (description, start_date, end_date,patient_id) values (?, ?,?, ?)";
     private static final String SQL_GET_THERAPY_BY_ID = "select * from therapy where id = ?";
-    private static final String SQL_GET_MAX_ID = "select max(id) from therapy";
 
     JdbcTemplate jdbcTemplate;
+    JdbcTemplatePatientDAO jdbcTemplatePatientDAO;
 
     @Autowired
-    public JdbcTemplateTherapyDAO(JdbcTemplate jdbcTemplate) {
+    public JdbcTemplateTherapyDAO(JdbcTemplate jdbcTemplate,JdbcTemplatePatientDAO jdbcTemplatePatientDAO) {
         this.jdbcTemplate = jdbcTemplate;
+        this.jdbcTemplatePatientDAO = jdbcTemplatePatientDAO;
     }
 
     @Override
@@ -36,27 +39,13 @@ public class JdbcTemplateTherapyDAO implements TherapyDAO {
         jdbcTemplate.update(SQL_SAVE_THERAPY,desc,startDate,endDate,patientId);
     }
 
-    public int getNextID() {
-        Integer id =jdbcTemplate.queryForObject(SQL_GET_MAX_ID,Integer.class);
-        if( id == null) {
-            return 1;
-        }
-        else {
-            return id + 1;
-        }
-    }
-
     @Override
-    public Optional<Therapy> getTherapy(int id) {
-
-        int patientId = 1;
-        int doctorId = 1;
-        List<Integer> patTrpsInt = new ArrayList<>();
-        List<Integer> doctPatsInt = new ArrayList<>();
-
+    public Optional<Therapy> getTherapy(int id) throws UserDAOException {
 
         Therapy therapy = jdbcTemplate.queryForObject(SQL_GET_THERAPY_BY_ID, new Object[]{id}, new TherapyMapper());
-
+        Optional<Patient> patient = jdbcTemplatePatientDAO.getPatientById(therapy.getPatient().getId());
+        patient.ifPresent(pat -> therapy.setPatient(pat));
         return Optional.ofNullable(therapy);
+
     }
 }

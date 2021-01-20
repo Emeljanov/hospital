@@ -72,7 +72,7 @@ public class UserServiceImp implements UserService {
     }
 
     @Override
-    public Optional<Therapy> getTherapy(int id) throws TherapyDAOException {
+    public Optional<Therapy> getTherapy(int id) throws TherapyDAOException, UserDAOException {
         return therapyDAO.getTherapy(id);
     }
 
