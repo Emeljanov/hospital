@@ -13,6 +13,8 @@ import by.emel.anton.model.dao.interfaces.TherapyDAO;
 import by.emel.anton.model.dao.interfaces.UserDAO;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 public class UserServiceImp implements UserService {
@@ -88,9 +90,13 @@ public class UserServiceImp implements UserService {
         therapy.setStartDate(LocalDate.now());
         therapy.setEndDate(endDate);
         therapy.setPatient(patient);
-        patient.addTherapy(therapy);
+        Optional<List<Therapy>> therapie = Optional.ofNullable(patient.getTherapies());
+        therapie.ifPresentOrElse( t -> t.add(therapy),
+                () -> {List<Therapy> t = new ArrayList<>();
+                t.add(therapy);
+                patient.setTherapies(t);
+        });
         saveTherapy(therapy);
-
     }
 
     @Override
