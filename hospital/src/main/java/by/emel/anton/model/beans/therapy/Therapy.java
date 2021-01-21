@@ -7,7 +7,6 @@ import javax.persistence.*;
 import java.time.LocalDate;
 
 @Entity
-@Inheritance(strategy = InheritanceType.SINGLE_TABLE)
 public class Therapy {
 
     @Id

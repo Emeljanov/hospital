@@ -15,7 +15,7 @@ import java.util.Optional;
 @Repository("JdbcTemplateTherapyDAO")
 public class JdbcTemplateTherapyDAO implements TherapyDAO {
     private static final String SQL_SAVE_THERAPY =
-            "insert into therapy (dtype ,description, start_date, end_date,patient_id) values (?,?, ?,?, ?)";
+            "insert into therapy (description, start_date, end_date,patient_id) values (?, ?, ?, ?)";
     private static final String SQL_GET_THERAPY_BY_ID = "select * from therapy where id = ?";
 
     JdbcTemplate jdbcTemplate;
@@ -33,9 +33,8 @@ public class JdbcTemplateTherapyDAO implements TherapyDAO {
         LocalDate startDate = therapy.getStartDate();
         LocalDate endDate = therapy.getEndDate();
         int patientId = therapy.getPatient().getId();
-        String dtype = therapy.getClass().getSimpleName();
 
-        jdbcTemplate.update(SQL_SAVE_THERAPY, dtype, desc, startDate, endDate, patientId);
+        jdbcTemplate.update(SQL_SAVE_THERAPY, desc, startDate, endDate, patientId);
     }
 
     @Override

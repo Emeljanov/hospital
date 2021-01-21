@@ -1,6 +1,5 @@
 package by.emel.anton.model.dao.implementation.jdbctemplatedao.rowmappers;
 
-import by.emel.anton.model.beans.therapy.OrdinaryTherapy;
 import by.emel.anton.model.beans.therapy.Therapy;
 import by.emel.anton.model.beans.users.patients.Patient;
 import org.springframework.jdbc.core.RowMapper;
@@ -13,7 +12,7 @@ import java.sql.SQLException;
 public class TherapyMapper implements RowMapper<Therapy> {
     @Override
     public Therapy mapRow(ResultSet resultSet, int i) throws SQLException {
-        Therapy therapy = new OrdinaryTherapy();
+        Therapy therapy = new Therapy();
         therapy.setId(resultSet.getInt("id"));
         therapy.setStartDate(resultSet.getDate("start_date").toLocalDate());
         therapy.setEndDate(resultSet.getDate("end_date").toLocalDate());

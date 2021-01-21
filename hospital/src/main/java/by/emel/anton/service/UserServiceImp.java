@@ -101,7 +101,5 @@ public class UserServiceImp implements UserService {
         patient.setDoctor(doctor);
         doctor.addPatient(patient);
         updateUser(patient);
-
     }
-
 }
