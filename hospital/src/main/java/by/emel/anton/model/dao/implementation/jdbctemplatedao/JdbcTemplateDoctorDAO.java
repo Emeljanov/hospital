@@ -40,34 +40,33 @@ public class JdbcTemplateDoctorDAO implements DoctorDAO {
     @Override
     public Optional<Doctor> getDoctor(String login, String password) throws UserDAOException {
 
-     try {
-         Doctor doctor = jdbcTemplate.queryForObject(SQL_GET_DOCTOR,new Object[]{login,password},doctorMapper);
-         addPatients(doctor);
-         return Optional.of(doctor);
-
-     }
-     catch (DataAccessException e) {
-         throw new UserDAOException(Constants.EXCEPTION_MESSAGE_LP_INCORRECT);
-     }
-    }
-    public Optional<Doctor> getDoctorById (int id) throws UserDAOException {
         try {
-            Optional<Doctor> doctor = Optional.ofNullable(jdbcTemplate.queryForObject(SQL_GET_DOCTOR_BY_ID, new Object[]{id},doctorMapper));
+            Doctor doctor = jdbcTemplate.queryForObject(SQL_GET_DOCTOR, new Object[]{login, password}, doctorMapper);
+            addPatients(doctor);
+            return Optional.of(doctor);
+
+        } catch (DataAccessException e) {
+            throw new UserDAOException(Constants.EXCEPTION_MESSAGE_LP_INCORRECT);
+        }
+    }
+
+    public Optional<Doctor> getDoctorById(int id) throws UserDAOException {
+        try {
+            Optional<Doctor> doctor = Optional.ofNullable(jdbcTemplate.queryForObject(SQL_GET_DOCTOR_BY_ID, new Object[]{id}, doctorMapper));
             doctor.ifPresent(this::addPatients);
             return doctor;
-        }
-        catch (DataAccessException e) {
+        } catch (DataAccessException e) {
             throw new UserDAOException("ERROR getDoctorByID");
         }
 
     }
 
     private void addPatients(Doctor doctor) {
-        List<Patient> patients = jdbcTemplate.query(SQL_GET_PATIENT,patientMapper,doctor.getId());
+        List<Patient> patients = jdbcTemplate.query(SQL_GET_PATIENT, patientMapper, doctor.getId());
         patients.forEach(patient -> {
             patient.setDoctor(doctor);
-            JdbcTemplateService.addTherapiesToPatient(patient,jdbcTemplate);
-        } );
+            JdbcTemplateService.addTherapiesToPatient(patient, jdbcTemplate);
+        });
         doctor.setPatients(patients);
     }
 }

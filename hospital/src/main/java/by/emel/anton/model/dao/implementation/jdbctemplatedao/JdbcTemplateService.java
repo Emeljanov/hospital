@@ -11,7 +11,7 @@ public class JdbcTemplateService {
     private static final String SQL_GET_THERAPIES = "select * from therapy where patient_id = ?";
 
     protected static void addTherapiesToPatient(Patient patient, JdbcTemplate jdbcTemplate) {
-        List<Therapy> therapies = jdbcTemplate.query(SQL_GET_THERAPIES,new TherapyMapper(),patient.getId());
+        List<Therapy> therapies = jdbcTemplate.query(SQL_GET_THERAPIES, new TherapyMapper(), patient.getId());
         therapies.forEach(t -> t.setPatient(patient));
         patient.setTherapies(therapies);
     }

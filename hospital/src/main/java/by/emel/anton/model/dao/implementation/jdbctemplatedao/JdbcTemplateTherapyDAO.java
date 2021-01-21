@@ -22,7 +22,7 @@ public class JdbcTemplateTherapyDAO implements TherapyDAO {
     JdbcTemplatePatientDAO jdbcTemplatePatientDAO;
 
     @Autowired
-    public JdbcTemplateTherapyDAO(JdbcTemplate jdbcTemplate,JdbcTemplatePatientDAO jdbcTemplatePatientDAO) {
+    public JdbcTemplateTherapyDAO(JdbcTemplate jdbcTemplate, JdbcTemplatePatientDAO jdbcTemplatePatientDAO) {
         this.jdbcTemplate = jdbcTemplate;
         this.jdbcTemplatePatientDAO = jdbcTemplatePatientDAO;
     }
@@ -35,7 +35,7 @@ public class JdbcTemplateTherapyDAO implements TherapyDAO {
         int patientId = therapy.getPatient().getId();
         String dtype = therapy.getClass().getSimpleName();
 
-        jdbcTemplate.update(SQL_SAVE_THERAPY,dtype,desc,startDate,endDate,patientId);
+        jdbcTemplate.update(SQL_SAVE_THERAPY, dtype, desc, startDate, endDate, patientId);
     }
 
     @Override

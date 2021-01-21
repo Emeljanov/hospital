@@ -29,13 +29,12 @@ public class JdbcTemplatePatientDAO implements PatientDAO {
     }
 
     @Override
-    public Optional<Patient> getPatient(String login, String password) throws UserDAOException{
+    public Optional<Patient> getPatient(String login, String password) throws UserDAOException {
         try {
-            Patient patient = jdbcTemplate.queryForObject(SQL_GET_PATIENT, new Object[]{login,password},patientMapper);
-            addDoctorAndTherapiesToPatient(patient,jdbcTemplate);
+            Patient patient = jdbcTemplate.queryForObject(SQL_GET_PATIENT, new Object[]{login, password}, patientMapper);
+            addDoctorAndTherapiesToPatient(patient, jdbcTemplate);
             return Optional.of(patient);
-        }
-        catch (DataAccessException e) {
+        } catch (DataAccessException e) {
             throw new UserDAOException("ERROR getPatient");
         }
 
@@ -45,24 +44,23 @@ public class JdbcTemplatePatientDAO implements PatientDAO {
     public Optional<Patient> getPatientById(int id) throws UserDAOException {
         try {
             Patient patient = jdbcTemplate.queryForObject(SQL_GET_PATIENT_BY_ID, new Object[]{id}, patientMapper);
-            addDoctorAndTherapiesToPatient(patient,jdbcTemplate);
+            addDoctorAndTherapiesToPatient(patient, jdbcTemplate);
             return Optional.of(patient);
-        }
-        catch (DataAccessException e) {
+        } catch (DataAccessException e) {
             throw new UserDAOException("ERROR getPatientByID");
         }
     }
 
-    private void addDoctorAndTherapiesToPatient(Patient patient,JdbcTemplate jdbcTemplate)  {
+    private void addDoctorAndTherapiesToPatient(Patient patient, JdbcTemplate jdbcTemplate) {
 
         Optional<Doctor> optionalDoctor = Optional.ofNullable(patient.getDoctor());
-        optionalDoctor.ifPresent( doctor -> {
+        optionalDoctor.ifPresent(doctor -> {
             try {
                 jdbcTemplateDoctorDAO.getDoctorById(doctor.getId()).ifPresent(patient::setDoctor);
             } catch (UserDAOException e) {
                 e.printStackTrace();
             }
         });
-        JdbcTemplateService.addTherapiesToPatient(patient,jdbcTemplate);
+        JdbcTemplateService.addTherapiesToPatient(patient, jdbcTemplate);
     }
 }
