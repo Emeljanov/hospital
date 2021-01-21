@@ -7,10 +7,9 @@ import javax.persistence.*;
 import java.time.LocalDate;
 
 
-
 @Entity
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
-public abstract class Therapy {
+public  class Therapy {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -70,6 +69,6 @@ public abstract class Therapy {
 
     @Override
     public String toString() {
-        return String.join(Constants.SEPARATOR, String.valueOf(id),description,startDate.toString(),endDate.toString(),String.valueOf(patient.getId()));
+        return String.join(Constants.SEPARATOR, String.valueOf(id), description, startDate.toString(), endDate.toString(), String.valueOf(patient.getId()));
     }
 }

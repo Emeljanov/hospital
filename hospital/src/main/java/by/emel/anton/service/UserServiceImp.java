@@ -1,7 +1,6 @@
 package by.emel.anton.service;
 
 import by.emel.anton.constants.Constants;
-import by.emel.anton.model.beans.therapy.OrdinaryTherapy;
 import by.emel.anton.model.beans.therapy.Therapy;
 import by.emel.anton.model.beans.users.User;
 import by.emel.anton.model.beans.users.doctors.Doctor;
@@ -84,7 +83,7 @@ public class UserServiceImp implements UserService {
     @Override
     public void addTherapy(Doctor doctor, Patient patient, String description, LocalDate endDate) throws UserDAOException, TherapyDAOException {
 
-        Therapy therapy = new OrdinaryTherapy();
+        Therapy therapy = new Therapy();
         therapy.setDescription(description);
         therapy.setStartDate(LocalDate.now());
         therapy.setEndDate(endDate);

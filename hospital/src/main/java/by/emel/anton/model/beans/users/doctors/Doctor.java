@@ -34,7 +34,7 @@ public class Doctor extends User {
         patients.add(patient);
     }
 
-    public void setTherapy (Patient patient, Therapy therapy) {
+    public void setTherapy(Patient patient, Therapy therapy) {
         patient
                 .getTherapies()
                 .add(therapy);
@@ -44,6 +44,6 @@ public class Doctor extends User {
     public String toString() {
         String patientsToString = patients.stream().map(Patient::getId).collect(Collectors.toList()).toString();
 
-        return String.join(Constants.SEPARATOR,super.toString(),patientsToString);
+        return String.join(Constants.SEPARATOR, super.toString(), patientsToString);
     }
 }
