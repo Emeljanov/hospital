@@ -17,9 +17,9 @@ public abstract class Therapy {
     private int id;
     @Column
     private String description;
-    @Column(name = "start_date", nullable = false)
+    @Column(nullable = false)
     private LocalDate startDate;
-    @Column(name = "end_date", nullable = false)
+    @Column(nullable = false)
     private LocalDate endDate;
     @ManyToOne(fetch = FetchType.EAGER, cascade = {CascadeType.MERGE, CascadeType.PERSIST, CascadeType.ALL})
     @JoinColumn(name = "patient_id", nullable = false)

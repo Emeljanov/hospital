@@ -20,7 +20,7 @@ public abstract class User {
     private String password;
 
     @Enumerated(EnumType.STRING)
-    @Column(name = "user_type", columnDefinition ="ENUM('DOCTOR','PATIENT')", nullable = false)
+    @Column(columnDefinition ="ENUM('DOCTOR','PATIENT')", nullable = false)
     private UserType userType;
 
     @Column
