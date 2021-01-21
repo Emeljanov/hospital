@@ -43,8 +43,8 @@ public class Patient extends User {
     @Override
     public String toString() {
         String doctorId = (null != doctor) ? String.valueOf(doctor.getId()) : "no doctor";
+        String therapiesToString = therapies.stream().map(Therapy::getId).collect(Collectors.toList()).toString();
 
-        return super.toString() + Constants.SEPARATOR + doctorId + Constants.SEPARATOR
-                + therapies.stream().map(Therapy::getId).collect(Collectors.toList());
+        return String.join(Constants.SEPARATOR,super.toString(),doctorId,therapiesToString);
     }
 }

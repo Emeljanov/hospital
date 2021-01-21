@@ -70,6 +70,6 @@ public abstract class Therapy {
 
     @Override
     public String toString() {
-        return id + Constants.SEPARATOR + description + Constants.SEPARATOR + startDate + Constants.SEPARATOR + endDate + Constants.SEPARATOR + patient.getId();
+        return String.join(Constants.SEPARATOR, String.valueOf(id),description,startDate.toString(),endDate.toString(),String.valueOf(patient.getId()));
     }
 }
