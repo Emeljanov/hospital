@@ -7,6 +7,5 @@ create table user (
    user_type ENUM('DOCTOR','PATIENT') not null,
    primary key(id)
 
-) engine=InnoDB
+) engine=InnoDB ;
 
-NEXT_SCRIPT

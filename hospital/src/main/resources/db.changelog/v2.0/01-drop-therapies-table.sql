@@ -1,4 +1,3 @@
 
-drop table therapies
+drop table therapies;
 
-NEXT_SCRIPT

@@ -20,7 +20,7 @@ public abstract class User {
     private String password;
 
     @Enumerated(EnumType.STRING)
-    @Column(name = "user_type", columnDefinition ="ENUM('DOCTOR','PATIENT')", nullable = false)
+    @Column(columnDefinition ="ENUM('DOCTOR','PATIENT')", nullable = false)
     private UserType userType;
 
     @Column
@@ -82,11 +82,6 @@ public abstract class User {
 
     @Override
     public String toString() {
-        return id + Constants.SEPARATOR +
-        login + Constants.SEPARATOR +
-        password + Constants.SEPARATOR +
-        userType.toString() + Constants.SEPARATOR +
-        name + Constants.SEPARATOR +
-        birthday;
+        return String.join(Constants.SEPARATOR,String.valueOf(id),login,password,userType.toString(),name,birthday.toString());
     }
 }

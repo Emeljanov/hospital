@@ -11,7 +11,7 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
 
-@Repository("UserHibernate")
+@Repository("HibernateUserDAO")
 @Transactional
 public class HibernateUserDAO implements UserDAO {
 

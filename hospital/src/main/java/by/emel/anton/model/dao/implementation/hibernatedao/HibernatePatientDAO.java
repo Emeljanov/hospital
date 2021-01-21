@@ -12,7 +12,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
 import java.util.Optional;
 
-@Repository("PatientHibernate")
+@Repository("HibernatePatientDAO")
 @Transactional
 public class HibernatePatientDAO implements PatientDAO {
 

@@ -4,7 +4,6 @@ import by.emel.anton.terminalprog.AnswerType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
-import org.springframework.stereotype.Service;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -16,7 +15,7 @@ public class UserServiceResolverImp implements UserServiceResolver{
 
     @Autowired
     public UserServiceResolverImp(
-            @Qualifier("FromHibernate") UserService hibernateUserService,
+            @Qualifier("HibernateService") UserService hibernateUserService,) {
             @Qualifier("FromJDBCTemplate") UserService jdbcTemplateUserService) {
         map = new HashMap<>();
         map.put(AnswerType.HIBERNATE,hibernateUserService);

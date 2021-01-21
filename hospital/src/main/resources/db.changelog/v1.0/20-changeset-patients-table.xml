@@ -9,7 +9,6 @@
     <changeSet id="20-1" author="anton_e">
         <sqlFile dbms="mysql"
                  encoding="utf8"
-                 endDelimiter="\nNEXT_SCRIPT"
                  relativeToChangelogFile="true"
                  splitStatements="true"
                  stripComments="true"
@@ -17,7 +16,6 @@
         <rollback>
             <sqlFile dbms="mysql"
                      encoding="utf8"
-                     endDelimiter="\nNEXT_SCRIPT"
                      relativeToChangelogFile="true"
                      splitStatements="true"
                      stripComments="true"

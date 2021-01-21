@@ -15,9 +15,9 @@ public abstract class Therapy {
     private int id;
     @Column
     private String description;
-    @Column(name = "start_date", nullable = false)
+    @Column(nullable = false)
     private LocalDate startDate;
-    @Column(name = "end_date", nullable = false)
+    @Column(nullable = false)
     private LocalDate endDate;
     @ManyToOne(fetch = FetchType.EAGER, cascade = {CascadeType.MERGE, CascadeType.PERSIST, CascadeType.ALL})
     @JoinColumn(name = "patient_id", nullable = false)
@@ -68,6 +68,6 @@ public abstract class Therapy {
 
     @Override
     public String toString() {
-        return id + Constants.SEPARATOR + description + Constants.SEPARATOR + startDate + Constants.SEPARATOR + endDate + Constants.SEPARATOR + patient.getId();
+        return String.join(Constants.SEPARATOR, String.valueOf(id),description,startDate.toString(),endDate.toString(),String.valueOf(patient.getId()));
     }
 }

@@ -42,6 +42,8 @@ public class Doctor extends User {
 
     @Override
     public String toString() {
-        return super.toString() + Constants.SEPARATOR + patients.stream().map(Patient::getId).collect(Collectors.toList());
+        String patientsToString = patients.stream().map(Patient::getId).collect(Collectors.toList()).toString();
+
+        return String.join(Constants.SEPARATOR,super.toString(),patientsToString);
     }
 }
