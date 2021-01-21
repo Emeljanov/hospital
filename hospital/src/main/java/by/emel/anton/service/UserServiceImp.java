@@ -1,7 +1,6 @@
 package by.emel.anton.service;
 
 import by.emel.anton.constants.Constants;
-import by.emel.anton.model.beans.therapy.OrdinaryTherapy;
 import by.emel.anton.model.beans.therapy.Therapy;
 import by.emel.anton.model.beans.users.User;
 import by.emel.anton.model.beans.users.doctors.Doctor;
@@ -41,7 +40,7 @@ public class UserServiceImp implements UserService {
         user.setPassword(password);
         user.setName(name);
         user.setBirthday(birthday);
-        if(isSave) {
+        if (isSave) {
             saveUser(user);
         }
     }
@@ -58,16 +57,16 @@ public class UserServiceImp implements UserService {
 
     @Override
     public Optional<Doctor> getDoctor(String login, String password) throws UserDAOException {
-        return doctorDAO.getDoctor(login,password);
+        return doctorDAO.getDoctor(login, password);
     }
 
     @Override
-    public Optional<Patient> getPatient(String login, String password) throws UserDAOException{
-        return patientDAO.getPatient(login,password);
+    public Optional<Patient> getPatient(String login, String password) throws UserDAOException {
+        return patientDAO.getPatient(login, password);
     }
 
     @Override
-    public Optional<Patient> getPatientById(int id) throws UserDAOException{
+    public Optional<Patient> getPatientById(int id) throws UserDAOException {
         return patientDAO.getPatientById(id);
     }
 
@@ -84,7 +83,7 @@ public class UserServiceImp implements UserService {
     @Override
     public void addTherapy(Patient patient, String description, LocalDate endDate) throws UserDAOException, TherapyDAOException {
 
-        Therapy therapy = new OrdinaryTherapy();
+        Therapy therapy = new Therapy();
         therapy.setDescription(description);
         therapy.setStartDate(LocalDate.now());
         therapy.setEndDate(endDate);
@@ -95,7 +94,7 @@ public class UserServiceImp implements UserService {
     }
 
     @Override
-    public void addPatientToDoctor(Doctor doctor,int patientId) throws UserDAOException {
+    public void addPatientToDoctor(Doctor doctor, int patientId) throws UserDAOException {
 
         Patient patient = getPatientById(patientId)
                 .orElseThrow(() -> new UserDAOException(Constants.EXCEPTION_NO_ID));

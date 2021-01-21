@@ -26,17 +26,16 @@ public class HibernatePatientDAO implements PatientDAO {
     @Override
     public Optional<Patient> getPatient(String login, String password) throws UserDAOException {
 
-        return Optional.ofNullable(entityManager.find(Patient.class,HibernateUserDAO.getUserId(login,password,entityManager)));
+        return Optional.ofNullable(entityManager.find(Patient.class, HibernateUserDAO.getUserId(login, password, entityManager)));
 
     }
 
     @Override
     public Optional<Patient> getPatientById(int id) throws UserDAOException {
 
-        try{
-            return Optional.ofNullable(entityManager.find(Patient.class,id));
-        }
-        catch (NoResultException e) {
+        try {
+            return Optional.ofNullable(entityManager.find(Patient.class, id));
+        } catch (NoResultException e) {
             throw new UserDAOException(Constants.EXCEPTION_NO_ID);
         }
     }

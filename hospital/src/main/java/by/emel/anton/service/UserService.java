@@ -12,7 +12,7 @@ import java.util.Optional;
 
 public interface UserService {
 
-    void createUser(User user, String login, String password, String name, LocalDate birthday,boolean isSave) throws UserDAOException;
+    void createUser(User user, String login, String password, String name, LocalDate birthday, boolean isSave) throws UserDAOException;
 
     void saveUser(User user) throws UserDAOException;
 

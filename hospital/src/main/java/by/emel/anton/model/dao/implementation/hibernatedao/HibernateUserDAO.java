@@ -26,7 +26,7 @@ public class HibernateUserDAO implements UserDAO {
     @Override
     public boolean isLoginExist(String login) throws UserDAOException {
         String query = "select count(*) from User where login = ?0";
-        int count = (Integer) entityManager.createQuery(query).setParameter(0,login).getSingleResult();
+        int count = (Integer) entityManager.createQuery(query).setParameter(0, login).getSingleResult();
         return count >= 1;
 
     }
