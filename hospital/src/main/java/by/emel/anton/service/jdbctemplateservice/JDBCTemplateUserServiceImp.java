@@ -1,4 +1,4 @@
-package by.emel.anton.service.jdbctemplatework;
+package by.emel.anton.service.jdbctemplateservice;
 
 import by.emel.anton.model.dao.interfaces.DoctorDAO;
 import by.emel.anton.model.dao.interfaces.PatientDAO;
