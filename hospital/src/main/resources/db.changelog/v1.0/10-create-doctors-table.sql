@@ -5,9 +5,8 @@ create table doctor (
       foreign key (id)
     references user (id)
 
-) engine=InnoDB
+) engine=InnoDB;
 
-NEXT_SCRIPT
 
 
 

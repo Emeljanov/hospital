@@ -9,7 +9,6 @@ create table patient (
           foreign key(doctor_id)
         references doctor(id)
 
-) engine=InnoDB
+) engine=InnoDB;
 
-NEXT_SCRIPT
 

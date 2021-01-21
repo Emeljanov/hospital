@@ -9,6 +9,6 @@ create table therapy (
    constraint idpatient_thr
           foreign key (patient_id)
         references patient (id)
-) engine=InnoDB
+) engine=InnoDB;
 
 
