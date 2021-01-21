@@ -9,18 +9,18 @@ import org.springframework.transaction.annotation.Transactional;
 
 @SpringBootApplication
 @Transactional
-public class Runner implements CommandLineRunner  {
+public class Runner implements CommandLineRunner {
 
     @Autowired
     private TerminalProgram terminalProgram;
 
     public static void main(String[] args) {
 
-        SpringApplication.run(Runner.class,args);
+        SpringApplication.run(Runner.class, args);
     }
 
     @Override
-    public void run(String... args)  {
+    public void run(String... args) {
 
         terminalProgram.startProgram();
     }

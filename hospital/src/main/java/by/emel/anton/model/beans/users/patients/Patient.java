@@ -17,7 +17,7 @@ public class Patient extends User {
     @JoinColumn(name = "doctor_id")
     private Doctor doctor;
 
-    @OneToMany(fetch = FetchType.LAZY,mappedBy = "patient",cascade = CascadeType.ALL)
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "patient", cascade = CascadeType.ALL)
     private List<Therapy> therapies;
 
     public Patient() {
@@ -45,6 +45,6 @@ public class Patient extends User {
         String doctorId = (null != doctor) ? String.valueOf(doctor.getId()) : "no doctor";
         String therapiesToString = therapies.stream().map(Therapy::getId).collect(Collectors.toList()).toString();
 
-        return String.join(Constants.SEPARATOR,super.toString(),doctorId,therapiesToString);
+        return String.join(Constants.SEPARATOR, super.toString(), doctorId, therapiesToString);
     }
 }

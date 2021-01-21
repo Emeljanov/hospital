@@ -31,9 +31,8 @@ public class HibernateTherapyDAO implements TherapyDAO {
     @Override
     public Optional<Therapy> getTherapy(int id) throws TherapyDAOException {
         try {
-            return Optional.ofNullable(entityManager.find(Therapy.class,id));
-        }
-        catch (NoResultException e) {
+            return Optional.ofNullable(entityManager.find(Therapy.class, id));
+        } catch (NoResultException e) {
             throw new TherapyDAOException(Constants.EXCEPTION_NO_ID);
         }
     }

@@ -13,13 +13,13 @@ public class StringToList {
 
         line = line.replaceAll("[\\]\\[\\ ]", Constants.EMPTY);
 
-        if(!line.isEmpty()) {
+        if (!line.isEmpty()) {
 
             return Arrays
                     .stream(line.split(Constants.COMMA))
                     .map(Integer::valueOf)
                     .collect(Collectors.toList());
-            }
+        }
 
         return Collections.emptyList();
     }

@@ -5,7 +5,9 @@ import by.emel.anton.model.dao.exceptions.UserDAOException;
 
 import java.util.Optional;
 
-/** @author Anton Yemialynau  */
+/**
+ * @author Anton Yemialynau
+ */
 
 public interface PatientDAO {
     Optional<Patient> getPatient(String login, String password) throws UserDAOException;

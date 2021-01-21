@@ -9,7 +9,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 @Component
-public class UserServiceResolverImp implements UserServiceResolver{
+public class UserServiceResolverImp implements UserServiceResolver {
 
     private final Map<AnswerType, UserService> map;
 
@@ -17,7 +17,7 @@ public class UserServiceResolverImp implements UserServiceResolver{
     public UserServiceResolverImp(
             @Qualifier("HibernateService") UserService hibernateUserService) {
         map = new HashMap<>();
-        map.put(AnswerType.HIBERNATE,hibernateUserService);
+        map.put(AnswerType.HIBERNATE, hibernateUserService);
     }
 
     @Override
