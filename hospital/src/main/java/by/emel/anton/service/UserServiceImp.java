@@ -90,8 +90,8 @@ public class UserServiceImp implements UserService {
         therapy.setStartDate(LocalDate.now());
         therapy.setEndDate(endDate);
         therapy.setPatient(patient);
-        Optional<List<Therapy>> therapie = Optional.ofNullable(patient.getTherapies());
-        therapie.ifPresentOrElse( t -> t.add(therapy),
+        Optional<List<Therapy>> therapies = Optional.ofNullable(patient.getTherapies());
+        therapies.ifPresentOrElse( t -> t.add(therapy),
                 () -> {List<Therapy> t = new ArrayList<>();
                 t.add(therapy);
                 patient.setTherapies(t);
