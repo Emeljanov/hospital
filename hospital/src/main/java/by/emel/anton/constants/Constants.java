@@ -1,6 +1,6 @@
 package by.emel.anton.constants;
 
-public class Constants {
+public final class Constants {
     public static final String EMPTY = "";
     public static final String SEPARATOR = "/";
     public static final String DESCENT = "\n";
@@ -12,5 +12,5 @@ public class Constants {
     public static final String FILE_PATH_PATIENTS = "src/main/data/patients";
     public static final String FILE_PATH_THERAPIES = "src/main/data/therapies";
     public static final String FILE_PATH_TEMP = "src/main/data/temp";
-
+    public static final String EXCEPTION_NO_ID = "Id not found";
 }

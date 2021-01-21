@@ -1,19 +1,33 @@
 package by.emel.anton.model.beans.therapy;
 
 import by.emel.anton.constants.Constants;
+import by.emel.anton.model.beans.users.patients.Patient;
+
+import javax.persistence.*;
 import java.time.LocalDate;
 
-public abstract class Therapy {
+@Entity
+@Inheritance(strategy = InheritanceType.SINGLE_TABLE)
+public class Therapy {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
+
+    @Column
     private String description;
+
+    @Column(nullable = false)
     private LocalDate startDate;
+
+    @Column(nullable = false)
     private LocalDate endDate;
 
-    public Therapy(int id ,String description, LocalDate startDate, LocalDate endDate) {
-        this.id = id;
-        this.description = description;
-        this.startDate = startDate;
-        this.endDate = endDate;
+    @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @JoinColumn(name = "patient_id", nullable = false)
+    private Patient patient;
+
+    public Therapy() {
     }
 
     public int getId() {
@@ -32,8 +46,32 @@ public abstract class Therapy {
         return endDate;
     }
 
+    public Patient getPatient() {
+        return patient;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public void setStartDate(LocalDate startDate) {
+        this.startDate = startDate;
+    }
+
+    public void setEndDate(LocalDate endDate) {
+        this.endDate = endDate;
+    }
+
+    public void setPatient(Patient patient) {
+        this.patient = patient;
+    }
+
     @Override
     public String toString() {
-        return id + Constants.SEPARATOR + description + Constants.SEPARATOR + startDate + Constants.SEPARATOR + endDate;
+        return String.join(Constants.SEPARATOR, String.valueOf(id), description, startDate.toString(), endDate.toString(), String.valueOf(patient.getId()));
     }
 }

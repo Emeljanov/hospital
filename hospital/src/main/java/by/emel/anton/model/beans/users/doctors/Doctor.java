@@ -1,55 +1,49 @@
 package by.emel.anton.model.beans.users.doctors;
 
 import by.emel.anton.constants.Constants;
+import by.emel.anton.model.beans.therapy.Therapy;
 import by.emel.anton.model.beans.users.User;
 import by.emel.anton.model.beans.users.UserType;
-import by.emel.anton.model.beans.users.patients.*;
-import by.emel.anton.model.beans.therapy.Therapy;
-import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.List;
+import by.emel.anton.model.beans.users.patients.Patient;
 
-public abstract class Doctor extends User {
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.OneToMany;
+import java.util.List;
+import java.util.stream.Collectors;
+
+@Entity
+public class Doctor extends User {
 
     public Doctor() {
-
+        setUserType(UserType.DOCTOR);
     }
 
-    public Doctor(int id, String login, String password, String name, LocalDate birthday) {
-        super(id,login, password, UserType.DOCTOR,name,birthday);
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "doctor")
+    private List<Patient> patients;
+
+    public List<Patient> getPatients() {
+        return patients;
     }
 
-    private List<Integer> patientsId = new ArrayList<>();
-
-    public void setPatientsId(List<Integer> patientsId) {
-        this.patientsId = patientsId;
+    public void setPatients(List<Patient> patients) {
+        this.patients = patients;
     }
 
-    public void setPatientId(int id) {
-
-        if(!patientsId.contains(id)) {
-            patientsId.add(id);
-        }
-
+    public void addPatient(Patient patient) {
+        patients.add(patient);
     }
 
-    public void setDoctorIdToPatient(Patient patient) {
-        int doctorId = getId();
-        patient.setDoctorId(doctorId);
-    }
-
-    public List<Integer> getPatientsId() {
-        return patientsId;
-    }
-
-    public void setTherapy (Patient patient, Therapy therapy) {
+    public void setTherapy(Patient patient, Therapy therapy) {
         patient
                 .getTherapies()
-                .add(therapy.getId());
+                .add(therapy);
     }
 
     @Override
     public String toString() {
-        return super.toString() + Constants.SEPARATOR + patientsId.toString();
+        String patientsToString = patients.stream().map(Patient::getId).collect(Collectors.toList()).toString();
+
+        return String.join(Constants.SEPARATOR, super.toString(), patientsToString);
     }
 }

@@ -10,4 +10,9 @@ logs/
 
 *.zip
 *.tar.gz
-*.rar	
+*.rar
+
+filedao/
+jdbctemplatedao/
+fileworkservice/
+jdbctemplatework/
