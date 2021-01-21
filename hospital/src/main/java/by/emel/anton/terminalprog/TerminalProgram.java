@@ -235,18 +235,15 @@ public class TerminalProgram {
 
         LOGGER.info(ENTER_PATIENT_ID);
         int patientId = Integer.parseInt(scanner.nextLine().trim());
-        /*Patient patient = userService
-                .getPatientById(patientId)
-                .orElseThrow(() -> new UserDAOException(ERROR_NO_PATIENT_F_BY_ID));*/
         Optional<Patient> optPatient = doctor.getPatients().stream().filter(pat -> pat.getId() == patientId).findFirst();
-        //or throw, id therapy hz
-        if(!optPatient.isPresent()) return;
+        if(!optPatient.isPresent()) throw new UserDAOException("Patien with such id doesn't exist or connect with this doctor");
         Patient patient = optPatient.get();
         LOGGER.info(ENTER_THERAPY_DESCR);
         String description = scanner.nextLine();
         LOGGER.info(ENTER_ENDDATE);
         LocalDate endDate = getDateAndCheckDateTimeExp(scanner.nextLine());
         userService.addTherapy(patient,description,endDate);
+
     }
 
     private void addPatientToDoctor(Scanner scanner, Doctor doctor) throws UserDAOException  {
