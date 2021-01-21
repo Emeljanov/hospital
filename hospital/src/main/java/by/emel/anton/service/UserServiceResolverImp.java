@@ -15,7 +15,7 @@ public class UserServiceResolverImp implements UserServiceResolver{
 
     @Autowired
     public UserServiceResolverImp(
-            @Qualifier("FromHibernate") UserService hibernateUserService) {
+            @Qualifier("HibernateService") UserService hibernateUserService) {
         map = new HashMap<>();
         map.put(AnswerType.HIBERNATE,hibernateUserService);
     }
