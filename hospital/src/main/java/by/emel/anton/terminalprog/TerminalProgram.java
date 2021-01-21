@@ -17,6 +17,7 @@ import org.springframework.stereotype.Component;
 
 import java.time.DateTimeException;
 import java.time.LocalDate;
+import java.util.List;
 import java.util.Optional;
 import java.util.Scanner;
 import java.util.stream.Collectors;
@@ -285,6 +286,11 @@ public class TerminalProgram {
             AnswerType answer = getAnswerAndCheckIllegalArgExp(scanner.nextLine());
             switch (answer) {
                 case THERAPIES:
+                    Optional<List<Therapy>> therapies = Optional.ofNullable(patient.getTherapies());
+                    if (!therapies.isPresent()) {
+                        LOGGER.info("[]");
+                        break;
+                    }
                     LOGGER.info(patient.getTherapies()
                             .stream()
                             .map(Therapy::getId)
