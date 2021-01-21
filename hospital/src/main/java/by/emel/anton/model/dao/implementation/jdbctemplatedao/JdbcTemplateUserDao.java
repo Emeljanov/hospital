@@ -50,9 +50,11 @@ public class JdbcTemplateUserDao implements UserDAO {
         LocalDate birthday = user.getBirthday();
 
         jdbcTemplate.update(SQL_UPDATE_USER, password, name, birthday, userId);
+
         if (UserType.PATIENT == userType) {
             Patient patient = (Patient) user;
             int doctorId = patient.getDoctor().getId();
+
             jdbcTemplate.update(SQL_UPDATE_PATIENT, doctorId, userId);
         }
     }
@@ -83,7 +85,6 @@ public class JdbcTemplateUserDao implements UserDAO {
             doctor.ifPresentOrElse(d -> {
                 jdbcTemplate.update(SQL_SAVE_PATIENT, patientId, d.getId());
             }, () -> jdbcTemplate.update(SQL_SAVE_PATIENT_NO_SETTED_DOCTOR, patientId));
-
         }
     }
 

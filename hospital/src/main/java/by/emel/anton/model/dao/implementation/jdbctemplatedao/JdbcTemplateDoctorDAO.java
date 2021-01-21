@@ -58,7 +58,6 @@ public class JdbcTemplateDoctorDAO implements DoctorDAO {
         } catch (DataAccessException e) {
             throw new UserDAOException("ERROR getDoctorByID");
         }
-
     }
 
     private void addPatients(Doctor doctor) {

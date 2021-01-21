@@ -37,7 +37,6 @@ public class JdbcTemplatePatientDAO implements PatientDAO {
         } catch (DataAccessException e) {
             throw new UserDAOException("ERROR getPatient");
         }
-
     }
 
     @Override

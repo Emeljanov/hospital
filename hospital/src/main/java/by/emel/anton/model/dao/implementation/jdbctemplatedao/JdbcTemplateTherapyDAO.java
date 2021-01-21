@@ -43,7 +43,7 @@ public class JdbcTemplateTherapyDAO implements TherapyDAO {
         Therapy therapy = jdbcTemplate.queryForObject(SQL_GET_THERAPY_BY_ID, new Object[]{id}, new TherapyMapper());
         Optional<Patient> patient = jdbcTemplatePatientDAO.getPatientById(therapy.getPatient().getId());
         patient.ifPresent(pat -> therapy.setPatient(pat));
-        return Optional.ofNullable(therapy);
 
+        return Optional.ofNullable(therapy);
     }
 }
