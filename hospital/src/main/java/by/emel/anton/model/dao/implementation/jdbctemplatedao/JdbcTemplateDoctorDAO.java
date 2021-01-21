@@ -16,7 +16,7 @@ import java.util.List;
 import java.util.Optional;
 
 
-@Repository("DoctorJdbcTemplate")
+@Repository("JdbcTemplateDoctorDAO")
 public class JdbcTemplateDoctorDAO implements DoctorDAO {
 
     private static final String SQL_GET_DOCTOR = "select * from user where login = ? and password = ?";

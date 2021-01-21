@@ -12,7 +12,7 @@ import org.springframework.stereotype.Repository;
 import java.time.LocalDate;
 import java.util.Optional;
 
-@Repository("TherapyJdbcTemplate")
+@Repository("JdbcTemplateTherapyDAO")
 public class JdbcTemplateTherapyDAO implements TherapyDAO {
     private static final String SQL_SAVE_THERAPY =
             "insert into therapy (dtype ,description, start_date, end_date,patient_id) values (?,?, ?,?, ?)";

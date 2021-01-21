@@ -12,7 +12,7 @@ import org.springframework.stereotype.Repository;
 
 import java.util.Optional;
 
-@Repository("PatientJdbcTemplate")
+@Repository("JdbcTemplatePatientDAO")
 public class JdbcTemplatePatientDAO implements PatientDAO {
     private static final String SQL_GET_PATIENT = "select u.*, p.doctor_id from user u inner join patient p ON u.id = p.id and u.login = ? and u.password = ?";
     private static final String SQL_GET_PATIENT_BY_ID = "select u.*, p.doctor_id from user u inner join patient p ON u.id = p.id and u.id = ?";

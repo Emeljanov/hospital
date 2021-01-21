@@ -9,14 +9,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
-@Service("FromJDBCTemplate")
-public class UserServiceImpJDBCTemplate extends UserServiceImp {
+@Service("JdbcTemplateService")
+public class JDBCTemplateUserServiceImp extends UserServiceImp {
 
     @Autowired
-    public UserServiceImpJDBCTemplate( @Qualifier("UserJdbcTemplate")UserDAO userDAO,
-                                       @Qualifier("PatientJdbcTemplate")PatientDAO patientDAO,
-                                       @Qualifier("DoctorJdbcTemplate")DoctorDAO doctorDAO,
-                                       @Qualifier("TherapyJdbcTemplate")TherapyDAO therapyDAO) {
+    public JDBCTemplateUserServiceImp(@Qualifier("JdbcTemplateUserDAO")UserDAO userDAO,
+                                      @Qualifier("JdbcTemplatePatientDAO")PatientDAO patientDAO,
+                                      @Qualifier("JdbcTemplateDoctorDAO")DoctorDAO doctorDAO,
+                                      @Qualifier("JdbcTemplateTherapyDAO")TherapyDAO therapyDAO) {
         super(userDAO, patientDAO, doctorDAO, therapyDAO);
     }
 
