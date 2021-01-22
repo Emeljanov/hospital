@@ -12,5 +12,4 @@ logs/
 *.tar.gz
 *.rar
 
-filedao/
-fileworkservice/
+
