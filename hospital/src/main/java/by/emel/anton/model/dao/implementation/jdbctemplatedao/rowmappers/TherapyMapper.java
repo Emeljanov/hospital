@@ -17,7 +17,7 @@ public class TherapyMapper implements RowMapper<Therapy> {
         therapy.setStartDate(resultSet.getDate("start_date").toLocalDate());
         therapy.setEndDate(resultSet.getDate("end_date").toLocalDate());
         therapy.setDescription(resultSet.getString("description"));
-//this is only for patient ID, then it will be replace by the real doctor
+//this is only for patient ID, then it will be replace by the real patient
         Patient patient = new Patient();
         patient.setId(resultSet.getInt("patient_id"));
         therapy.setPatient(patient);

@@ -52,9 +52,9 @@ public class JdbcTemplateDoctorDAO implements DoctorDAO {
 
     public Optional<Doctor> getDoctorById(int id) throws UserDAOException {
         try {
-            Optional<Doctor> doctor = Optional.ofNullable(jdbcTemplate.queryForObject(SQL_GET_DOCTOR_BY_ID, new Object[]{id}, doctorMapper));
-            doctor.ifPresent(this::addPatients);
-            return doctor;
+            Doctor doctor = jdbcTemplate.queryForObject(SQL_GET_DOCTOR_BY_ID, new Object[]{id}, doctorMapper);
+            addPatients(doctor);
+            return Optional.of(doctor);
         } catch (DataAccessException e) {
             throw new UserDAOException("ERROR getDoctorByID");
         }
