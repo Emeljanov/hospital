@@ -32,11 +32,11 @@ public class Runner implements CommandLineRunner {
         /*terminalProgram.startProgram();*/
         Patient patient = new Patient();
         patient.setBirthday(LocalDate.of(2000,10,1));
-        patient.setName("Naaaaa");
+        patient.setName("NaaaaaUPDATE");
         patient.setPassword("Passs");
-        patient.setLogin("Ldddd111");
+        patient.setLogin("Ldd");
         try {
-            fileUserDAO.saveUser(patient);
+            fileUserDAO.updateUser(patient);
         } catch (UserDAOException e) {
             e.printStackTrace();
         }
