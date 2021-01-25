@@ -16,10 +16,12 @@ public class UserServiceResolverImp implements UserServiceResolver {
     @Autowired
     public UserServiceResolverImp(
             @Qualifier("HibernateService") UserService hibernateUserService,
-            @Qualifier("JdbcTemplateService") UserService jdbcTemplateUserService) {
+            @Qualifier("JdbcTemplateService") UserService jdbcTemplateUserService,
+            @Qualifier("FileService") UserService fileUserService) {
         map = new HashMap<>();
         map.put(AnswerType.HIBERNATE, hibernateUserService);
         map.put(AnswerType.TEMPLATE, jdbcTemplateUserService);
+        map.put(AnswerType.FILE, fileUserService);
     }
 
     @Override
