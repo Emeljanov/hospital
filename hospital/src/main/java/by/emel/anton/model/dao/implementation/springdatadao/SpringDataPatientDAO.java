@@ -20,7 +20,9 @@ public class SpringDataPatientDAO implements PatientDAO {
 
     @Override
     public Optional<Patient> getPatient(String login, String password)  {
-        return Optional.empty();
+        Optional<Integer> optionalId = patientJpaRepository.getPatientIdByLoginAndPassword(login,password);
+        return optionalId.flatMap(integer -> patientJpaRepository.findById(integer));
+
     }
 
     @Override

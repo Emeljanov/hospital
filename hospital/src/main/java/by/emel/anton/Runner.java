@@ -36,12 +36,12 @@ public class Runner implements CommandLineRunner {
     @Override
     public void run(String... args) {
 
-        Optional<Patient> patient = springDataPatientDAO.getPatientById(5);
+        Optional<Patient> patient = springDataPatientDAO.getPatient("Patient11","111");
         System.out.println(patient);
 
-        Patient pat = patient.get();
+        /*Patient pat = patient.get();
         pat.setName("NameJPA");
         springDataUserDAO.updateUser(pat);
-
+*/
     }
 }
