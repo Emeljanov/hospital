@@ -2,6 +2,7 @@ package by.emel.anton.model.dao.implementation.filedao;
 
 import by.emel.anton.constants.Constants;
 import by.emel.anton.model.beans.therapy.Therapy;
+import by.emel.anton.model.beans.users.User;
 import by.emel.anton.model.beans.users.doctors.Doctor;
 import by.emel.anton.model.beans.users.patients.Patient;
 import by.emel.anton.model.dao.exceptions.UserDAOException;
@@ -12,10 +13,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -61,7 +59,6 @@ public class FileServiceDAO {
     }
 
     public void addTherapiesToPatient(Patient patient) throws IOException {
-//        try {
         List<String> listLineThe = Files.readAllLines(Paths.get(Constants.FILE_PATH_THERAPIES)).stream()
                 .filter(l -> Integer.parseInt(l.split(Constants.SEPARATOR)[4]) == patient.getId())
                 .collect(Collectors.toList());
@@ -77,26 +74,30 @@ public class FileServiceDAO {
 
     public void addPatientsToDoctor(Doctor doctor) throws UserDAOException {
 
-        List<Patient> patients = new ArrayList<>();
+        try {
+            List<String> dataFile = Files.readAllLines(Paths.get(Constants.FILE_PATH_USERS));
+            List<Patient> patients = new ArrayList<>();
 
-        Optional<List<Integer>> optionalPatientIdList = Optional.ofNullable(getDoctorPatientsIdMap().get(doctor.getId()));
+            List<Integer> patientIds = Optional.ofNullable(doctor)
+                    .map(User::getId)
+                    .map(getDoctorPatientsIdMap()::get)
+                    .orElse(Collections.emptyList());
 
-        optionalPatientIdList.ifPresent(pats -> pats.forEach(id -> {
-            try {
-                List<String> fileDataList = Files.readAllLines(Paths.get(Constants.FILE_PATH_USERS));
-                fileDataList.forEach(data -> {
-                    String[] patData = data.split(Constants.SEPARATOR);
-                    if (patData[0].equals(String.valueOf(id))) {
-                        patients.add(createPatient(patData, doctor));
-                    }
-                });
+            patientIds.forEach(id -> addPatientsToListFromFile(dataFile, id, patients, doctor));
+            doctor.setPatients(patients);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
 
-            } catch (IOException e) {
-                e.printStackTrace();
+    }
+
+    private void addPatientsToListFromFile(List<String> datafile, int id, List<Patient> patients, Doctor doctor) {
+        datafile.forEach(data -> {
+            String[] patientData = data.split(Constants.SEPARATOR);
+            if (patientData[0].equals(String.valueOf(id))) {
+                patients.add(createPatient(patientData, doctor));
             }
-        }));
-
-        doctor.setPatients(patients);
+        });
     }
 
     public Therapy createTherapyFromLine(String line) {
