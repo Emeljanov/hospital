@@ -22,9 +22,5 @@ public class FileUserServiceImp extends UserServiceImp {
             @Qualifier("FileTherapyDAO") TherapyDAO therapyDAO) {
         super(userDAO, patientDAO, doctorDAO, therapyDAO);
     }
-//id dopis
- /*   @Override
-    public void createUser(User user, String login, String password, String name, LocalDate birthday, boolean isSave) throws UserDAOException {
-        super.createUser(user, login, password, name, birthday, isSave);
-    }*/
+
 }

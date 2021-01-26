@@ -13,7 +13,6 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.nio.file.StandardOpenOption;
-import java.time.LocalDate;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
@@ -21,15 +20,15 @@ import java.util.Optional;
 @Repository("FileTherapyDAO")
 public class FileTherapyDAO implements TherapyDAO {
 
-
     private FilePatientDAO filePatientDAO;
+    private FileServiceDAO fileServiceDAO;
 
     @Autowired
-    public FileTherapyDAO( FilePatientDAO filePatientDAO) {
+    public FileTherapyDAO(FilePatientDAO filePatientDAO, FileServiceDAO fileServiceDAO) {
         this.filePatientDAO = filePatientDAO;
+        this.fileServiceDAO = fileServiceDAO;
 
     }
-
 
     @Override
     public void saveTherapy(Therapy therapy) throws TherapyDAOException {
@@ -46,8 +45,8 @@ public class FileTherapyDAO implements TherapyDAO {
     public int getNextID() throws TherapyDAOException {
 
         try {
-            return FileService.getNextLineId(Paths.get(Constants.FILE_PATH_THERAPIES));
-        } catch (IOException e) {
+            return fileServiceDAO.getNextLineId(Paths.get(Constants.FILE_PATH_THERAPIES));
+        } catch (UserDAOException e) {
             throw new TherapyDAOException("ERROR get Next therapy file");
         }
     }
@@ -57,13 +56,12 @@ public class FileTherapyDAO implements TherapyDAO {
 
         try {
             List<String> fileData = Files.readAllLines(Paths.get(Constants.FILE_PATH_THERAPIES));
-            Optional<String> therapyString = fileData.stream().filter(s -> FileService.findLineById(s, id))
+            Optional<String> therapyString = fileData.stream().filter(s -> fileServiceDAO.isIdCorrect(s, id))
                     .findFirst();
 
             if (!therapyString.isPresent()) throw new TherapyDAOException("ERROR getTherapy");
 
-//            Therapy therapy = createTherapyFromLine(therapyString.get());
-            Therapy therapy = FileService.createTherapyFromLine(therapyString.get());
+            Therapy therapy = fileServiceDAO.createTherapyFromLine(therapyString.get());
             Optional<Patient> patient = filePatientDAO.getPatientById(therapy.getPatient().getId());
             patient.ifPresent(therapy::setPatient);
 
@@ -74,24 +72,4 @@ public class FileTherapyDAO implements TherapyDAO {
         }
     }
 
-  /*  private Therapy createTherapyFromLine(String lineData) throws UserDAOException {
-
-        String[] therapyData = lineData.split(Constants.SEPARATOR);
-        int id = Integer.parseInt(therapyData[0]);
-        String description = therapyData[1];
-        LocalDate startDate = LocalDate.parse(therapyData[2]);
-        LocalDate endDate = LocalDate.parse(therapyData[3]);
-        int patientId = Integer.parseInt(therapyData[4]);
-
-        Therapy therapy = new Therapy();
-        therapy.setId(id);
-        therapy.setDescription(description);
-        therapy.setStartDate(startDate);
-        therapy.setEndDate(endDate);
-
-        Optional<Patient> patient = filePatientDAO.getPatientById(patientId);
-        patient.ifPresent(therapy::setPatient);
-
-        return therapy;
-    }*/
 }

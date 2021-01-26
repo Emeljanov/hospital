@@ -31,12 +31,17 @@ public class FileUserDAO implements UserDAO {
     private final BiFunction<String, String, Boolean> bifunctionfIsLoginExist = (line, login) -> login.equals(line.split(Constants.SEPARATOR)[1]);
     private final BiFunction<String, String, Boolean> bifunctionIsIdExist = (line, idString) -> idString.equals(line.split(Constants.SEPARATOR)[0]);
 
+    private FileServiceDAO fileServiceDAO;
+
+    @Autowired
+    public FileUserDAO(FileServiceDAO fileServiceDAO) {
+        this.fileServiceDAO = fileServiceDAO;
+    }
 
     @Override
     public boolean isLoginExist(String login) throws UserDAOException {
 
         try {
-
             List<String> fileDataUsers = Files.readAllLines(userPath);
             return fileDataUsers.stream().anyMatch(line -> bifunctionfIsLoginExist.apply(line, login));
 
@@ -48,42 +53,35 @@ public class FileUserDAO implements UserDAO {
     @Override
     public void saveUser(User user) throws UserDAOException {
 
-        try {
+        String login = user.getLogin();
+        if (isLoginExist(login)) {
+            throw new UserDAOException("ERROR Login is exist");
+        }
+        String password = user.getPassword();
+        String name = user.getName();
+        String birthday = user.getBirthday().toString();
+        String idStr = String.valueOf(fileServiceDAO.getNextLineId(userPath));
 
-            String login = user.getLogin();
-            if (isLoginExist(login)) {
-                return;
+        UserType userType = user.getUserType();
+
+        String lineUserForWrite = String.join(Constants.SEPARATOR, idStr, login, password, name, birthday, userType.toString());
+        writeInFile(lineUserForWrite, userPath);
+
+        if (UserType.DOCTOR == userType) {
+
+            writeInFile(idStr, doctorPath);
+
+        } else if (UserType.PATIENT == userType) {
+
+            Patient patient = (Patient) user;
+            Optional<Doctor> doctor = Optional.ofNullable(patient.getDoctor());
+            String doctorIdLine = "0";
+
+            if (doctor.isPresent()) {
+                doctorIdLine = String.valueOf(doctor.get().getId());
             }
-            String password = user.getPassword();
-            String name = user.getName();
-            String birthday = user.getBirthday().toString();
-            String idStr = null;
-            idStr = String.valueOf(FileService.getNextLineId(userPath));
-
-            UserType userType = user.getUserType();
-
-            String lineUserForWrite = String.join(Constants.SEPARATOR, idStr, login, password, name, birthday, userType.toString());
-            writeInFile(lineUserForWrite, userPath);
-
-            if (UserType.DOCTOR == userType) {
-
-                writeInFile(idStr, doctorPath);
-
-            } else if (UserType.PATIENT == userType) {
-
-                Patient patient = (Patient) user;
-                Optional<Doctor> doctor = Optional.ofNullable(patient.getDoctor());
-                String doctorIdLine = "0";
-
-                if (doctor.isPresent()) {
-                    doctorIdLine = String.valueOf(doctor.get().getId());
-                }
-                String linePatientToWrite = String.join(Constants.SEPARATOR, idStr, doctorIdLine);
-                writeInFile(linePatientToWrite, patientPath);
-            }
-
-        } catch (IOException e) {
-            throw new UserDAOException("ERROR with user file");
+            String linePatientToWrite = String.join(Constants.SEPARATOR, idStr, doctorIdLine);
+            writeInFile(linePatientToWrite, patientPath);
         }
     }
 
@@ -125,4 +123,51 @@ public class FileUserDAO implements UserDAO {
             throw new UserDAOException("ERROR delete data from file");
         }
     }
+
+    public Optional<Doctor> getDoctorFromFile(String login, String password) throws UserDAOException {
+        String doctorLine = findUserLineInFileByLoginPassword(login, password);
+        return Optional.ofNullable(fileServiceDAO.createDoctor(doctorLine));
+    }
+
+    public Optional<Patient> getPatientFromFile(String login, String password) throws UserDAOException {
+        String patientLine = findUserLineInFileByLoginPassword(login, password);
+        return Optional.ofNullable(fileServiceDAO.createPatientFromLine(patientLine));
+    }
+
+    public Optional<Patient> getPatientFromFileByID(int id) throws UserDAOException {
+        String patientLine = findUserLineInFileById(id);
+        return Optional.ofNullable(fileServiceDAO.createPatientFromLine(patientLine));
+    }
+
+    private String findUserLineInFileByLoginPassword(String login, String password) throws UserDAOException {
+
+        try {
+            List<String> fileData = Files.readAllLines(Paths.get(Constants.FILE_PATH_USERS));
+            Optional<String> optionalUserLine = fileData
+                    .stream()
+                    .filter(s -> fileServiceDAO.isLoginPasswordCorrect(s, login, password))
+                    .findFirst();
+
+            return optionalUserLine.orElseThrow(() -> new UserDAOException("ERROR with login or password"));
+
+        } catch (IOException e) {
+            throw new UserDAOException("ERROR with IOE");
+        }
+    }
+
+    private String findUserLineInFileById(int id) throws UserDAOException {
+
+        try {
+            List<String> fileData = Files.readAllLines(Paths.get(Constants.FILE_PATH_USERS));
+            Optional<String> optionalUserLine = fileData
+                    .stream()
+                    .filter(s -> fileServiceDAO.isIdCorrect(s, id))
+                    .findFirst();
+
+            return optionalUserLine.orElseThrow(() -> new UserDAOException("ERROR with id user"));
+        } catch (IOException e) {
+            throw new UserDAOException("ERROR with IOE");
+        }
+    }
+
 }
