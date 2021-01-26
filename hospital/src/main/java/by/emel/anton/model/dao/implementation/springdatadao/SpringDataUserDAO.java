@@ -21,7 +21,6 @@ public class SpringDataUserDAO implements UserDAO {
 
     public boolean isLoginExist(String login) {
         int count = userJpaRepository.loginCount(login);
-
         return count>=1;
     }
 
