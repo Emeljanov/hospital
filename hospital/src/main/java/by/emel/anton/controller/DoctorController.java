@@ -4,10 +4,9 @@ import by.emel.anton.facade.doctor.DoctorFacade;
 import by.emel.anton.facade.doctor.RequestDoctorDTO;
 import by.emel.anton.facade.doctor.ResponseDoctorDTO;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import javax.servlet.http.HttpSession;
 
 @RestController
 @RequestMapping("/doctor")
@@ -17,7 +16,9 @@ public class DoctorController {
     DoctorFacade doctorFacade;
 
     @PostMapping("/login")
-    public ResponseDoctorDTO getDoctorByLoginPass(@RequestBody RequestDoctorDTO requestDoctorDTO) {
+    public ResponseDoctorDTO getDoctorByLoginPass(@RequestBody RequestDoctorDTO requestDoctorDTO, HttpSession httpSession) {
+        httpSession.setAttribute("abc","bbc");
+
         String login = requestDoctorDTO.getLogin();
         String password = requestDoctorDTO.getPassword();
         return doctorFacade.getDoctorByLoginPassword(login,password);
@@ -26,5 +27,9 @@ public class DoctorController {
     @PostMapping("/login/setpatient")
     public void setPatientToDoctor(@RequestBody ResponseDoctorDTO responseDoctorDTO) {
 
+    }
+    @GetMapping("/log")
+    public void getSomeString(@SessionAttribute("abc") String abc) {
+        System.out.println(abc);
     }
 }
