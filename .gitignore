@@ -12,4 +12,6 @@ logs/
 *.tar.gz
 *.rar
 
+src/main/java/by/emel/anton/controller/
+
 
