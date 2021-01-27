@@ -8,6 +8,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 
+import javax.servlet.http.HttpSession;
+
 @Component
 public class DoctorFacadeImpl implements DoctorFacade {
     @Autowired
@@ -15,16 +17,28 @@ public class DoctorFacadeImpl implements DoctorFacade {
     private UserService userService;
     @Autowired
     private Converter<Doctor, ResponseDoctorDTO> converter;
+    @Autowired
+    HttpSession httpSession;
 
 
     @Override
     public ResponseDoctorDTO getDoctorByLoginPassword(String login, String password) {
 
         try {
-            return userService.getDoctor(login,password).map(converter::convert).orElseThrow(IllegalArgumentException::new);
+            ResponseDoctorDTO responseDoctorDTO = userService.getDoctor(login,password).map(converter::convert).orElseThrow(IllegalArgumentException::new);
+            int id = responseDoctorDTO.getId();
+            httpSession.setAttribute("idd",id);
+            return responseDoctorDTO;
         } catch (UserDAOException e) {
             e.printStackTrace();
         }
         return null;
     }
+
+    @Override
+    public void setPatientToDoctor(int id) {
+
+    }
+
+
 }
