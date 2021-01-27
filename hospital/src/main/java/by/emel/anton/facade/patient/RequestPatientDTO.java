@@ -1,9 +1,13 @@
-package by.emel.anton.facade;
+package by.emel.anton.facade.patient;
 
+
+import javax.validation.constraints.NotNull;
 
 public class RequestPatientDTO {
 
+    @NotNull
     private String login;
+    @NotNull
     private String password;
 
     public String getLogin() {

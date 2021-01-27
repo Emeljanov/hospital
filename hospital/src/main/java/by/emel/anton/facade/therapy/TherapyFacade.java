@@ -1,4 +1,4 @@
-package by.emel.anton.facade;
+package by.emel.anton.facade.therapy;
 
 import by.emel.anton.model.beans.therapy.Therapy;
 

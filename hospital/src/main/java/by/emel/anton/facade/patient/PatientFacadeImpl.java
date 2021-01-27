@@ -1,5 +1,6 @@
-package by.emel.anton.facade;
+package by.emel.anton.facade.patient;
 
+import by.emel.anton.facade.converter.Converter;
 import by.emel.anton.model.beans.users.patients.Patient;
 import by.emel.anton.model.dao.exceptions.UserDAOException;
 import by.emel.anton.service.UserService;
@@ -15,13 +16,11 @@ public class PatientFacadeImpl implements PatientFacade {
     @Autowired
     private Converter<Patient, ResponsePatientDTO> converter;
 
-
     @Override
     public ResponsePatientDTO getPatientById(String id) {
 
         try {
-           return userService.getPatientById(Integer.parseInt(id)).map(converter::convert).orElseThrow(IllegalArgumentException::new);
-//            return converter.convert(patient);
+            return userService.getPatientById(Integer.parseInt(id)).map(converter::convert).orElseThrow(IllegalArgumentException::new);
 
         } catch (UserDAOException e) {
             e.printStackTrace();
@@ -33,8 +32,7 @@ public class PatientFacadeImpl implements PatientFacade {
     public ResponsePatientDTO getPatientByLogPass(String login, String password) {
 
         try {
-           return userService.getPatient(login, password).map(converter::convert).orElse(null);
-//            return converter.convert(patient);
+            return userService.getPatient(login, password).map(converter::convert).orElseThrow(IllegalArgumentException::new);
         } catch (UserDAOException e) {
             e.printStackTrace();
         }
