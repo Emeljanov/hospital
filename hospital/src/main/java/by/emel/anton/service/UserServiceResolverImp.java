@@ -17,11 +17,13 @@ public class UserServiceResolverImp implements UserServiceResolver {
     public UserServiceResolverImp(
             @Qualifier("HibernateService") UserService hibernateUserService,
             @Qualifier("JdbcTemplateService") UserService jdbcTemplateUserService,
-            @Qualifier("FileService") UserService fileUserService) {
+            @Qualifier("FileService") UserService fileUserService,
+            @Qualifier("SpringDataService") UserService springdataUserService) {
         map = new HashMap<>();
         map.put(AnswerType.HIBERNATE, hibernateUserService);
         map.put(AnswerType.TEMPLATE, jdbcTemplateUserService);
         map.put(AnswerType.FILE, fileUserService);
+        map.put(AnswerType.SPRINGDATA,springdataUserService);
     }
 
     @Override

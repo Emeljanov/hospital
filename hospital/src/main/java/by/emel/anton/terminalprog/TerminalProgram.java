@@ -45,10 +45,11 @@ public class TerminalProgram {
     private static final String ERROR_ENTER_PATIENT = "ERROR: patient -> login or password is incorrect";
     private static final String ERROR_ARG_INC = "ERROR: argument is incorrect";
     private static final String SELECT_DATA_STORAGE = "Select data storage: file(FILE), jdbcTemplate(TEMPLATE)," +
-            " hibernate(HIBERNATE) or EXIT";
+            " hibernate(HIBERNATE), spring data(SPRINGDATA) or EXIT";
     private static final String DATA_FROM_FILE = "Data from file";
     private static final String DATA_FROM_JDBC_TEMPLATE = "Data from jdbcTemplate";
     private static final String DATA_FROM_HIBERNATE = "Data from hibernate";
+    private static final String DATA_FROM_SPRINGDATA = "Data from spring data";
 
     private static final Logger LOGGER = LoggerFactory.getLogger(TerminalProgram.class);
 
@@ -92,6 +93,11 @@ public class TerminalProgram {
                     break;
                 case HIBERNATE:
                     LOGGER.info(DATA_FROM_HIBERNATE);
+                    setUserService(userServiceResolver.resolveUserService(answer));
+                    processingProgram(scanner);
+                    break;
+                case SPRINGDATA:
+                    LOGGER.info(DATA_FROM_SPRINGDATA);
                     setUserService(userServiceResolver.resolveUserService(answer));
                     processingProgram(scanner);
                     break;
@@ -247,7 +253,12 @@ public class TerminalProgram {
 
         LOGGER.info(ENTER_PATIENT_ID);
         int patientId = Integer.parseInt(scanner.nextLine().trim());
-        Optional<Patient> optPatient = doctor.getPatients().stream().filter(pat -> pat.getId() == patientId).findFirst();
+        Optional<List<Patient>> optionalPatients = Optional.ofNullable(doctor.getPatients());
+
+        if (!optionalPatients.isPresent()) {
+            throw new UserDAOException("No patients list");
+        }
+        Optional<Patient> optPatient = optionalPatients.get().stream().filter(pat -> pat.getId() == patientId).findFirst();
         if (!optPatient.isPresent())
             throw new UserDAOException("Patien with such id doesn't exist or connect with this doctor");
         Patient patient = optPatient.get();
