@@ -21,7 +21,7 @@ public class SpringDataDoctorDAO implements DoctorDAO {
 
     @Override
     public Optional<Doctor> getDoctor(String login, String password) throws UserDAOException {
-        Optional<Integer> optionalDoctorId = doctorJpaRepository.getDoctorIdByLoginAndPassword(login,password);
+        Optional<Integer> optionalDoctorId = doctorJpaRepository.getDoctorIdByLoginAndPassword(login, password);
         return optionalDoctorId.flatMap(doctorId -> doctorJpaRepository.findById(doctorId));
     }
 }
