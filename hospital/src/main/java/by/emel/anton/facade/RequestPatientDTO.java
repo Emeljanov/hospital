@@ -1,7 +1,5 @@
-package by.emel.anton.facades;
+package by.emel.anton.facade;
 
-
-import java.io.Serializable;
 
 public class RequestPatientDTO {
 

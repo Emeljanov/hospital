@@ -1,17 +1,15 @@
 package by.emel.anton.controller;
 
-import by.emel.anton.facades.ResponsePatientDTO;
-import by.emel.anton.facades.PatientFacade;
-import by.emel.anton.facades.RequestPatientDTO;
+import by.emel.anton.facade.ResponsePatientDTO;
+import by.emel.anton.facade.PatientFacade;
+import by.emel.anton.facade.RequestPatientDTO;
 import by.emel.anton.model.dao.implementation.springdatadao.SpringDataTherapyDAO;
-import by.emel.anton.terminalprog.TerminalProgram;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 //import org.springframework.http.MediaType;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
