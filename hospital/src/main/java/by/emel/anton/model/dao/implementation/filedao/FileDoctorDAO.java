@@ -22,4 +22,9 @@ public class FileDoctorDAO implements DoctorDAO {
     public Optional<Doctor> getDoctor(String login, String password) throws UserDAOException {
         return fileUserDAO.getDoctorFromFile(login, password);
     }
+
+    @Override
+    public Optional<Doctor> getDoctorById(int id) throws UserDAOException {
+        return Optional.empty();
+    }
 }

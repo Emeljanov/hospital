@@ -63,6 +63,11 @@ public class UserServiceImp implements UserService {
     }
 
     @Override
+    public Optional<Doctor> getDoctorById(int id) throws UserDAOException {
+        return doctorDAO.getDoctorById(id);
+    }
+
+    @Override
     public Optional<Patient> getPatient(String login, String password) throws UserDAOException {
         return patientDAO.getPatient(login, password);
     }

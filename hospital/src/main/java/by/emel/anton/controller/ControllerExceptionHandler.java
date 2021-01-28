@@ -1,5 +1,7 @@
 package by.emel.anton.controller;
 
+import by.emel.anton.model.dao.exceptions.TherapyDAOException;
+import by.emel.anton.model.dao.exceptions.UserDAOException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
@@ -13,8 +15,21 @@ public class ControllerExceptionHandler {
 
 
     @ResponseStatus(HttpStatus.BAD_REQUEST)
-    @ExceptionHandler(Exception.class)
-    public void exceptionHanlder(Exception exception) {
-        LOGGER.error("some error from excpHH",exception);
+    @ExceptionHandler(UserDAOException.class)
+    public void UserDAOexceptionHandler(UserDAOException userDAOException) {
+        LOGGER.error(userDAOException.getMessage());
     }
+
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ExceptionHandler(TherapyDAOException.class)
+    public void TherapyDAOexceptionHandler(TherapyDAOException therapyDAOException) {
+        LOGGER.error(therapyDAOException.getMessage());
+    }
+
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ExceptionHandler(Exception.class)
+    public void exceptionHandler(Exception exception) {
+        LOGGER.error("Controller exception :" + exception.getClass().getSimpleName());
+    }
+
 }

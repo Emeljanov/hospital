@@ -20,6 +20,8 @@ public interface UserService {
 
     Optional<Doctor> getDoctor(String login, String password) throws UserDAOException;
 
+    Optional<Doctor> getDoctorById(int id) throws UserDAOException;
+
     Optional<Patient> getPatient(String login, String password) throws UserDAOException;
 
     Optional<Patient> getPatientById(int id) throws UserDAOException;

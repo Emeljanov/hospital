@@ -50,6 +50,7 @@ public class JdbcTemplateDoctorDAO implements DoctorDAO {
         }
     }
 
+    @Override
     public Optional<Doctor> getDoctorById(int id) throws UserDAOException {
         try {
             Doctor doctor = jdbcTemplate.queryForObject(SQL_GET_DOCTOR_BY_ID, new Object[]{id}, doctorMapper);

@@ -9,4 +9,6 @@ public interface DoctorDAO {
 
     Optional<Doctor> getDoctor(String login, String password) throws UserDAOException;
 
+    Optional<Doctor> getDoctorById(int id) throws UserDAOException;
+
 }

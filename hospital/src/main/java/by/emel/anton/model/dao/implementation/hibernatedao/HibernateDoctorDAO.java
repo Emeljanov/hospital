@@ -27,4 +27,9 @@ public class HibernateDoctorDAO implements DoctorDAO {
         return Optional.ofNullable(entityManager.find(Doctor.class, HibernateUserDAO.getUserId(login, password, entityManager)));
 
     }
+
+    @Override
+    public Optional<Doctor> getDoctorById(int id) throws UserDAOException {
+        return Optional.ofNullable(entityManager.find(Doctor.class,id));
+    }
 }
