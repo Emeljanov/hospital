@@ -12,5 +12,6 @@ logs/
 *.tar.gz
 *.rar
 
-filedao/
-fileworkservice/
+controller/
+facades/
+

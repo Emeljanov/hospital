@@ -13,6 +13,7 @@ public enum AnswerType {
     FILE,
     TEMPLATE,
     BACK,
-    HIBERNATE
+    HIBERNATE,
+    SPRINGDATA
 
 }

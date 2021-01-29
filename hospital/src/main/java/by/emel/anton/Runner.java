@@ -23,6 +23,5 @@ public class Runner implements CommandLineRunner {
     public void run(String... args) {
 
         terminalProgram.startProgram();
-
     }
 }
