@@ -1,11 +1,9 @@
 package by.emel.anton.facade.patient;
 
-import by.emel.anton.model.dao.exceptions.UserDaoUncheckedException;
-
 public interface PatientFacade {
 
-    ResponsePatientDTO getPatientById(int id) throws UserDaoUncheckedException;
+    ResponsePatientDTO getPatientById(int id);
 
-    ResponsePatientDTO getPatientByLogPass(String login, String password) throws UserDaoUncheckedException;
+    ResponsePatientDTO getPatientByLogPass(String login, String password);
 
 }

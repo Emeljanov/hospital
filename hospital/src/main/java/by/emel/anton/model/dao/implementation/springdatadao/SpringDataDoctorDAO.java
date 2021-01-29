@@ -1,7 +1,6 @@
 package by.emel.anton.model.dao.implementation.springdatadao;
 
 import by.emel.anton.model.beans.users.doctors.Doctor;
-import by.emel.anton.model.dao.exceptions.UserDaoUncheckedException;
 import by.emel.anton.model.dao.implementation.springdatadao.intefaces.DoctorJpaRepository;
 import by.emel.anton.model.dao.interfaces.DoctorDAO;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,13 +19,13 @@ public class SpringDataDoctorDAO implements DoctorDAO {
     }
 
     @Override
-    public Optional<Doctor> getDoctor(String login, String password) throws UserDaoUncheckedException {
+    public Optional<Doctor> getDoctor(String login, String password) {
         Optional<Integer> optionalDoctorId = doctorJpaRepository.getDoctorIdByLoginAndPassword(login, password);
         return optionalDoctorId.flatMap(doctorId -> doctorJpaRepository.findById(doctorId));
     }
 
     @Override
-    public Optional<Doctor> getDoctorById(int id) throws UserDaoUncheckedException {
+    public Optional<Doctor> getDoctorById(int id) {
         return doctorJpaRepository.findById(id);
     }
 

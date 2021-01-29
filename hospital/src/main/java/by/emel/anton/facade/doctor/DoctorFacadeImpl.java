@@ -5,7 +5,6 @@ import by.emel.anton.facade.therapy.RequestTherapyDTO;
 import by.emel.anton.model.beans.therapy.Therapy;
 import by.emel.anton.model.beans.users.doctors.Doctor;
 import by.emel.anton.model.beans.users.patients.Patient;
-import by.emel.anton.model.dao.exceptions.TherapyDaoUncheckedException;
 import by.emel.anton.model.dao.exceptions.UserDaoUncheckedException;
 import by.emel.anton.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,7 +27,7 @@ public class DoctorFacadeImpl implements DoctorFacade {
     HttpSession httpSession;
 
     @Override
-    public ResponseDoctorDTO getDoctorByLoginPassword(String login, String password) throws UserDaoUncheckedException {
+    public ResponseDoctorDTO getDoctorByLoginPassword(String login, String password) {
 
         ResponseDoctorDTO responseDoctorDTO = userService
                 .getDoctor(login, password)
@@ -41,7 +40,7 @@ public class DoctorFacadeImpl implements DoctorFacade {
     }
 
     @Override
-    public void setPatientToDoctor(int doctorId, int patientId) throws UserDaoUncheckedException {
+    public void setPatientToDoctor(int doctorId, int patientId) {
 
         Doctor doctor = userService
                 .getDoctorById(doctorId)
@@ -52,7 +51,7 @@ public class DoctorFacadeImpl implements DoctorFacade {
     }
 
     @Override
-    public void setTherapyToPatient(int doctorId, RequestTherapyDTO requestTherapyDTO) throws UserDaoUncheckedException, TherapyDaoUncheckedException {
+    public void setTherapyToPatient(int doctorId, RequestTherapyDTO requestTherapyDTO) {
 
         int patientId = requestTherapyDTO.getPatientId();
         Doctor doctor = userService

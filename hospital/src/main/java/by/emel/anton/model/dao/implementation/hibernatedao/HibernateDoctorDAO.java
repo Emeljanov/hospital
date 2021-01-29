@@ -1,7 +1,6 @@
 package by.emel.anton.model.dao.implementation.hibernatedao;
 
 import by.emel.anton.model.beans.users.doctors.Doctor;
-import by.emel.anton.model.dao.exceptions.UserDaoUncheckedException;
 import by.emel.anton.model.dao.interfaces.DoctorDAO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
@@ -22,14 +21,14 @@ public class HibernateDoctorDAO implements DoctorDAO {
     }
 
     @Override
-    public Optional<Doctor> getDoctor(String login, String password) throws UserDaoUncheckedException {
+    public Optional<Doctor> getDoctor(String login, String password) {
 
         return Optional.ofNullable(entityManager.find(Doctor.class, HibernateUserDAO.getUserId(login, password, entityManager)));
 
     }
 
     @Override
-    public Optional<Doctor> getDoctorById(int id) throws UserDaoUncheckedException {
-        return Optional.ofNullable(entityManager.find(Doctor.class,id));
+    public Optional<Doctor> getDoctorById(int id) {
+        return Optional.ofNullable(entityManager.find(Doctor.class, id));
     }
 }

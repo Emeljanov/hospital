@@ -24,12 +24,12 @@ public class HibernateTherapyDAO implements TherapyDAO {
     }
 
     @Override
-    public void saveTherapy(Therapy therapy) throws TherapyDaoUncheckedException {
+    public void saveTherapy(Therapy therapy) {
         entityManager.persist(therapy);
     }
 
     @Override
-    public Optional<Therapy> getTherapy(int id) throws TherapyDaoUncheckedException {
+    public Optional<Therapy> getTherapy(int id) {
         try {
             return Optional.ofNullable(entityManager.find(Therapy.class, id));
         } catch (NoResultException e) {

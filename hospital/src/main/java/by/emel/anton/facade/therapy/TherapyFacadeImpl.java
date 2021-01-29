@@ -3,7 +3,6 @@ package by.emel.anton.facade.therapy;
 import by.emel.anton.facade.converter.Converter;
 import by.emel.anton.model.beans.therapy.Therapy;
 import by.emel.anton.model.dao.exceptions.TherapyDaoUncheckedException;
-import by.emel.anton.model.dao.exceptions.UserDaoUncheckedException;
 import by.emel.anton.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -20,7 +19,7 @@ public class TherapyFacadeImpl implements TherapyFacade {
     Converter<Therapy, ResponseTherapyDTO> converter;
 
     @Override
-    public ResponseTherapyDTO getTherapy(int id) throws TherapyDaoUncheckedException, UserDaoUncheckedException {
+    public ResponseTherapyDTO getTherapy(int id) {
 
         return userService
                 .getTherapy(id)

@@ -2,7 +2,6 @@ package by.emel.anton.model.dao.implementation.jdbctemplatedao;
 
 import by.emel.anton.model.beans.therapy.Therapy;
 import by.emel.anton.model.beans.users.patients.Patient;
-import by.emel.anton.model.dao.exceptions.UserDaoUncheckedException;
 import by.emel.anton.model.dao.implementation.jdbctemplatedao.rowmappers.TherapyMapper;
 import by.emel.anton.model.dao.interfaces.TherapyDAO;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -38,11 +37,11 @@ public class JdbcTemplateTherapyDAO implements TherapyDAO {
     }
 
     @Override
-    public Optional<Therapy> getTherapy(int id) throws UserDaoUncheckedException {
+    public Optional<Therapy> getTherapy(int id) {
 
         Therapy therapy = jdbcTemplate.queryForObject(SQL_GET_THERAPY_BY_ID, new Object[]{id}, new TherapyMapper());
         Optional<Patient> patient = jdbcTemplatePatientDAO.getPatientById(therapy.getPatient().getId());
-        patient.ifPresent(pat -> therapy.setPatient(pat));
+        patient.ifPresent(therapy::setPatient);
 
         return Optional.ofNullable(therapy);
     }

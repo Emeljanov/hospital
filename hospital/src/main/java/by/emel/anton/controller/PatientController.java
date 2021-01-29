@@ -5,8 +5,6 @@ import by.emel.anton.facade.patient.RequestPatientDTO;
 import by.emel.anton.facade.patient.ResponsePatientDTO;
 import by.emel.anton.facade.therapy.ResponseTherapyDTO;
 import by.emel.anton.facade.therapy.TherapyFacade;
-import by.emel.anton.model.dao.exceptions.TherapyDaoUncheckedException;
-import by.emel.anton.model.dao.exceptions.UserDaoUncheckedException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,14 +22,14 @@ public class PatientController {
     TherapyFacade therapyFacade;
 
     @GetMapping("/by_id")
-    public ResponsePatientDTO getPatientById(@RequestParam int patientId) throws UserDaoUncheckedException {
+    public ResponsePatientDTO getPatientById(@RequestParam int patientId) {
         LOGGER.info("Get patient by id: {}", patientId);
 
         return patientFacade.getPatientById(patientId);
     }
 
     @PostMapping("/login")
-    public ResponsePatientDTO getPatientByLoginPass(@RequestBody RequestPatientDTO requestPatientDTO) throws UserDaoUncheckedException {
+    public ResponsePatientDTO getPatientByLoginPass(@RequestBody RequestPatientDTO requestPatientDTO) {
 
         String login = requestPatientDTO.getLogin();
         String password = requestPatientDTO.getPassword();
@@ -41,7 +39,7 @@ public class PatientController {
     }
 
     @GetMapping("/get_therapy")
-    public ResponseTherapyDTO getTherapyById(@RequestParam int therapyId) throws TherapyDaoUncheckedException, UserDaoUncheckedException {
+    public ResponseTherapyDTO getTherapyById(@RequestParam int therapyId) {
         LOGGER.info("Get therapy by id : {}", therapyId);
 
         return therapyFacade.getTherapy(therapyId);

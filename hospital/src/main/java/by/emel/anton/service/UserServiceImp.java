@@ -5,7 +5,6 @@ import by.emel.anton.model.beans.therapy.Therapy;
 import by.emel.anton.model.beans.users.User;
 import by.emel.anton.model.beans.users.doctors.Doctor;
 import by.emel.anton.model.beans.users.patients.Patient;
-import by.emel.anton.model.dao.exceptions.TherapyDaoUncheckedException;
 import by.emel.anton.model.dao.exceptions.UserDaoUncheckedException;
 import by.emel.anton.model.dao.interfaces.DoctorDAO;
 import by.emel.anton.model.dao.interfaces.PatientDAO;
@@ -37,7 +36,7 @@ public class UserServiceImp implements UserService {
     }
 
     @Override
-    public void createUser(User user, String login, String password, String name, LocalDate birthday, boolean isSave) throws UserDaoUncheckedException {
+    public void createUser(User user, String login, String password, String name, LocalDate birthday, boolean isSave) {
         user.setLogin(login);
         user.setPassword(password);
         user.setName(name);
@@ -48,47 +47,47 @@ public class UserServiceImp implements UserService {
     }
 
     @Override
-    public void saveUser(User user) throws UserDaoUncheckedException {
+    public void saveUser(User user) {
         userDAO.saveUser(user);
     }
 
     @Override
-    public void saveTherapy(Therapy therapy) throws TherapyDaoUncheckedException {
+    public void saveTherapy(Therapy therapy) {
         therapyDAO.saveTherapy(therapy);
     }
 
     @Override
-    public Optional<Doctor> getDoctor(String login, String password) throws UserDaoUncheckedException {
+    public Optional<Doctor> getDoctor(String login, String password) {
         return doctorDAO.getDoctor(login, password);
     }
 
     @Override
-    public Optional<Doctor> getDoctorById(int id) throws UserDaoUncheckedException {
+    public Optional<Doctor> getDoctorById(int id) {
         return doctorDAO.getDoctorById(id);
     }
 
     @Override
-    public Optional<Patient> getPatient(String login, String password) throws UserDaoUncheckedException {
+    public Optional<Patient> getPatient(String login, String password) {
         return patientDAO.getPatient(login, password);
     }
 
     @Override
-    public Optional<Patient> getPatientById(int id) throws UserDaoUncheckedException {
+    public Optional<Patient> getPatientById(int id) {
         return patientDAO.getPatientById(id);
     }
 
     @Override
-    public Optional<Therapy> getTherapy(int id) throws TherapyDaoUncheckedException, UserDaoUncheckedException {
+    public Optional<Therapy> getTherapy(int id) {
         return therapyDAO.getTherapy(id);
     }
 
     @Override
-    public void updateUser(User user) throws UserDaoUncheckedException {
+    public void updateUser(User user) {
         userDAO.updateUser(user);
     }
 
     @Override
-    public void addTherapy(Patient patient, String description, LocalDate endDate) throws UserDaoUncheckedException, TherapyDaoUncheckedException {
+    public void addTherapy(Patient patient, String description, LocalDate endDate) {
 
         Therapy therapy = new Therapy();
         therapy.setDescription(description);
@@ -96,16 +95,17 @@ public class UserServiceImp implements UserService {
         therapy.setEndDate(endDate);
         therapy.setPatient(patient);
         Optional<List<Therapy>> therapies = Optional.ofNullable(patient.getTherapies());
-        therapies.ifPresentOrElse( t -> t.add(therapy),
-                () -> {List<Therapy> t = new ArrayList<>();
-                t.add(therapy);
-                patient.setTherapies(t);
-        });
+        therapies.ifPresentOrElse(t -> t.add(therapy),
+                () -> {
+                    List<Therapy> t = new ArrayList<>();
+                    t.add(therapy);
+                    patient.setTherapies(t);
+                });
         saveTherapy(therapy);
     }
 
     @Override
-    public void addPatientToDoctor(Doctor doctor, int patientId) throws UserDaoUncheckedException {
+    public void addPatientToDoctor(Doctor doctor, int patientId) {
 
         Patient patient = getPatientById(patientId)
                 .orElseThrow(() -> new UserDaoUncheckedException(Constants.EXCEPTION_NO_ID));

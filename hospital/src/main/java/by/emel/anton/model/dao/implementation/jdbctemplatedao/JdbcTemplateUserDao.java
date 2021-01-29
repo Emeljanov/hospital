@@ -4,6 +4,7 @@ import by.emel.anton.model.beans.users.User;
 import by.emel.anton.model.beans.users.UserType;
 import by.emel.anton.model.beans.users.doctors.Doctor;
 import by.emel.anton.model.beans.users.patients.Patient;
+import by.emel.anton.model.dao.exceptions.UserDaoUncheckedException;
 import by.emel.anton.model.dao.interfaces.UserDAO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -63,7 +64,7 @@ public class JdbcTemplateUserDao implements UserDAO {
     public void saveUser(User user) {
         String login = user.getLogin();
         if (isLoginExist(login)) {
-            return;
+            throw new UserDaoUncheckedException();
         }
 
         UserType userType = user.getUserType();

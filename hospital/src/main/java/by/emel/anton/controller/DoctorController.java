@@ -4,8 +4,6 @@ import by.emel.anton.facade.doctor.DoctorFacade;
 import by.emel.anton.facade.doctor.RequestDoctorDTO;
 import by.emel.anton.facade.doctor.ResponseDoctorDTO;
 import by.emel.anton.facade.therapy.RequestTherapyDTO;
-import by.emel.anton.model.dao.exceptions.TherapyDaoUncheckedException;
-import by.emel.anton.model.dao.exceptions.UserDaoUncheckedException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,7 +20,7 @@ public class DoctorController {
     private static final Logger LOGGER = LoggerFactory.getLogger(DoctorController.class);
 
     @PostMapping("/login")
-    public ResponseDoctorDTO getDoctorByLoginPass(@RequestBody @Validated RequestDoctorDTO requestDoctorDTO) throws UserDaoUncheckedException {
+    public ResponseDoctorDTO getDoctorByLoginPass(@RequestBody @Validated RequestDoctorDTO requestDoctorDTO) {
 
         String login = requestDoctorDTO.getLogin();
         String password = requestDoctorDTO.getPassword();
@@ -33,7 +31,7 @@ public class DoctorController {
     }
 
     @PostMapping("/login/setpatient")
-    public void setPatientToDoctor(@SessionAttribute("doctorId") int doctorId, @RequestParam int patientId) throws UserDaoUncheckedException {
+    public void setPatientToDoctor(@SessionAttribute("doctorId") int doctorId, @RequestParam int patientId) {
 
         LOGGER.info("Set patient id: {} by doctor id: {}", patientId, doctorId);
         doctorFacade.setPatientToDoctor(doctorId, patientId);
@@ -41,7 +39,7 @@ public class DoctorController {
     }
 
     @PostMapping("/login/settherapy")
-    public void setTherapyToPatient(@RequestBody RequestTherapyDTO requestTherapyDTO, @SessionAttribute("doctorId") int doctorId) throws UserDaoUncheckedException, TherapyDaoUncheckedException {
+    public void setTherapyToPatient(@RequestBody RequestTherapyDTO requestTherapyDTO, @SessionAttribute("doctorId") int doctorId) {
 
         LOGGER.info("Set therapy description : {} to patient id: {} by doctor id : {}",
                 requestTherapyDTO.getDescription(), requestTherapyDTO.getPatientId(), doctorId);

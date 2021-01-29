@@ -18,7 +18,7 @@ public class PatientFacadeImpl implements PatientFacade {
     private Converter<Patient, ResponsePatientDTO> converter;
 
     @Override
-    public ResponsePatientDTO getPatientById(int id) throws UserDaoUncheckedException {
+    public ResponsePatientDTO getPatientById(int id) {
 
         return userService
                 .getPatientById(id)
@@ -27,7 +27,7 @@ public class PatientFacadeImpl implements PatientFacade {
     }
 
     @Override
-    public ResponsePatientDTO getPatientByLogPass(String login, String password) throws UserDaoUncheckedException {
+    public ResponsePatientDTO getPatientByLogPass(String login, String password) {
 
         return userService
                 .getPatient(login, password)

@@ -38,7 +38,7 @@ public class JdbcTemplateDoctorDAO implements DoctorDAO {
     }
 
     @Override
-    public Optional<Doctor> getDoctor(String login, String password) throws UserDaoUncheckedException {
+    public Optional<Doctor> getDoctor(String login, String password) {
 
         try {
             Doctor doctor = jdbcTemplate.queryForObject(SQL_GET_DOCTOR, new Object[]{login, password}, doctorMapper);
@@ -51,7 +51,7 @@ public class JdbcTemplateDoctorDAO implements DoctorDAO {
     }
 
     @Override
-    public Optional<Doctor> getDoctorById(int id) throws UserDaoUncheckedException {
+    public Optional<Doctor> getDoctorById(int id) {
         try {
             Doctor doctor = jdbcTemplate.queryForObject(SQL_GET_DOCTOR_BY_ID, new Object[]{id}, doctorMapper);
             addPatients(doctor);

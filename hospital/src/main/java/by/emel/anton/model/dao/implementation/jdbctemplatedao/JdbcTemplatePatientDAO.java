@@ -29,7 +29,7 @@ public class JdbcTemplatePatientDAO implements PatientDAO {
     }
 
     @Override
-    public Optional<Patient> getPatient(String login, String password) throws UserDaoUncheckedException {
+    public Optional<Patient> getPatient(String login, String password) {
         try {
             Patient patient = jdbcTemplate.queryForObject(SQL_GET_PATIENT, new Object[]{login, password}, patientMapper);
             addDoctorAndTherapiesToPatient(patient, jdbcTemplate);
@@ -40,7 +40,7 @@ public class JdbcTemplatePatientDAO implements PatientDAO {
     }
 
     @Override
-    public Optional<Patient> getPatientById(int id) throws UserDaoUncheckedException {
+    public Optional<Patient> getPatientById(int id) {
         try {
             Patient patient = jdbcTemplate.queryForObject(SQL_GET_PATIENT_BY_ID, new Object[]{id}, patientMapper);
             addDoctorAndTherapiesToPatient(patient, jdbcTemplate);
@@ -53,13 +53,7 @@ public class JdbcTemplatePatientDAO implements PatientDAO {
     private void addDoctorAndTherapiesToPatient(Patient patient, JdbcTemplate jdbcTemplate) {
 
         Optional<Doctor> optionalDoctor = Optional.ofNullable(patient.getDoctor());
-        optionalDoctor.ifPresent(doctor -> {
-            try {
-                jdbcTemplateDoctorDAO.getDoctorById(doctor.getId()).ifPresent(patient::setDoctor);
-            } catch (UserDaoUncheckedException e) {
-                e.printStackTrace();
-            }
-        });
+        optionalDoctor.flatMap(doctor -> jdbcTemplateDoctorDAO.getDoctorById(doctor.getId())).ifPresent(patient::setDoctor);
         JdbcTemplateService.addTherapiesToPatient(patient, jdbcTemplate);
     }
 }

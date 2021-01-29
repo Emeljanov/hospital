@@ -24,7 +24,7 @@ public class HibernateUserDAO implements UserDAO {
     }
 
     @Override
-    public boolean isLoginExist(String login) throws UserDaoUncheckedException {
+    public boolean isLoginExist(String login) {
         String query = "select count(*) from User where login = ?0";
         int count = (Integer) entityManager.createQuery(query).setParameter(0, login).getSingleResult();
         return count >= 1;
@@ -32,16 +32,16 @@ public class HibernateUserDAO implements UserDAO {
     }
 
     @Override
-    public void updateUser(User user) throws UserDaoUncheckedException {
+    public void updateUser(User user) {
         entityManager.merge(user);
     }
 
     @Override
-    public void saveUser(User user) throws UserDaoUncheckedException {
+    public void saveUser(User user) {
         entityManager.persist(user);
     }
 
-    protected static int getUserId(String login, String password, EntityManager entityManager) throws UserDaoUncheckedException {
+    protected static int getUserId(String login, String password, EntityManager entityManager) {
         String queryGetDoctorId = "select id from User where login = ?0 and password = ?1";
         try {
             return (int) entityManager

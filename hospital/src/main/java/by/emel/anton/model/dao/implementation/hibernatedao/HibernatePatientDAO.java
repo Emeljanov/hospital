@@ -24,14 +24,14 @@ public class HibernatePatientDAO implements PatientDAO {
     }
 
     @Override
-    public Optional<Patient> getPatient(String login, String password) throws UserDaoUncheckedException {
+    public Optional<Patient> getPatient(String login, String password) {
 
         return Optional.ofNullable(entityManager.find(Patient.class, HibernateUserDAO.getUserId(login, password, entityManager)));
 
     }
 
     @Override
-    public Optional<Patient> getPatientById(int id) throws UserDaoUncheckedException {
+    public Optional<Patient> getPatientById(int id) {
 
         try {
             return Optional.ofNullable(entityManager.find(Patient.class, id));
