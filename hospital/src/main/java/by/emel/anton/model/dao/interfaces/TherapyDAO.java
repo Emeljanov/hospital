@@ -1,14 +1,14 @@
 package by.emel.anton.model.dao.interfaces;
 
 import by.emel.anton.model.beans.therapy.Therapy;
-import by.emel.anton.model.dao.exceptions.TherapyDAOException;
-import by.emel.anton.model.dao.exceptions.UserDAOException;
+import by.emel.anton.model.dao.exceptions.TherapyDaoUncheckedException;
+import by.emel.anton.model.dao.exceptions.UserDaoUncheckedException;
 
 import java.util.Optional;
 
 public interface TherapyDAO {
 
-    void saveTherapy(Therapy therapy) throws TherapyDAOException;
+    void saveTherapy(Therapy therapy) throws TherapyDaoUncheckedException;
 
-    Optional<Therapy> getTherapy(int id) throws TherapyDAOException, UserDAOException;
+    Optional<Therapy> getTherapy(int id) throws TherapyDaoUncheckedException, UserDaoUncheckedException;
 }

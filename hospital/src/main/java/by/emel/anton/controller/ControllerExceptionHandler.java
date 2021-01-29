@@ -1,7 +1,7 @@
 package by.emel.anton.controller;
 
-import by.emel.anton.model.dao.exceptions.TherapyDAOException;
-import by.emel.anton.model.dao.exceptions.UserDAOException;
+import by.emel.anton.model.dao.exceptions.TherapyDaoUncheckedException;
+import by.emel.anton.model.dao.exceptions.UserDaoUncheckedException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
@@ -15,15 +15,15 @@ public class ControllerExceptionHandler {
 
 
     @ResponseStatus(HttpStatus.BAD_REQUEST)
-    @ExceptionHandler(UserDAOException.class)
-    public void userDaoExceptionHandler(UserDAOException userDAOException) {
-        LOGGER.error(userDAOException.getMessage());
+    @ExceptionHandler(UserDaoUncheckedException.class)
+    public void userDaoExceptionHandler(UserDaoUncheckedException userDaoUncheckedException) {
+        LOGGER.error(userDaoUncheckedException.getMessage());
     }
 
     @ResponseStatus(HttpStatus.BAD_REQUEST)
-    @ExceptionHandler(TherapyDAOException.class)
-    public void therapyDaoExceptionHandler(TherapyDAOException therapyDAOException) {
-        LOGGER.error(therapyDAOException.getMessage());
+    @ExceptionHandler(TherapyDaoUncheckedException.class)
+    public void therapyDaoExceptionHandler(TherapyDaoUncheckedException therapyDaoUncheckedException) {
+        LOGGER.error(therapyDaoUncheckedException.getMessage());
     }
 
     @ResponseStatus(HttpStatus.BAD_REQUEST)

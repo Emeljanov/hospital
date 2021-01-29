@@ -3,7 +3,7 @@ package by.emel.anton.model.dao.implementation.jdbctemplatedao;
 import by.emel.anton.constants.Constants;
 import by.emel.anton.model.beans.users.doctors.Doctor;
 import by.emel.anton.model.beans.users.patients.Patient;
-import by.emel.anton.model.dao.exceptions.UserDAOException;
+import by.emel.anton.model.dao.exceptions.UserDaoUncheckedException;
 import by.emel.anton.model.dao.implementation.jdbctemplatedao.rowmappers.DoctorMapper;
 import by.emel.anton.model.dao.implementation.jdbctemplatedao.rowmappers.PatientMapper;
 import by.emel.anton.model.dao.interfaces.DoctorDAO;
@@ -38,7 +38,7 @@ public class JdbcTemplateDoctorDAO implements DoctorDAO {
     }
 
     @Override
-    public Optional<Doctor> getDoctor(String login, String password) throws UserDAOException {
+    public Optional<Doctor> getDoctor(String login, String password) throws UserDaoUncheckedException {
 
         try {
             Doctor doctor = jdbcTemplate.queryForObject(SQL_GET_DOCTOR, new Object[]{login, password}, doctorMapper);
@@ -46,18 +46,18 @@ public class JdbcTemplateDoctorDAO implements DoctorDAO {
             return Optional.of(doctor);
 
         } catch (DataAccessException e) {
-            throw new UserDAOException(Constants.EXCEPTION_MESSAGE_LP_INCORRECT);
+            throw new UserDaoUncheckedException(Constants.EXCEPTION_MESSAGE_LP_INCORRECT);
         }
     }
 
     @Override
-    public Optional<Doctor> getDoctorById(int id) throws UserDAOException {
+    public Optional<Doctor> getDoctorById(int id) throws UserDaoUncheckedException {
         try {
             Doctor doctor = jdbcTemplate.queryForObject(SQL_GET_DOCTOR_BY_ID, new Object[]{id}, doctorMapper);
             addPatients(doctor);
             return Optional.of(doctor);
         } catch (DataAccessException e) {
-            throw new UserDAOException("ERROR getDoctorByID");
+            throw new UserDaoUncheckedException("ERROR getDoctorByID");
         }
     }
 

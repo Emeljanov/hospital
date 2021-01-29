@@ -2,7 +2,7 @@ package by.emel.anton.model.dao.implementation.hibernatedao;
 
 import by.emel.anton.constants.Constants;
 import by.emel.anton.model.beans.users.patients.Patient;
-import by.emel.anton.model.dao.exceptions.UserDAOException;
+import by.emel.anton.model.dao.exceptions.UserDaoUncheckedException;
 import by.emel.anton.model.dao.interfaces.PatientDAO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
@@ -24,19 +24,19 @@ public class HibernatePatientDAO implements PatientDAO {
     }
 
     @Override
-    public Optional<Patient> getPatient(String login, String password) throws UserDAOException {
+    public Optional<Patient> getPatient(String login, String password) throws UserDaoUncheckedException {
 
         return Optional.ofNullable(entityManager.find(Patient.class, HibernateUserDAO.getUserId(login, password, entityManager)));
 
     }
 
     @Override
-    public Optional<Patient> getPatientById(int id) throws UserDAOException {
+    public Optional<Patient> getPatientById(int id) throws UserDaoUncheckedException {
 
         try {
             return Optional.ofNullable(entityManager.find(Patient.class, id));
         } catch (NoResultException e) {
-            throw new UserDAOException(Constants.EXCEPTION_NO_ID);
+            throw new UserDaoUncheckedException(Constants.EXCEPTION_NO_ID);
         }
     }
 }

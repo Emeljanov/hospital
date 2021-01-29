@@ -6,8 +6,8 @@ import by.emel.anton.model.beans.users.User;
 import by.emel.anton.model.beans.users.doctors.Doctor;
 import by.emel.anton.model.beans.users.patients.Patient;
 import by.emel.anton.model.dao.exceptions.TerminalException;
-import by.emel.anton.model.dao.exceptions.TherapyDAOException;
-import by.emel.anton.model.dao.exceptions.UserDAOException;
+import by.emel.anton.model.dao.exceptions.TherapyDaoUncheckedException;
+import by.emel.anton.model.dao.exceptions.UserDaoUncheckedException;
 import by.emel.anton.service.UserService;
 import by.emel.anton.service.UserServiceResolver;
 import org.slf4j.Logger;
@@ -146,12 +146,12 @@ public class TerminalProgram {
                 default:
                     throw new TerminalException(ERROR_ARG_INC);
             }
-        } catch (TerminalException | UserDAOException | TherapyDAOException e) {
+        } catch (TerminalException | UserDaoUncheckedException | TherapyDaoUncheckedException e) {
             LOGGER.error(e.getClass().getSimpleName() + Constants.SPACE + e.getMessage());
         }
     }
 
-    private void createNewUser(Scanner scanner) throws UserDAOException {
+    private void createNewUser(Scanner scanner) throws UserDaoUncheckedException {
 
         LOGGER.info(CREATE_NEW_USER);
 
@@ -184,7 +184,7 @@ public class TerminalProgram {
         }
     }
 
-    private void enterDoctor(Scanner scanner) throws UserDAOException, TherapyDAOException {
+    private void enterDoctor(Scanner scanner) throws UserDaoUncheckedException, TherapyDaoUncheckedException {
 
         LOGGER.info(ENTER_LOGIN);
         String login = scanner.nextLine();
@@ -192,14 +192,14 @@ public class TerminalProgram {
         String password = scanner.nextLine();
         Doctor doctor = userService
                 .getDoctor(login, password)
-                .orElseThrow(() -> new UserDAOException(ERROR_ENTER_DOCTOR));
+                .orElseThrow(() -> new UserDaoUncheckedException(ERROR_ENTER_DOCTOR));
         LOGGER.info(HI + doctor.getName());
 
         startProcessingDoctor(scanner, doctor);
 
     }
 
-    private void startProcessingDoctor(Scanner scanner, Doctor doctor) throws UserDAOException, TherapyDAOException {
+    private void startProcessingDoctor(Scanner scanner, Doctor doctor) throws UserDaoUncheckedException, TherapyDaoUncheckedException {
 
         while (flag_doctor) {
             processingDoctor(scanner, doctor);
@@ -208,7 +208,7 @@ public class TerminalProgram {
 
     }
 
-    private void processingDoctor(Scanner scanner, Doctor doctor) throws UserDAOException, TherapyDAOException {
+    private void processingDoctor(Scanner scanner, Doctor doctor) throws UserDaoUncheckedException, TherapyDaoUncheckedException {
 
         LOGGER.info(PROCESSING_DOCTOR);
 
@@ -249,18 +249,18 @@ public class TerminalProgram {
 
     }
 
-    private void setTherapyToPatient(Scanner scanner, Doctor doctor) throws UserDAOException, TherapyDAOException, TerminalException {
+    private void setTherapyToPatient(Scanner scanner, Doctor doctor) throws UserDaoUncheckedException, TherapyDaoUncheckedException, TerminalException {
 
         LOGGER.info(ENTER_PATIENT_ID);
         int patientId = Integer.parseInt(scanner.nextLine().trim());
         Optional<List<Patient>> optionalPatients = Optional.ofNullable(doctor.getPatients());
 
         if (!optionalPatients.isPresent()) {
-            throw new UserDAOException("No patients list");
+            throw new UserDaoUncheckedException("No patients list");
         }
         Optional<Patient> optPatient = optionalPatients.get().stream().filter(pat -> pat.getId() == patientId).findFirst();
         if (!optPatient.isPresent())
-            throw new UserDAOException("Patien with such id doesn't exist or connect with this doctor");
+            throw new UserDaoUncheckedException("Patien with such id doesn't exist or connect with this doctor");
         Patient patient = optPatient.get();
         LOGGER.info(ENTER_THERAPY_DESCR);
         String description = scanner.nextLine();
@@ -270,7 +270,7 @@ public class TerminalProgram {
         userService.addTherapy(patient, description, endDate);
     }
 
-    private void addPatientToDoctor(Scanner scanner, Doctor doctor) throws UserDAOException {
+    private void addPatientToDoctor(Scanner scanner, Doctor doctor) throws UserDaoUncheckedException {
 
         LOGGER.info(ENTER_PATIENT_ID);
         int patientId = Integer.parseInt(scanner.nextLine().trim());
@@ -279,7 +279,7 @@ public class TerminalProgram {
 
     }
 
-    private void enterPatient(Scanner scanner) throws UserDAOException, TherapyDAOException {
+    private void enterPatient(Scanner scanner) throws UserDaoUncheckedException, TherapyDaoUncheckedException {
 
         LOGGER.info(ENTER_LOGIN);
         String login = scanner.nextLine();
@@ -287,13 +287,13 @@ public class TerminalProgram {
         String password = scanner.nextLine();
         Patient patient = userService
                 .getPatient(login, password)
-                .orElseThrow(() -> new UserDAOException(ERROR_ENTER_PATIENT));
+                .orElseThrow(() -> new UserDaoUncheckedException(ERROR_ENTER_PATIENT));
         LOGGER.info(HI + patient.getName());
 
         startProcessingPatient(scanner, patient);
     }
 
-    private void startProcessingPatient(Scanner scanner, Patient patient) throws TherapyDAOException, UserDAOException {
+    private void startProcessingPatient(Scanner scanner, Patient patient) throws TherapyDaoUncheckedException, UserDaoUncheckedException {
 
         while (flag_patient) {
             processingPatient(scanner, patient);
@@ -301,7 +301,7 @@ public class TerminalProgram {
         processingProgram(scanner);
     }
 
-    private void processingPatient(Scanner scanner, Patient patient) throws TherapyDAOException, UserDAOException {
+    private void processingPatient(Scanner scanner, Patient patient) throws TherapyDaoUncheckedException, UserDaoUncheckedException {
 
         LOGGER.info(PROCESSING_PATIENT);
         Optional<List<Therapy>> therapies = Optional.ofNullable(patient.getTherapies());

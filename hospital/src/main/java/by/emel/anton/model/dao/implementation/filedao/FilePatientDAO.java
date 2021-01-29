@@ -1,7 +1,6 @@
 package by.emel.anton.model.dao.implementation.filedao;
 
 import by.emel.anton.model.beans.users.patients.Patient;
-import by.emel.anton.model.dao.exceptions.UserDAOException;
 import by.emel.anton.model.dao.interfaces.PatientDAO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
@@ -19,12 +18,12 @@ public class FilePatientDAO implements PatientDAO {
     }
 
     @Override
-    public Optional<Patient> getPatient(String login, String password) throws UserDAOException {
+    public Optional<Patient> getPatient(String login, String password) {
         return fileUserDAO.getPatientFromFile(login, password);
     }
 
     @Override
-    public Optional<Patient> getPatientById(int id) throws UserDAOException {
+    public Optional<Patient> getPatientById(int id) {
 
         return fileUserDAO.getPatientFromFileByID(id);
     }

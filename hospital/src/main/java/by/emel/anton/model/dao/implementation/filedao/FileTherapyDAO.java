@@ -3,8 +3,8 @@ package by.emel.anton.model.dao.implementation.filedao;
 import by.emel.anton.constants.Constants;
 import by.emel.anton.model.beans.therapy.Therapy;
 import by.emel.anton.model.beans.users.patients.Patient;
-import by.emel.anton.model.dao.exceptions.TherapyDAOException;
-import by.emel.anton.model.dao.exceptions.UserDAOException;
+import by.emel.anton.model.dao.exceptions.TherapyDaoUncheckedException;
+import by.emel.anton.model.dao.exceptions.UserDaoUncheckedException;
 import by.emel.anton.model.dao.interfaces.TherapyDAO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
@@ -31,44 +31,51 @@ public class FileTherapyDAO implements TherapyDAO {
     }
 
     @Override
-    public void saveTherapy(Therapy therapy) throws TherapyDAOException {
+    public void saveTherapy(Therapy therapy) {
 
         try {
             therapy.setId(getNextID());
             List<String> lines = Collections.singletonList(therapy.toString());
             Files.write(Paths.get(Constants.FILE_PATH_THERAPIES), lines, StandardOpenOption.APPEND);
         } catch (IOException e) {
-            throw new TherapyDAOException("ERROR save Therapy in file");
+            throw new TherapyDaoUncheckedException("ERROR save Therapy in file");
         }
     }
 
-    public int getNextID() throws TherapyDAOException {
+    public int getNextID() {
 
         try {
             return fileServiceDAO.getNextLineId(Paths.get(Constants.FILE_PATH_THERAPIES));
-        } catch (UserDAOException e) {
-            throw new TherapyDAOException("ERROR get Next therapy file");
+        } catch (UserDaoUncheckedException e) {
+            throw new TherapyDaoUncheckedException("ERROR get Next therapy file");
         }
     }
 
     @Override
-    public Optional<Therapy> getTherapy(int id) throws TherapyDAOException, UserDAOException {
+    public Optional<Therapy> getTherapy(int id) {
 
         try {
             List<String> fileData = Files.readAllLines(Paths.get(Constants.FILE_PATH_THERAPIES));
-            Optional<String> therapyString = fileData.stream().filter(s -> fileServiceDAO.isIdCorrect(s, id))
+
+            Optional<String> therapyString = fileData
+                    .stream()
+                    .filter(s -> fileServiceDAO.isIdCorrect(s, id))
                     .findFirst();
 
-            if (!therapyString.isPresent()) throw new TherapyDAOException("ERROR getTherapy");
+            Therapy therapy = therapyString
+                    .map(fileServiceDAO::createTherapyFromLine)
+                    .orElseThrow(TherapyDaoUncheckedException::new);
 
-            Therapy therapy = fileServiceDAO.createTherapyFromLine(therapyString.get());
-            Optional<Patient> patient = filePatientDAO.getPatientById(therapy.getPatient().getId());
-            patient.ifPresent(therapy::setPatient);
+            Patient patient = filePatientDAO
+                    .getPatientById(therapy.getPatient().getId())
+                    .orElseThrow(UserDaoUncheckedException::new);
+
+            therapy.setPatient(patient);
 
             return Optional.ofNullable(therapy);
 
         } catch (IOException e) {
-            throw new TherapyDAOException("Error get therapy from file");
+            throw new TherapyDaoUncheckedException("Error get therapy from file");
         }
     }
 
