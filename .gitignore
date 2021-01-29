@@ -13,6 +13,4 @@ logs/
 *.rar
 
 filedao/
-jdbctemplatedao/
 fileworkservice/
-jdbctemplatework/

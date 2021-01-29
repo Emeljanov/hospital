@@ -172,6 +172,7 @@ public class TerminalProgram {
             LocalDate birthday = getDateAndCheckDateTimeExp(scanner.nextLine());
 
             userService.createUser(user, login, password, name, birthday, true);
+
         } catch (TerminalException e) {
             LOGGER.error(e.getClass().getSimpleName() + Constants.SPACE + e.getMessage());
         }
@@ -187,6 +188,7 @@ public class TerminalProgram {
                 .getDoctor(login, password)
                 .orElseThrow(() -> new UserDAOException(ERROR_ENTER_DOCTOR));
         LOGGER.info(HI + doctor.getName());
+
         startProcessingDoctor(scanner, doctor);
 
     }
@@ -214,7 +216,14 @@ public class TerminalProgram {
                     break;
                 case SEE:
                     LOGGER.info(AnswerType.SEE.toString());
-                    System.out.println(doctor.getPatients());
+                    Optional<List<Patient>> patients = Optional.ofNullable(doctor.getPatients());
+                    patients.ifPresentOrElse(p ->
+                                    LOGGER.info(p
+                                            .stream()
+                                            .map(Patient::getId)
+                                            .collect(Collectors.toList())
+                                            .toString()),
+                            () -> LOGGER.info("[]"));
                     break;
                 case SET:
                     LOGGER.info(AnswerType.SET.toString());
@@ -238,20 +247,23 @@ public class TerminalProgram {
 
         LOGGER.info(ENTER_PATIENT_ID);
         int patientId = Integer.parseInt(scanner.nextLine().trim());
-        Patient patient = userService
-                .getPatientById(patientId)
-                .orElseThrow(() -> new UserDAOException(ERROR_NO_PATIENT_F_BY_ID));
+        Optional<Patient> optPatient = doctor.getPatients().stream().filter(pat -> pat.getId() == patientId).findFirst();
+        if (!optPatient.isPresent())
+            throw new UserDAOException("Patien with such id doesn't exist or connect with this doctor");
+        Patient patient = optPatient.get();
         LOGGER.info(ENTER_THERAPY_DESCR);
         String description = scanner.nextLine();
         LOGGER.info(ENTER_ENDDATE);
         LocalDate endDate = getDateAndCheckDateTimeExp(scanner.nextLine());
-        userService.addTherapy(doctor, patient, description, endDate);
+
+        userService.addTherapy(patient, description, endDate);
     }
 
     private void addPatientToDoctor(Scanner scanner, Doctor doctor) throws UserDAOException {
 
         LOGGER.info(ENTER_PATIENT_ID);
         int patientId = Integer.parseInt(scanner.nextLine().trim());
+
         userService.addPatientToDoctor(doctor, patientId);
 
     }
@@ -266,11 +278,11 @@ public class TerminalProgram {
                 .getPatient(login, password)
                 .orElseThrow(() -> new UserDAOException(ERROR_ENTER_PATIENT));
         LOGGER.info(HI + patient.getName());
-        startProcessingPatient(scanner, patient);
 
+        startProcessingPatient(scanner, patient);
     }
 
-    private void startProcessingPatient(Scanner scanner, Patient patient) throws TherapyDAOException {
+    private void startProcessingPatient(Scanner scanner, Patient patient) throws TherapyDAOException, UserDAOException {
 
         while (flag_patient) {
             processingPatient(scanner, patient);
@@ -278,30 +290,33 @@ public class TerminalProgram {
         processingProgram(scanner);
     }
 
-    private void processingPatient(Scanner scanner, Patient patient) throws TherapyDAOException {
+    private void processingPatient(Scanner scanner, Patient patient) throws TherapyDAOException, UserDAOException {
 
         LOGGER.info(PROCESSING_PATIENT);
+        Optional<List<Therapy>> therapies = Optional.ofNullable(patient.getTherapies());
 
         try {
             AnswerType answer = getAnswerAndCheckIllegalArgExp(scanner.nextLine());
             switch (answer) {
                 case THERAPIES:
-                    Optional<List<Therapy>> therapies = Optional.ofNullable(patient.getTherapies());
-                    if (!therapies.isPresent()) {
-                        LOGGER.info("[]");
-                        break;
-                    }
-                    LOGGER.info(patient.getTherapies()
-                            .stream()
-                            .map(Therapy::getId)
-                            .collect(Collectors.toList())
-                            .toString());
+                    therapies.ifPresentOrElse(trps ->
+                                    LOGGER.info(trps
+                                            .stream()
+                                            .map(Therapy::getId)
+                                            .collect(Collectors.toList())
+                                            .toString()),
+                            () -> LOGGER.info("No therapies"));
                     break;
                 case THERAPY:
-                    LOGGER.info(ENTER_ID_THERAPY);
-                    int therapyId = Integer.parseInt(scanner.nextLine().trim());
-                    Optional<Therapy> therapy = userService.getTherapy(therapyId);
-                    therapy.ifPresent(tp -> LOGGER.info(tp.toString()));
+                    therapies.ifPresentOrElse(trps ->
+                    {
+                        LOGGER.info(ENTER_ID_THERAPY);
+                        int therapyId = Integer.parseInt(scanner.nextLine().trim());
+                        Optional<Therapy> therapy = trps
+                                .stream()
+                                .filter(t -> t.getId() == therapyId).findFirst();
+                        therapy.ifPresentOrElse(t -> LOGGER.info(t.toString()), () -> LOGGER.error("Wrong id"));
+                    }, () -> LOGGER.info("No therapies"));
                     break;
                 case BACK:
                     flag_patient = false;
@@ -312,7 +327,6 @@ public class TerminalProgram {
         } catch (TerminalException e) {
             LOGGER.error(e.getClass().getSimpleName() + Constants.SPACE + e.getMessage());
         }
-
     }
 
     private AnswerType getAnswerAndCheckIllegalArgExp(String line) throws TerminalException {

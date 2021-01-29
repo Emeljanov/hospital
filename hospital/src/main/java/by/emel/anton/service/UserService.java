@@ -24,11 +24,11 @@ public interface UserService {
 
     Optional<Patient> getPatientById(int id) throws UserDAOException;
 
-    Optional<Therapy> getTherapy(int id) throws TherapyDAOException;
+    Optional<Therapy> getTherapy(int id) throws TherapyDAOException, UserDAOException;
 
     void updateUser(User user) throws UserDAOException;
 
-    void addTherapy(Doctor doctor, Patient patient, String description, LocalDate endDate) throws TherapyDAOException, UserDAOException;
+    void addTherapy(Patient patient, String description, LocalDate endDate) throws TherapyDAOException, UserDAOException;
 
     void addPatientToDoctor(Doctor doctor, int patientId) throws UserDAOException;
 

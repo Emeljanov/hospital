@@ -1,5 +1,4 @@
 create table therapy (
-   dtype VARCHAR(31) NOT NULL,
    id INT NOT NULL auto_increment,
    description VARCHAR(255) not null,
    start_date DATE NOT NULL,

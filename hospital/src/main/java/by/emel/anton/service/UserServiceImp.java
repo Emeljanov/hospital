@@ -13,6 +13,8 @@ import by.emel.anton.model.dao.interfaces.TherapyDAO;
 import by.emel.anton.model.dao.interfaces.UserDAO;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 public class UserServiceImp implements UserService {
@@ -71,7 +73,7 @@ public class UserServiceImp implements UserService {
     }
 
     @Override
-    public Optional<Therapy> getTherapy(int id) throws TherapyDAOException {
+    public Optional<Therapy> getTherapy(int id) throws TherapyDAOException, UserDAOException {
         return therapyDAO.getTherapy(id);
     }
 
@@ -81,15 +83,20 @@ public class UserServiceImp implements UserService {
     }
 
     @Override
-    public void addTherapy(Doctor doctor, Patient patient, String description, LocalDate endDate) throws UserDAOException, TherapyDAOException {
+    public void addTherapy(Patient patient, String description, LocalDate endDate) throws UserDAOException, TherapyDAOException {
 
         Therapy therapy = new Therapy();
         therapy.setDescription(description);
         therapy.setStartDate(LocalDate.now());
         therapy.setEndDate(endDate);
         therapy.setPatient(patient);
+        Optional<List<Therapy>> therapies = Optional.ofNullable(patient.getTherapies());
+        therapies.ifPresentOrElse( t -> t.add(therapy),
+                () -> {List<Therapy> t = new ArrayList<>();
+                t.add(therapy);
+                patient.setTherapies(t);
+        });
         saveTherapy(therapy);
-
     }
 
     @Override
@@ -100,7 +107,5 @@ public class UserServiceImp implements UserService {
         patient.setDoctor(doctor);
         doctor.addPatient(patient);
         updateUser(patient);
-        updateUser(doctor);
     }
-
 }
