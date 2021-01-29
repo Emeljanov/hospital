@@ -3,46 +3,47 @@ package by.emel.anton.controller;
 import by.emel.anton.facade.patient.PatientFacade;
 import by.emel.anton.facade.patient.RequestPatientDTO;
 import by.emel.anton.facade.patient.ResponsePatientDTO;
+import by.emel.anton.facade.therapy.ResponseTherapyDTO;
+import by.emel.anton.facade.therapy.TherapyFacade;
+import by.emel.anton.model.dao.exceptions.TherapyDAOException;
+import by.emel.anton.model.dao.exceptions.UserDAOException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/therapy")
+@RequestMapping("/patient")
 public class PatientController {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(PatientController.class);
 
     @Autowired
     PatientFacade patientFacade;
+    @Autowired
+    TherapyFacade therapyFacade;
 
-    @GetMapping(value = "/patient/{id}")
-    public ResponsePatientDTO getPatientById(@PathVariable String id) {
-        return patientFacade.getPatientById(id);
+    @GetMapping("/by_id")
+    public ResponsePatientDTO getPatientById(@RequestParam int patientId) throws UserDAOException {
+        LOGGER.info("Get patient by id: {}", patientId);
+
+        return patientFacade.getPatientById(patientId);
     }
 
-    @PostMapping(value = "/patient/login" , consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponsePatientDTO getPatientByLoginPass(@RequestBody RequestPatientDTO requestPatientDTO) {
+    @PostMapping("/login")
+    public ResponsePatientDTO getPatientByLoginPass(@RequestBody RequestPatientDTO requestPatientDTO) throws UserDAOException {
 
         String login = requestPatientDTO.getLogin();
         String password = requestPatientDTO.getPassword();
+        LOGGER.info("Get patient by login :{}, password : {}", login, password);
 
-//        LOGGER.info(String.join(" ","Try to get by login ",login, "and password ",password));
-        LOGGER.info("try to get by login {}",login);
-
-        return patientFacade.getPatientByLogPass(login,password);
+        return patientFacade.getPatientByLogPass(login, password);
     }
 
-  /*  @GetMapping("/getlist")
-    public Optional<Therapy> therapyList() {
-        return springDataTherapyDAO.getTherapy(1);
-    }*/
-   /* @ResponseStatus(HttpStatus.BAD_REQUEST)
-    @ExceptionHandler(Exception.class)
-    public void exceptionHanlder(Exception exception) {
-        LOGGER.error("some error",exception);
-    }*/
+    @GetMapping("/get_therapy")
+    public ResponseTherapyDTO getTherapyById(@RequestParam int therapyId) throws TherapyDAOException, UserDAOException {
+        LOGGER.info("Get therapy by id : {}", therapyId);
+
+        return therapyFacade.getTherapy(therapyId);
+    }
 }

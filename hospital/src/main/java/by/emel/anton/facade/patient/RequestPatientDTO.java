@@ -1,13 +1,12 @@
 package by.emel.anton.facade.patient;
 
-
 import javax.validation.constraints.NotNull;
 
 public class RequestPatientDTO {
 
-    @NotNull
+    @NotNull(message = "field login = null")
     private String login;
-    @NotNull
+    @NotNull(message = "field password = null")
     private String password;
 
     public String getLogin() {

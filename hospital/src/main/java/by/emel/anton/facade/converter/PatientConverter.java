@@ -15,7 +15,8 @@ public class PatientConverter implements Converter<Patient, ResponsePatientDTO> 
         responsePatientDTO.setId(from.getId());
         responsePatientDTO.setName(from.getName());
         responsePatientDTO.setLogin(from.getLogin());
-        responsePatientDTO.setTherapнIds(from.getTherapies().stream().map(Therapy::getId).collect(Collectors.toList()));
+        responsePatientDTO.setTherapyIds(from.getTherapies().stream().map(Therapy::getId).collect(Collectors.toList()));
+
         return responsePatientDTO;
     }
 }

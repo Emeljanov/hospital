@@ -7,7 +7,7 @@ public class ResponsePatientDTO {
     private int id;
     private String login;
     private String name;
-    private List<Integer> therapнIds;
+    private List<Integer> therapyIds;
 
     public int getId() {
         return id;
@@ -33,11 +33,11 @@ public class ResponsePatientDTO {
         this.login = login;
     }
 
-    public List<Integer> getTherapнIds() {
-        return therapнIds;
+    public List<Integer> getTherapyIds() {
+        return therapyIds;
     }
 
-    public void setTherapнIds(List<Integer> therapнIds) {
-        this.therapнIds = therapнIds;
+    public void setTherapyIds(List<Integer> therapyIds) {
+        this.therapyIds = therapyIds;
     }
 }

@@ -16,20 +16,20 @@ public class ControllerExceptionHandler {
 
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ExceptionHandler(UserDAOException.class)
-    public void UserDAOexceptionHandler(UserDAOException userDAOException) {
+    public void userDaoExceptionHandler(UserDAOException userDAOException) {
         LOGGER.error(userDAOException.getMessage());
     }
 
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ExceptionHandler(TherapyDAOException.class)
-    public void TherapyDAOexceptionHandler(TherapyDAOException therapyDAOException) {
+    public void therapyDaoExceptionHandler(TherapyDAOException therapyDAOException) {
         LOGGER.error(therapyDAOException.getMessage());
     }
 
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ExceptionHandler(Exception.class)
     public void exceptionHandler(Exception exception) {
-        LOGGER.error("Controller exception :" + exception.getClass().getSimpleName());
+        LOGGER.error("Controller exception :" + exception.getMessage());
     }
 
 }

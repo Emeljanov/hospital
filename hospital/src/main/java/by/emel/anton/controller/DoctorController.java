@@ -6,7 +6,10 @@ import by.emel.anton.facade.doctor.ResponseDoctorDTO;
 import by.emel.anton.facade.therapy.RequestTherapyDTO;
 import by.emel.anton.model.dao.exceptions.TherapyDAOException;
 import by.emel.anton.model.dao.exceptions.UserDAOException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -16,30 +19,34 @@ public class DoctorController {
     @Autowired
     DoctorFacade doctorFacade;
 
+    private static final Logger LOGGER = LoggerFactory.getLogger(DoctorController.class);
+
     @PostMapping("/login")
-    public ResponseDoctorDTO getDoctorByLoginPass(@RequestBody RequestDoctorDTO requestDoctorDTO) throws UserDAOException {
+    public ResponseDoctorDTO getDoctorByLoginPass(@RequestBody @Validated RequestDoctorDTO requestDoctorDTO) throws UserDAOException {
 
         String login = requestDoctorDTO.getLogin();
         String password = requestDoctorDTO.getPassword();
+        LOGGER.info("Get doctor by login: {}, password: {}", login, password);
+
 
         return doctorFacade.getDoctorByLoginPassword(login, password);
     }
 
     @PostMapping("/login/setpatient")
-    public void setPatientToDoctor(@SessionAttribute("doctorId") int doctorId ,@RequestParam int patientId) throws UserDAOException {
+    public void setPatientToDoctor(@SessionAttribute("doctorId") int doctorId, @RequestParam int patientId) throws UserDAOException {
 
-        doctorFacade.setPatientToDoctor(doctorId,patientId);
+        LOGGER.info("Set patient id: {} by doctor id: {}", patientId, doctorId);
+        doctorFacade.setPatientToDoctor(doctorId, patientId);
+
     }
+
     @PostMapping("/login/settherapy")
-    public void setTherapyToPatient(@RequestBody RequestTherapyDTO requestTherapyDTO,@SessionAttribute("doctorId") int doctorId) throws UserDAOException, TherapyDAOException {
+    public void setTherapyToPatient(@RequestBody RequestTherapyDTO requestTherapyDTO, @SessionAttribute("doctorId") int doctorId) throws UserDAOException, TherapyDAOException {
 
-       doctorFacade.setTherapyToPatient(doctorId,requestTherapyDTO);
-
-
+        LOGGER.info("Set therapy description : {} to patient id: {} by doctor id : {}",
+                requestTherapyDTO.getDescription(), requestTherapyDTO.getPatientId(), doctorId);
+        doctorFacade.setTherapyToPatient(doctorId, requestTherapyDTO);
     }
 }
-   /* @GetMapping("/log")
-    public void getSomeString(@SessionAttribute("abc") String abc) {
-        System.out.println(abc);
-    }*/
+
 

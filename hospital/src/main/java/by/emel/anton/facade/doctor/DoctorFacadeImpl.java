@@ -13,50 +13,61 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 
 import javax.servlet.http.HttpSession;
-import java.util.Optional;
 
 @Component
 public class DoctorFacadeImpl implements DoctorFacade {
+
     @Autowired
     @Qualifier("SpringDataService")
     private UserService userService;
+
     @Autowired
     private Converter<Doctor, ResponseDoctorDTO> converter;
+
     @Autowired
     HttpSession httpSession;
-
 
     @Override
     public ResponseDoctorDTO getDoctorByLoginPassword(String login, String password) throws UserDAOException {
 
-        ResponseDoctorDTO responseDoctorDTO = userService.getDoctor(login, password).map(converter::convert).orElseThrow(IllegalArgumentException::new);
+        ResponseDoctorDTO responseDoctorDTO = userService
+                .getDoctor(login, password)
+                .map(converter::convert)
+                .orElseThrow(() -> new UserDAOException("Login or password are incorrect"));
         httpSession.setAttribute("doctorId", responseDoctorDTO.getId());
+
         return responseDoctorDTO;
 
     }
 
     @Override
     public void setPatientToDoctor(int doctorId, int patientId) throws UserDAOException {
-        Optional<Doctor> optionalDoctor = userService.getDoctorById(doctorId);
-        if (!optionalDoctor.isPresent()) throw new UserDAOException("no found doctor");
-        userService.addPatientToDoctor(optionalDoctor.get(), patientId);
+
+        Doctor doctor = userService
+                .getDoctorById(doctorId)
+                .orElseThrow(() -> new UserDAOException("didn't find doctor with id : " + doctorId));
+
+        userService.addPatientToDoctor(doctor, patientId);
+
     }
 
     @Override
     public void setTherapyToPatient(int doctorId, RequestTherapyDTO requestTherapyDTO) throws UserDAOException, TherapyDAOException {
 
-        Optional<Doctor> optionalDoctor = userService.getDoctorById(doctorId);
-        Optional<Patient> optionalPatient = userService.getPatientById(requestTherapyDTO.getPatientId());
-        if (!optionalDoctor.isPresent()) throw new UserDAOException("no doctor found");
-        if(!optionalPatient.isPresent()) throw new UserDAOException("no patient found");
-        Doctor doctor = optionalDoctor.get();
-        Patient patient = optionalPatient.get();
+        int patientId = requestTherapyDTO.getPatientId();
+        Doctor doctor = userService
+                .getDoctorById(doctorId)
+                .orElseThrow(() -> new UserDAOException("didn't find doctor with id : " + doctorId));
+        Patient patient = userService
+                .getPatientById(patientId)
+                .orElseThrow(() -> new UserDAOException("didn't find doctor with id : " + patientId));
 
         Therapy therapy = new Therapy();
         therapy.setPatient(patient);
         therapy.setStartDate(requestTherapyDTO.getStartDate());
         therapy.setEndDate(requestTherapyDTO.getEndDate());
         therapy.setDescription(requestTherapyDTO.getDescription());
+
         userService.saveTherapy(therapy);
     }
 

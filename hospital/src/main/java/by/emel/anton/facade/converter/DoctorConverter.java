@@ -8,7 +8,7 @@ import org.springframework.stereotype.Component;
 import java.util.stream.Collectors;
 
 @Component
-public class DoctorConverter implements Converter<Doctor, ResponseDoctorDTO>{
+public class DoctorConverter implements Converter<Doctor, ResponseDoctorDTO> {
     @Override
     public ResponseDoctorDTO convert(Doctor from) {
         ResponseDoctorDTO responseDoctorDTO = new ResponseDoctorDTO();
@@ -16,6 +16,7 @@ public class DoctorConverter implements Converter<Doctor, ResponseDoctorDTO>{
         responseDoctorDTO.setLogin(from.getLogin());
         responseDoctorDTO.setName(from.getName());
         responseDoctorDTO.setPatientIds(from.getPatients().stream().map(User::getId).collect(Collectors.toList()));
+
         return responseDoctorDTO;
     }
 }

@@ -3,9 +3,9 @@ package by.emel.anton.facade.doctor;
 import javax.validation.constraints.NotNull;
 
 public class RequestDoctorDTO {
-    @NotNull
+    @NotNull(message = "field login = null")
     private String login;
-    @NotNull
+    @NotNull(message = "field password = null")
     private String password;
 
     public String getLogin() {

@@ -10,6 +10,7 @@ import org.springframework.stereotype.Component;
 
 @Component
 public class PatientFacadeImpl implements PatientFacade {
+
     @Autowired
     @Qualifier("SpringDataService")
     private UserService userService;
@@ -17,25 +18,20 @@ public class PatientFacadeImpl implements PatientFacade {
     private Converter<Patient, ResponsePatientDTO> converter;
 
     @Override
-    public ResponsePatientDTO getPatientById(String id) {
+    public ResponsePatientDTO getPatientById(int id) throws UserDAOException {
 
-        try {
-            return userService.getPatientById(Integer.parseInt(id)).map(converter::convert).orElseThrow(IllegalArgumentException::new);
-
-        } catch (UserDAOException e) {
-            e.printStackTrace();
-        }
-        return null;
+        return userService
+                .getPatientById(id)
+                .map(converter::convert)
+                .orElseThrow(() -> new UserDAOException("Can't find patient with id : " + id));
     }
 
     @Override
-    public ResponsePatientDTO getPatientByLogPass(String login, String password) {
+    public ResponsePatientDTO getPatientByLogPass(String login, String password) throws UserDAOException {
 
-        try {
-            return userService.getPatient(login, password).map(converter::convert).orElseThrow(IllegalArgumentException::new);
-        } catch (UserDAOException e) {
-            e.printStackTrace();
-        }
-        return null;
+        return userService
+                .getPatient(login, password)
+                .map(converter::convert)
+                .orElseThrow(() -> new UserDAOException("Login or password are incorrect"));
     }
 }

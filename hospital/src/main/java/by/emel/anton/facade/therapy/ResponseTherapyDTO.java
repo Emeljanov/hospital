@@ -1,18 +1,22 @@
 package by.emel.anton.facade.therapy;
 
-import javax.validation.constraints.NotNull;
 import java.time.LocalDate;
 
-public class RequestTherapyDTO {
+public class ResponseTherapyDTO {
 
-    @NotNull(message = "field description = null")
+    private int therapyId;
     private String description;
-    @NotNull(message = "field startDate = null")
     private LocalDate startDate;
-    @NotNull(message = "field endDate = null")
     private LocalDate endDate;
-    @NotNull(message = "field patientId = null")
     private int patientId;
+
+    public int getTherapyId() {
+        return therapyId;
+    }
+
+    public void setTherapyId(int therapyId) {
+        this.therapyId = therapyId;
+    }
 
     public String getDescription() {
         return description;
