@@ -2,7 +2,7 @@ package by.emel.anton.model.dao.implementation.hibernatedao;
 
 import by.emel.anton.constants.Constants;
 import by.emel.anton.model.beans.users.User;
-import by.emel.anton.model.dao.exceptions.UserDaoUncheckedException;
+import by.emel.anton.model.dao.exceptions.UserDaoException;
 import by.emel.anton.model.dao.interfaces.UserDAO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
@@ -15,8 +15,7 @@ import javax.persistence.NoResultException;
 @Transactional
 public class HibernateUserDAO implements UserDAO {
 
-
-    EntityManager entityManager;
+    private EntityManager entityManager;
 
     @Autowired
     public HibernateUserDAO(EntityManager entityManager) {
@@ -50,7 +49,7 @@ public class HibernateUserDAO implements UserDAO {
                     .setParameter(1, password)
                     .getSingleResult();
         } catch (NoResultException e) {
-            throw new UserDaoUncheckedException(Constants.EXCEPTION_MESSAGE_LP_INCORRECT);
+            throw new UserDaoException(Constants.EXCEPTION_MESSAGE_LP_INCORRECT);
         }
     }
 }

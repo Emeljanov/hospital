@@ -3,7 +3,7 @@ package by.emel.anton.model.dao.implementation.jdbctemplatedao;
 import by.emel.anton.constants.Constants;
 import by.emel.anton.model.beans.users.doctors.Doctor;
 import by.emel.anton.model.beans.users.patients.Patient;
-import by.emel.anton.model.dao.exceptions.UserDaoUncheckedException;
+import by.emel.anton.model.dao.exceptions.UserDaoException;
 import by.emel.anton.model.dao.implementation.jdbctemplatedao.rowmappers.DoctorMapper;
 import by.emel.anton.model.dao.implementation.jdbctemplatedao.rowmappers.PatientMapper;
 import by.emel.anton.model.dao.interfaces.DoctorDAO;
@@ -46,7 +46,7 @@ public class JdbcTemplateDoctorDAO implements DoctorDAO {
             return Optional.of(doctor);
 
         } catch (DataAccessException e) {
-            throw new UserDaoUncheckedException(Constants.EXCEPTION_MESSAGE_LP_INCORRECT);
+            throw new UserDaoException(Constants.EXCEPTION_MESSAGE_LP_INCORRECT);
         }
     }
 
@@ -57,7 +57,7 @@ public class JdbcTemplateDoctorDAO implements DoctorDAO {
             addPatients(doctor);
             return Optional.of(doctor);
         } catch (DataAccessException e) {
-            throw new UserDaoUncheckedException("ERROR getDoctorByID");
+            throw new UserDaoException("ERROR getDoctorByID");
         }
     }
 

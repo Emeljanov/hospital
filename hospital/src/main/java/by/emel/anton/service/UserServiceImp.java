@@ -5,7 +5,7 @@ import by.emel.anton.model.beans.therapy.Therapy;
 import by.emel.anton.model.beans.users.User;
 import by.emel.anton.model.beans.users.doctors.Doctor;
 import by.emel.anton.model.beans.users.patients.Patient;
-import by.emel.anton.model.dao.exceptions.UserDaoUncheckedException;
+import by.emel.anton.model.dao.exceptions.UserDaoException;
 import by.emel.anton.model.dao.interfaces.DoctorDAO;
 import by.emel.anton.model.dao.interfaces.PatientDAO;
 import by.emel.anton.model.dao.interfaces.TherapyDAO;
@@ -108,7 +108,7 @@ public class UserServiceImp implements UserService {
     public void addPatientToDoctor(Doctor doctor, int patientId) {
 
         Patient patient = getPatientById(patientId)
-                .orElseThrow(() -> new UserDaoUncheckedException(Constants.EXCEPTION_NO_ID));
+                .orElseThrow(() -> new UserDaoException(Constants.EXCEPTION_NO_ID));
         patient.setDoctor(doctor);
         doctor.addPatient(patient);
         updateUser(patient);

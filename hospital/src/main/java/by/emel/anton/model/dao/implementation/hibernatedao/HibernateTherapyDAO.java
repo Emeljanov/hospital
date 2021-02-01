@@ -2,7 +2,7 @@ package by.emel.anton.model.dao.implementation.hibernatedao;
 
 import by.emel.anton.constants.Constants;
 import by.emel.anton.model.beans.therapy.Therapy;
-import by.emel.anton.model.dao.exceptions.TherapyDaoUncheckedException;
+import by.emel.anton.model.dao.exceptions.TherapyDaoException;
 import by.emel.anton.model.dao.interfaces.TherapyDAO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
@@ -16,7 +16,7 @@ import java.util.Optional;
 @Transactional
 public class HibernateTherapyDAO implements TherapyDAO {
 
-    EntityManager entityManager;
+    private EntityManager entityManager;
 
     @Autowired
     public HibernateTherapyDAO(EntityManager entityManager) {
@@ -33,7 +33,7 @@ public class HibernateTherapyDAO implements TherapyDAO {
         try {
             return Optional.ofNullable(entityManager.find(Therapy.class, id));
         } catch (NoResultException e) {
-            throw new TherapyDaoUncheckedException(Constants.EXCEPTION_NO_ID);
+            throw new TherapyDaoException(Constants.EXCEPTION_NO_ID);
         }
     }
 

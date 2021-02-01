@@ -17,8 +17,8 @@ public class JdbcTemplateTherapyDAO implements TherapyDAO {
             "insert into therapy (description, start_date, end_date,patient_id) values (?, ?, ?, ?)";
     private static final String SQL_GET_THERAPY_BY_ID = "select * from therapy where id = ?";
 
-    JdbcTemplate jdbcTemplate;
-    JdbcTemplatePatientDAO jdbcTemplatePatientDAO;
+    private JdbcTemplate jdbcTemplate;
+    private JdbcTemplatePatientDAO jdbcTemplatePatientDAO;
 
     @Autowired
     public JdbcTemplateTherapyDAO(JdbcTemplate jdbcTemplate, JdbcTemplatePatientDAO jdbcTemplatePatientDAO) {

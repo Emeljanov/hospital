@@ -11,7 +11,7 @@ import java.util.Optional;
 @Repository("SpringDataDoctorDAO")
 public class SpringDataDoctorDAO implements DoctorDAO {
 
-    DoctorJpaRepository doctorJpaRepository;
+    private DoctorJpaRepository doctorJpaRepository;
 
     @Autowired
     public SpringDataDoctorDAO(DoctorJpaRepository doctorJpaRepository) {

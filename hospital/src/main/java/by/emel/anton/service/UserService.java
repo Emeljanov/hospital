@@ -4,34 +4,32 @@ import by.emel.anton.model.beans.therapy.Therapy;
 import by.emel.anton.model.beans.users.User;
 import by.emel.anton.model.beans.users.doctors.Doctor;
 import by.emel.anton.model.beans.users.patients.Patient;
-import by.emel.anton.model.dao.exceptions.TherapyDaoUncheckedException;
-import by.emel.anton.model.dao.exceptions.UserDaoUncheckedException;
 
 import java.time.LocalDate;
 import java.util.Optional;
 
 public interface UserService {
 
-    void createUser(User user, String login, String password, String name, LocalDate birthday, boolean isSave) throws UserDaoUncheckedException;
+    void createUser(User user, String login, String password, String name, LocalDate birthday, boolean isSave);
 
-    void saveUser(User user) throws UserDaoUncheckedException;
+    void saveUser(User user);
 
-    void saveTherapy(Therapy therapy) throws TherapyDaoUncheckedException;
+    void saveTherapy(Therapy therapy);
 
-    Optional<Doctor> getDoctor(String login, String password) throws UserDaoUncheckedException;
+    Optional<Doctor> getDoctor(String login, String password);
 
-    Optional<Doctor> getDoctorById(int id) throws UserDaoUncheckedException;
+    Optional<Doctor> getDoctorById(int id);
 
-    Optional<Patient> getPatient(String login, String password) throws UserDaoUncheckedException;
+    Optional<Patient> getPatient(String login, String password);
 
-    Optional<Patient> getPatientById(int id) throws UserDaoUncheckedException;
+    Optional<Patient> getPatientById(int id);
 
-    Optional<Therapy> getTherapy(int id) throws TherapyDaoUncheckedException, UserDaoUncheckedException;
+    Optional<Therapy> getTherapy(int id);
 
-    void updateUser(User user) throws UserDaoUncheckedException;
+    void updateUser(User user);
 
-    void addTherapy(Patient patient, String description, LocalDate endDate) throws TherapyDaoUncheckedException, UserDaoUncheckedException;
+    void addTherapy(Patient patient, String description, LocalDate endDate);
 
-    void addPatientToDoctor(Doctor doctor, int patientId) throws UserDaoUncheckedException;
+    void addPatientToDoctor(Doctor doctor, int patientId);
 
 }

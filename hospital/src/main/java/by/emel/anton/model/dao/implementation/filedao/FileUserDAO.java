@@ -5,7 +5,7 @@ import by.emel.anton.model.beans.users.User;
 import by.emel.anton.model.beans.users.UserType;
 import by.emel.anton.model.beans.users.doctors.Doctor;
 import by.emel.anton.model.beans.users.patients.Patient;
-import by.emel.anton.model.dao.exceptions.UserDaoUncheckedException;
+import by.emel.anton.model.dao.exceptions.UserDaoException;
 import by.emel.anton.model.dao.interfaces.UserDAO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
@@ -46,7 +46,7 @@ public class FileUserDAO implements UserDAO {
             return fileDataUsers.stream().anyMatch(line -> biFunctionIsLoginExist.apply(line, login));
 
         } catch (IOException e) {
-            throw new UserDaoUncheckedException("ERROR in method isLoginExist in file");
+            throw new UserDaoException("ERROR in method isLoginExist in file");
         }
     }
 
@@ -55,7 +55,7 @@ public class FileUserDAO implements UserDAO {
 
         String login = user.getLogin();
         if (isLoginExist(login)) {
-            throw new UserDaoUncheckedException("ERROR Login is exist");
+            throw new UserDaoException("ERROR Login is exist");
         }
         String password = user.getPassword();
         String name = user.getName();
@@ -107,7 +107,7 @@ public class FileUserDAO implements UserDAO {
         try {
             Files.write(filePath, lines, StandardOpenOption.APPEND);
         } catch (IOException e) {
-            throw new UserDaoUncheckedException("ERROR : can't save data in file");
+            throw new UserDaoException("ERROR : can't save data in file");
         }
     }
 
@@ -120,7 +120,7 @@ public class FileUserDAO implements UserDAO {
                     .collect(Collectors.toList());
             Files.write(filepath, dataToWrite);
         } catch (IOException e) {
-            throw new UserDaoUncheckedException("ERROR delete data from file");
+            throw new UserDaoException("ERROR delete data from file");
         }
     }
 
@@ -147,10 +147,10 @@ public class FileUserDAO implements UserDAO {
             return fileData
                     .stream()
                     .filter(s -> fileServiceDAO.isLoginPasswordCorrect(s, login, password))
-                    .findFirst().orElseThrow(UserDaoUncheckedException::new);
+                    .findFirst().orElseThrow(UserDaoException::new);
 
         } catch (IOException e) {
-            throw new UserDaoUncheckedException("ERROR with IOE");
+            throw new UserDaoException("ERROR with IOE");
         }
     }
 
@@ -162,10 +162,10 @@ public class FileUserDAO implements UserDAO {
             return fileData
                     .stream()
                     .filter(s -> fileServiceDAO.isIdCorrect(s, id))
-                    .findFirst().orElseThrow(UserDaoUncheckedException::new);
+                    .findFirst().orElseThrow(UserDaoException::new);
 
         } catch (IOException e) {
-            throw new UserDaoUncheckedException("ERROR with IOE");
+            throw new UserDaoException("ERROR with IOE");
         }
     }
 

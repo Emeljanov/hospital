@@ -3,8 +3,8 @@ package by.emel.anton.model.dao.implementation.filedao;
 import by.emel.anton.constants.Constants;
 import by.emel.anton.model.beans.therapy.Therapy;
 import by.emel.anton.model.beans.users.patients.Patient;
-import by.emel.anton.model.dao.exceptions.TherapyDaoUncheckedException;
-import by.emel.anton.model.dao.exceptions.UserDaoUncheckedException;
+import by.emel.anton.model.dao.exceptions.TherapyDaoException;
+import by.emel.anton.model.dao.exceptions.UserDaoException;
 import by.emel.anton.model.dao.interfaces.TherapyDAO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
@@ -38,7 +38,7 @@ public class FileTherapyDAO implements TherapyDAO {
             List<String> lines = Collections.singletonList(therapy.toString());
             Files.write(Paths.get(Constants.FILE_PATH_THERAPIES), lines, StandardOpenOption.APPEND);
         } catch (IOException e) {
-            throw new TherapyDaoUncheckedException("ERROR save Therapy in file");
+            throw new TherapyDaoException("ERROR save Therapy in file");
         }
     }
 
@@ -46,8 +46,8 @@ public class FileTherapyDAO implements TherapyDAO {
 
         try {
             return fileServiceDAO.getNextLineId(Paths.get(Constants.FILE_PATH_THERAPIES));
-        } catch (UserDaoUncheckedException e) {
-            throw new TherapyDaoUncheckedException("ERROR get Next therapy file");
+        } catch (UserDaoException e) {
+            throw new TherapyDaoException("ERROR get Next therapy file");
         }
     }
 
@@ -64,18 +64,18 @@ public class FileTherapyDAO implements TherapyDAO {
 
             Therapy therapy = therapyString
                     .map(fileServiceDAO::createTherapyFromLine)
-                    .orElseThrow(TherapyDaoUncheckedException::new);
+                    .orElseThrow(TherapyDaoException::new);
 
             Patient patient = filePatientDAO
                     .getPatientById(therapy.getPatient().getId())
-                    .orElseThrow(UserDaoUncheckedException::new);
+                    .orElseThrow(UserDaoException::new);
 
             therapy.setPatient(patient);
 
             return Optional.ofNullable(therapy);
 
         } catch (IOException e) {
-            throw new TherapyDaoUncheckedException("Error get therapy from file");
+            throw new TherapyDaoException("Error get therapy from file");
         }
     }
 

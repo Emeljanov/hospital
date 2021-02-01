@@ -5,7 +5,7 @@ import by.emel.anton.facade.therapy.RequestTherapyDTO;
 import by.emel.anton.model.beans.therapy.Therapy;
 import by.emel.anton.model.beans.users.doctors.Doctor;
 import by.emel.anton.model.beans.users.patients.Patient;
-import by.emel.anton.model.dao.exceptions.UserDaoUncheckedException;
+import by.emel.anton.model.dao.exceptions.UserDaoException;
 import by.emel.anton.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -16,15 +16,16 @@ import javax.servlet.http.HttpSession;
 @Component
 public class DoctorFacadeImpl implements DoctorFacade {
 
-    @Autowired
-    @Qualifier("SpringDataService")
     private UserService userService;
-
-    @Autowired
     private Converter<Doctor, ResponseDoctorDTO> converter;
+    private HttpSession httpSession;
 
     @Autowired
-    private HttpSession httpSession;
+    public DoctorFacadeImpl(@Qualifier("SpringDataService") UserService userService, Converter<Doctor, ResponseDoctorDTO> converter, HttpSession httpSession) {
+        this.userService = userService;
+        this.converter = converter;
+        this.httpSession = httpSession;
+    }
 
     @Override
     public ResponseDoctorDTO getDoctorByLoginPassword(String login, String password) {
@@ -32,7 +33,7 @@ public class DoctorFacadeImpl implements DoctorFacade {
         ResponseDoctorDTO responseDoctorDTO = userService
                 .getDoctor(login, password)
                 .map(converter::convert)
-                .orElseThrow(() -> new UserDaoUncheckedException("Login or password are incorrect"));
+                .orElseThrow(() -> new UserDaoException("Login or password are incorrect"));
         httpSession.setAttribute("doctorId", responseDoctorDTO.getId());
 
         return responseDoctorDTO;
@@ -44,7 +45,7 @@ public class DoctorFacadeImpl implements DoctorFacade {
 
         Doctor doctor = userService
                 .getDoctorById(doctorId)
-                .orElseThrow(() -> new UserDaoUncheckedException("didn't find doctor with id : " + doctorId));
+                .orElseThrow(() -> new UserDaoException("didn't find doctor with id : " + doctorId));
 
         userService.addPatientToDoctor(doctor, patientId);
 
@@ -56,10 +57,10 @@ public class DoctorFacadeImpl implements DoctorFacade {
         int patientId = requestTherapyDTO.getPatientId();
         Doctor doctor = userService
                 .getDoctorById(doctorId)
-                .orElseThrow(() -> new UserDaoUncheckedException("didn't find doctor with id : " + doctorId));
+                .orElseThrow(() -> new UserDaoException("didn't find doctor with id : " + doctorId));
         Patient patient = userService
                 .getPatientById(patientId)
-                .orElseThrow(() -> new UserDaoUncheckedException("didn't find doctor with id : " + patientId));
+                .orElseThrow(() -> new UserDaoException("didn't find doctor with id : " + patientId));
 
         Therapy therapy = new Therapy();
         therapy.setPatient(patient);

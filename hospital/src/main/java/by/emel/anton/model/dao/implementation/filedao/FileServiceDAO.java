@@ -5,8 +5,8 @@ import by.emel.anton.model.beans.therapy.Therapy;
 import by.emel.anton.model.beans.users.User;
 import by.emel.anton.model.beans.users.doctors.Doctor;
 import by.emel.anton.model.beans.users.patients.Patient;
-import by.emel.anton.model.dao.exceptions.TherapyDaoUncheckedException;
-import by.emel.anton.model.dao.exceptions.UserDaoUncheckedException;
+import by.emel.anton.model.dao.exceptions.TherapyDaoException;
+import by.emel.anton.model.dao.exceptions.UserDaoException;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
@@ -44,7 +44,7 @@ public class FileServiceDAO {
             return Integer.parseInt(lineMaxID.split(Constants.SEPARATOR)[0]) + 1;
 
         } catch (IOException e) {
-            throw new UserDaoUncheckedException("ERROR getNextLineID");
+            throw new UserDaoException("ERROR getNextLineID");
         }
     }
 
@@ -56,7 +56,7 @@ public class FileServiceDAO {
                             Collectors.mapping(line -> Integer.valueOf(line.split(Constants.SEPARATOR)[0]), Collectors.toList())));
 
         } catch (IOException e) {
-            throw new UserDaoUncheckedException("ERROR get Patient id list");
+            throw new UserDaoException("ERROR get Patient id list");
         }
     }
 
@@ -79,11 +79,11 @@ public class FileServiceDAO {
             patient.setTherapies(therapies);
 
         } catch (IOException e) {
-            throw new TherapyDaoUncheckedException();
+            throw new TherapyDaoException();
         }
     }
 
-    public void addPatientsToDoctor(Doctor doctor) throws UserDaoUncheckedException {
+    public void addPatientsToDoctor(Doctor doctor) {
 
         try {
             List<String> dataFile = Files.readAllLines(Paths.get(Constants.FILE_PATH_USERS));
@@ -97,7 +97,7 @@ public class FileServiceDAO {
             patientIds.forEach(id -> addPatientsToListFromFile(dataFile, id, patients, doctor));
             doctor.setPatients(patients);
         } catch (IOException e) {
-            e.printStackTrace();
+            throw new UserDaoException();
         }
 
     }
@@ -166,7 +166,7 @@ public class FileServiceDAO {
                     .filter(entry -> entry.getValue().contains(patientId))
                     .map(Map.Entry::getKey)
                     .findFirst()
-                    .orElseThrow(UserDaoUncheckedException::new);
+                    .orElseThrow(UserDaoException::new);
 
             Doctor doctor = fileData
                     .stream()
@@ -178,7 +178,7 @@ public class FileServiceDAO {
             return createPatient(patData, doctor);
 
         } catch (IOException e) {
-            throw new UserDaoUncheckedException("ERROR with user file");
+            throw new UserDaoException("ERROR with user file");
         }
     }
 

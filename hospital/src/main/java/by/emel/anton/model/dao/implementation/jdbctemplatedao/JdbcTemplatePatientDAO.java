@@ -2,7 +2,7 @@ package by.emel.anton.model.dao.implementation.jdbctemplatedao;
 
 import by.emel.anton.model.beans.users.doctors.Doctor;
 import by.emel.anton.model.beans.users.patients.Patient;
-import by.emel.anton.model.dao.exceptions.UserDaoUncheckedException;
+import by.emel.anton.model.dao.exceptions.UserDaoException;
 import by.emel.anton.model.dao.implementation.jdbctemplatedao.rowmappers.PatientMapper;
 import by.emel.anton.model.dao.interfaces.PatientDAO;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,7 +35,7 @@ public class JdbcTemplatePatientDAO implements PatientDAO {
             addDoctorAndTherapiesToPatient(patient, jdbcTemplate);
             return Optional.of(patient);
         } catch (DataAccessException e) {
-            throw new UserDaoUncheckedException("ERROR getPatient");
+            throw new UserDaoException("ERROR getPatient");
         }
     }
 
@@ -46,7 +46,7 @@ public class JdbcTemplatePatientDAO implements PatientDAO {
             addDoctorAndTherapiesToPatient(patient, jdbcTemplate);
             return Optional.of(patient);
         } catch (DataAccessException e) {
-            throw new UserDaoUncheckedException("ERROR getPatientByID");
+            throw new UserDaoException("ERROR getPatientByID");
         }
     }
 

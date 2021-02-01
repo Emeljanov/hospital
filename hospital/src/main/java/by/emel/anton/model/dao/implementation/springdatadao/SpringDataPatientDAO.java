@@ -10,7 +10,8 @@ import java.util.Optional;
 
 @Repository("SpringDataPatientDAO")
 public class SpringDataPatientDAO implements PatientDAO {
-    PatientJpaRepository patientJpaRepository;
+
+    private PatientJpaRepository patientJpaRepository;
 
     @Autowired
     public SpringDataPatientDAO(PatientJpaRepository patientJpaRepository) {

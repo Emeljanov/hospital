@@ -13,7 +13,7 @@ import java.util.Optional;
 @Transactional
 public class HibernateDoctorDAO implements DoctorDAO {
 
-    EntityManager entityManager;
+    private EntityManager entityManager;
 
     @Autowired
     public HibernateDoctorDAO(EntityManager entityManager) {

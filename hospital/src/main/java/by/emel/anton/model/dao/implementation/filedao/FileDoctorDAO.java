@@ -10,7 +10,7 @@ import java.util.Optional;
 @Repository("FileDoctorDAO")
 public class FileDoctorDAO implements DoctorDAO {
 
-    FileUserDAO fileUserDAO;
+    private FileUserDAO fileUserDAO;
 
     @Autowired
     public FileDoctorDAO(FileUserDAO fileUserDAO) {
