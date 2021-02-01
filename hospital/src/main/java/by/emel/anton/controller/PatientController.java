@@ -8,6 +8,7 @@ import by.emel.anton.facade.therapy.TherapyFacade;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -29,7 +30,7 @@ public class PatientController {
     }
 
     @PostMapping("/login")
-    public ResponsePatientDTO getPatientByLoginPass(@RequestBody RequestPatientDTO requestPatientDTO) {
+    public ResponsePatientDTO getPatientByLoginPass(@RequestBody @Validated RequestPatientDTO requestPatientDTO) {
 
         String login = requestPatientDTO.getLogin();
         String password = requestPatientDTO.getPassword();
