@@ -24,7 +24,7 @@ public class DoctorFacadeImpl implements DoctorFacade {
     private Converter<Doctor, ResponseDoctorDTO> converter;
 
     @Autowired
-    HttpSession httpSession;
+    private HttpSession httpSession;
 
     @Override
     public ResponseDoctorDTO getDoctorByLoginPassword(String login, String password) {

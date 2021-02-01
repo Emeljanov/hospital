@@ -26,7 +26,7 @@ public class PatientController {
     @Autowired
     HttpSession httpSession;
 
-    @GetMapping("/by_id")
+    @GetMapping("/by-id")
     public ResponsePatientDTO getPatientById(@RequestParam int patientId) {
         LOGGER.info("Get patient by id: {}", patientId);
 
@@ -43,15 +43,16 @@ public class PatientController {
         return patientFacade.getPatientByLogPass(login, password);
     }
 
-    @GetMapping("/get_therapy")
-    public ResponseTherapyDTO getTherapyById(@RequestParam int therapyId) {
+    @GetMapping("/therapy/get/{id}")
+    public ResponseTherapyDTO getTherapyById(@PathVariable(name = "id") int therapyId) {
         LOGGER.info("Get therapy by id : {}", therapyId);
 
         return therapyFacade.getTherapy(therapyId);
     }
 
     @PostMapping("/logout")
-    public void logout() {
+    public void logout(@SessionAttribute("patientId") int patientId) {
         httpSession.invalidate();
+        LOGGER.info("Session invalidated, id : {}", patientId);
     }
 }

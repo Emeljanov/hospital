@@ -8,6 +8,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 
+import javax.servlet.http.HttpSession;
+
 @Component
 public class PatientFacadeImpl implements PatientFacade {
 
@@ -16,6 +18,8 @@ public class PatientFacadeImpl implements PatientFacade {
     private UserService userService;
     @Autowired
     private Converter<Patient, ResponsePatientDTO> converter;
+    @Autowired
+    private HttpSession httpSession;
 
     @Override
     public ResponsePatientDTO getPatientById(int id) {
@@ -28,10 +32,14 @@ public class PatientFacadeImpl implements PatientFacade {
 
     @Override
     public ResponsePatientDTO getPatientByLogPass(String login, String password) {
-
-        return userService
+        ResponsePatientDTO responsePatientDTO = userService
                 .getPatient(login, password)
                 .map(converter::convert)
                 .orElseThrow(() -> new UserDaoUncheckedException("Login or password are incorrect"));
+
+        int patientId = responsePatientDTO.getId();
+        httpSession.setAttribute("patientId", patientId);
+
+        return responsePatientDTO;
     }
 }
