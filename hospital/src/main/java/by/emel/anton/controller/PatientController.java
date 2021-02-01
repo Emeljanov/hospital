@@ -11,6 +11,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpSession;
+
 @RestController
 @RequestMapping("/patient")
 public class PatientController {
@@ -21,6 +23,8 @@ public class PatientController {
     PatientFacade patientFacade;
     @Autowired
     TherapyFacade therapyFacade;
+    @Autowired
+    HttpSession httpSession;
 
     @GetMapping("/by_id")
     public ResponsePatientDTO getPatientById(@RequestParam int patientId) {
@@ -44,5 +48,10 @@ public class PatientController {
         LOGGER.info("Get therapy by id : {}", therapyId);
 
         return therapyFacade.getTherapy(therapyId);
+    }
+
+    @PostMapping("/logout")
+    public void logout() {
+        httpSession.invalidate();
     }
 }

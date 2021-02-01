@@ -10,12 +10,17 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpSession;
+
 @RestController
 @RequestMapping("/doctor")
 public class DoctorController {
 
     @Autowired
     DoctorFacade doctorFacade;
+
+    @Autowired
+    HttpSession httpSession;
 
     private static final Logger LOGGER = LoggerFactory.getLogger(DoctorController.class);
 
@@ -44,6 +49,11 @@ public class DoctorController {
         LOGGER.info("Set therapy description : {} to patient id: {} by doctor id : {}",
                 requestTherapyDTO.getDescription(), requestTherapyDTO.getPatientId(), doctorId);
         doctorFacade.setTherapyToPatient(doctorId, requestTherapyDTO);
+    }
+
+    @PostMapping("/logout")
+    public void logout() {
+        httpSession.invalidate();
     }
 }
 
