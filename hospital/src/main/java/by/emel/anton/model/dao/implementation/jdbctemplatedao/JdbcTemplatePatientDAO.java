@@ -2,7 +2,7 @@ package by.emel.anton.model.dao.implementation.jdbctemplatedao;
 
 import by.emel.anton.model.beans.users.doctors.Doctor;
 import by.emel.anton.model.beans.users.patients.Patient;
-import by.emel.anton.model.dao.exceptions.UserDAOException;
+import by.emel.anton.model.dao.exceptions.UserDaoException;
 import by.emel.anton.model.dao.implementation.jdbctemplatedao.rowmappers.PatientMapper;
 import by.emel.anton.model.dao.interfaces.PatientDAO;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,37 +29,31 @@ public class JdbcTemplatePatientDAO implements PatientDAO {
     }
 
     @Override
-    public Optional<Patient> getPatient(String login, String password) throws UserDAOException {
+    public Optional<Patient> getPatient(String login, String password) {
         try {
             Patient patient = jdbcTemplate.queryForObject(SQL_GET_PATIENT, new Object[]{login, password}, patientMapper);
             addDoctorAndTherapiesToPatient(patient, jdbcTemplate);
             return Optional.of(patient);
         } catch (DataAccessException e) {
-            throw new UserDAOException("ERROR getPatient");
+            throw new UserDaoException("ERROR getPatient");
         }
     }
 
     @Override
-    public Optional<Patient> getPatientById(int id) throws UserDAOException {
+    public Optional<Patient> getPatientById(int id) {
         try {
             Patient patient = jdbcTemplate.queryForObject(SQL_GET_PATIENT_BY_ID, new Object[]{id}, patientMapper);
             addDoctorAndTherapiesToPatient(patient, jdbcTemplate);
             return Optional.of(patient);
         } catch (DataAccessException e) {
-            throw new UserDAOException("ERROR getPatientByID");
+            throw new UserDaoException("ERROR getPatientByID");
         }
     }
 
     private void addDoctorAndTherapiesToPatient(Patient patient, JdbcTemplate jdbcTemplate) {
 
         Optional<Doctor> optionalDoctor = Optional.ofNullable(patient.getDoctor());
-        optionalDoctor.ifPresent(doctor -> {
-            try {
-                jdbcTemplateDoctorDAO.getDoctorById(doctor.getId()).ifPresent(patient::setDoctor);
-            } catch (UserDAOException e) {
-                e.printStackTrace();
-            }
-        });
+        optionalDoctor.flatMap(doctor -> jdbcTemplateDoctorDAO.getDoctorById(doctor.getId())).ifPresent(patient::setDoctor);
         JdbcTemplateService.addTherapiesToPatient(patient, jdbcTemplate);
     }
 }

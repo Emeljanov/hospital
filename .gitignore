@@ -12,6 +12,4 @@ logs/
 *.tar.gz
 *.rar
 
-controller/
-facades/
 

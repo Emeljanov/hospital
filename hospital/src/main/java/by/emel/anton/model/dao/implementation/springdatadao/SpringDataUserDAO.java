@@ -9,7 +9,7 @@ import org.springframework.stereotype.Repository;
 @Repository("SpringDataUserDAO")
 public class SpringDataUserDAO implements UserDAO {
 
-    UserJpaRepository userJpaRepository;
+    private UserJpaRepository userJpaRepository;
 
     @Autowired
     public SpringDataUserDAO(UserJpaRepository userJpaRepository) {

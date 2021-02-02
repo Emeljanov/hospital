@@ -12,7 +12,7 @@ import java.util.Optional;
 @Repository("SpringDataTherapyDAO")
 public class SpringDataTherapyDAO implements TherapyDAO {
 
-    TherapyJpaRepository therapyJpaRepository;
+    private TherapyJpaRepository therapyJpaRepository;
 
     @Autowired
     public SpringDataTherapyDAO(TherapyJpaRepository therapyJpaRepository) {

@@ -5,7 +5,8 @@ import by.emel.anton.model.beans.therapy.Therapy;
 import by.emel.anton.model.beans.users.User;
 import by.emel.anton.model.beans.users.doctors.Doctor;
 import by.emel.anton.model.beans.users.patients.Patient;
-import by.emel.anton.model.dao.exceptions.UserDAOException;
+import by.emel.anton.model.dao.exceptions.TherapyDaoException;
+import by.emel.anton.model.dao.exceptions.UserDaoException;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
@@ -34,19 +35,20 @@ public class FileServiceDAO {
         return id == idData;
     }
 
-    public int getNextLineId(Path filePath) throws UserDAOException {
+    public int getNextLineId(Path filePath) {
 
         try {
             List<String> fileData = Files.readAllLines(filePath);
             String lineMaxID = fileData.stream().max(new LineIdComaparator()).orElse("0/");
 
             return Integer.parseInt(lineMaxID.split(Constants.SEPARATOR)[0]) + 1;
+
         } catch (IOException e) {
-            throw new UserDAOException("ERROR getNextLineID");
+            throw new UserDaoException("ERROR getNextLineID");
         }
     }
 
-    public Map<Integer, List<Integer>> getDoctorPatientsIdMap() throws UserDAOException {
+    public Map<Integer, List<Integer>> getDoctorPatientsIdMap() {
         try {
             return Files.readAllLines(Paths.get(Constants.FILE_PATH_PATIENTS))
                     .stream()
@@ -54,25 +56,34 @@ public class FileServiceDAO {
                             Collectors.mapping(line -> Integer.valueOf(line.split(Constants.SEPARATOR)[0]), Collectors.toList())));
 
         } catch (IOException e) {
-            throw new UserDAOException("ERROR get Patient id list");
+            throw new UserDaoException("ERROR get Patient id list");
         }
     }
 
-    public void addTherapiesToPatient(Patient patient) throws IOException {
-        List<String> listLineThe = Files.readAllLines(Paths.get(Constants.FILE_PATH_THERAPIES)).stream()
-                .filter(l -> Integer.parseInt(l.split(Constants.SEPARATOR)[4]) == patient.getId())
-                .collect(Collectors.toList());
+    public void addTherapiesToPatient(Patient patient) {
 
-        List<Therapy> therapies = listLineThe.stream()
-                .map(this::createTherapyFromLine)
-                .collect(Collectors.toList());
-        therapies.forEach(t -> t.setPatient(patient));
+        try {
+            List<String> listLineThe = Files
+                    .readAllLines(Paths.get(Constants.FILE_PATH_THERAPIES))
+                    .stream()
+                    .filter(line -> Integer.parseInt(line.split(Constants.SEPARATOR)[4]) == patient.getId())
+                    .collect(Collectors.toList());
 
-        patient.setTherapies(therapies);
+            List<Therapy> therapies = listLineThe
+                    .stream()
+                    .map(this::createTherapyFromLine)
+                    .collect(Collectors.toList());
 
+            therapies.forEach(t -> t.setPatient(patient));
+
+            patient.setTherapies(therapies);
+
+        } catch (IOException e) {
+            throw new TherapyDaoException();
+        }
     }
 
-    public void addPatientsToDoctor(Doctor doctor) throws UserDAOException {
+    public void addPatientsToDoctor(Doctor doctor) {
 
         try {
             List<String> dataFile = Files.readAllLines(Paths.get(Constants.FILE_PATH_USERS));
@@ -86,7 +97,7 @@ public class FileServiceDAO {
             patientIds.forEach(id -> addPatientsToListFromFile(dataFile, id, patients, doctor));
             doctor.setPatients(patients);
         } catch (IOException e) {
-            e.printStackTrace();
+            throw new UserDaoException();
         }
 
     }
@@ -136,49 +147,45 @@ public class FileServiceDAO {
         patient.setName(name);
         patient.setBirthday(birthday);
         patient.setDoctor(doctor);
-        try {
-            addTherapiesToPatient(patient);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        addTherapiesToPatient(patient);
 
         return patient;
 
     }
 
-    public Patient createPatientFromLine(String line) throws UserDAOException {
-        String[] patData = line.split(Constants.SEPARATOR);
-        int patientId = Integer.parseInt(patData[0]);
+    public Patient createPatientFromLine(String line) {
 
-        List<String> fileData = null;
         try {
-            fileData = Files.readAllLines(Paths.get(Constants.FILE_PATH_USERS));
+            List<String> fileData = Files.readAllLines(Paths.get(Constants.FILE_PATH_USERS));
+            String[] patData = line.split(Constants.SEPARATOR);
+            int patientId = Integer.parseInt(patData[0]);
+
+            int idDoc = getDoctorPatientsIdMap()
+                    .entrySet()
+                    .stream()
+                    .filter(entry -> entry.getValue().contains(patientId))
+                    .map(Map.Entry::getKey)
+                    .findFirst()
+                    .orElseThrow(UserDaoException::new);
+
+            Doctor doctor = fileData
+                    .stream()
+                    .filter(s -> Integer.parseInt(s.split(Constants.SEPARATOR)[0]) == idDoc)
+                    .findFirst()
+                    .map(this::createDoctor)
+                    .orElseGet(this::createDefaultDoctor);
+
+            return createPatient(patData, doctor);
+
         } catch (IOException e) {
-            throw new UserDAOException("ERROR with user file");
+            throw new UserDaoException("ERROR with user file");
         }
+    }
 
-        Optional<Integer> optionalDocId = getDoctorPatientsIdMap()
-                .entrySet()
-                .stream()
-                .filter(entry -> entry.getValue().contains(patientId))
-                .map(Map.Entry::getKey)
-                .findFirst();
-        if (!optionalDocId.isPresent()) throw new UserDAOException("No doc ID");
-        int idDoc = optionalDocId.get();
-
-        Optional<Doctor> optionalDoctor = fileData
-                .stream()
-                .filter(s -> Integer.parseInt(s.split(Constants.SEPARATOR)[0]) == idDoc)
-                .findFirst()
-                .map(this::createDoctor);
+    private Doctor createDefaultDoctor() {
         Doctor doctor = new Doctor();
         doctor.setId(0);
-
-        if (optionalDoctor.isPresent()) {
-            doctor = optionalDoctor.get();
-        }
-
-        return createPatient(patData, doctor);
+        return doctor;
     }
 
     public Doctor createDoctor(String lineData) {
@@ -196,12 +203,7 @@ public class FileServiceDAO {
         doctor.setPassword(password);
         doctor.setName(name);
         doctor.setBirthday(birthday);
-
-        try {
-            addPatientsToDoctor(doctor);
-        } catch (UserDAOException e) {
-            e.printStackTrace();
-        }
+        addPatientsToDoctor(doctor);
 
         return doctor;
     }

@@ -4,32 +4,32 @@ import by.emel.anton.model.beans.therapy.Therapy;
 import by.emel.anton.model.beans.users.User;
 import by.emel.anton.model.beans.users.doctors.Doctor;
 import by.emel.anton.model.beans.users.patients.Patient;
-import by.emel.anton.model.dao.exceptions.TherapyDAOException;
-import by.emel.anton.model.dao.exceptions.UserDAOException;
 
 import java.time.LocalDate;
 import java.util.Optional;
 
 public interface UserService {
 
-    void createUser(User user, String login, String password, String name, LocalDate birthday, boolean isSave) throws UserDAOException;
+    void createUser(User user, String login, String password, String name, LocalDate birthday, boolean isSave);
 
-    void saveUser(User user) throws UserDAOException;
+    void saveUser(User user);
 
-    void saveTherapy(Therapy therapy) throws TherapyDAOException;
+    void saveTherapy(Therapy therapy);
 
-    Optional<Doctor> getDoctor(String login, String password) throws UserDAOException;
+    Optional<Doctor> getDoctor(String login, String password);
 
-    Optional<Patient> getPatient(String login, String password) throws UserDAOException;
+    Optional<Doctor> getDoctorById(int id);
 
-    Optional<Patient> getPatientById(int id) throws UserDAOException;
+    Optional<Patient> getPatient(String login, String password);
 
-    Optional<Therapy> getTherapy(int id) throws TherapyDAOException, UserDAOException;
+    Optional<Patient> getPatientById(int id);
 
-    void updateUser(User user) throws UserDAOException;
+    Optional<Therapy> getTherapy(int id);
 
-    void addTherapy(Patient patient, String description, LocalDate endDate) throws TherapyDAOException, UserDAOException;
+    void updateUser(User user);
 
-    void addPatientToDoctor(Doctor doctor, int patientId) throws UserDAOException;
+    void addTherapy(Patient patient, String description, LocalDate endDate);
+
+    void addPatientToDoctor(Doctor doctor, int patientId);
 
 }
