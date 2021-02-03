@@ -85,7 +85,7 @@ public class DoctorFacadeImplTest {
         assertEquals(doctorByLoginPassword.getLogin(), doctor.getLogin());
         int size = doctor.getPatients().size();
         assertThat(doctorByLoginPassword.getPatientIds()).hasSize(size).containsExactlyInAnyOrder(10, 13);
-        verify(httpSession).setAttribute(eq(DOCTOR_ID), anyInt());
+        verify(httpSession).setAttribute(eq(DOCTOR_ID), eq(doctor.getId()));
     }
 
 
@@ -105,7 +105,10 @@ public class DoctorFacadeImplTest {
     @Test
     public void setTherapyToPatientExceptionPatient() {
         int patientId = requestTherapyDTO.getPatientId();
-        when(userService.getDoctorById(10)).thenReturn(Optional.of(mock(Doctor.class)));
+        Doctor doctor = new Doctor();
+        int doctorId = 10;
+        doctor.setId(doctorId);
+        when(userService.getDoctorById(doctorId)).thenReturn(Optional.of(doctor));
         when(userService.getPatientById(patientId)).thenReturn(Optional.empty());
         Assertions.assertThrows(UserDaoException.class, () -> doctorFacade.setTherapyToPatient(patientId, requestTherapyDTO));
     }
@@ -113,15 +116,23 @@ public class DoctorFacadeImplTest {
     @Test
     public void setTherapyToPatientExceptionDoctor() {
         int patientId = requestTherapyDTO.getPatientId();
-        when(userService.getDoctorById(10)).thenReturn(Optional.empty());
+        int doctorId = 10;
+        when(userService.getDoctorById(doctorId)).thenReturn(Optional.empty());
         Assertions.assertThrows(UserDaoException.class, () -> doctorFacade.setTherapyToPatient(patientId, requestTherapyDTO));
     }
 
     @Test
     public void setTherapyToPatient() {
         int patientId = requestTherapyDTO.getPatientId();
-        when(userService.getDoctorById(10)).thenReturn(Optional.of(mock(Doctor.class)));
-        when(userService.getPatientById(patientId)).thenReturn(Optional.of(mock(Patient.class)));
+        Patient patient = new Patient();
+        patient.setId(patientId);
+
+        int doctorId = 10;
+        Doctor doctor = new Doctor();
+        doctor.setId(doctorId);
+
+        when(userService.getDoctorById(doctorId)).thenReturn(Optional.of(doctor));
+        when(userService.getPatientById(patientId)).thenReturn(Optional.of(patient));
         doctorFacade.setTherapyToPatient(patientId, requestTherapyDTO);
         verify(userService).saveTherapy(any());
     }
