@@ -1,51 +1,51 @@
 package by.emel.anton.facade.doctor;
 
-import by.emel.anton.facade.converter.DoctorConverter;
+import by.emel.anton.facade.converter.Converter;
 import by.emel.anton.facade.therapy.RequestTherapyDTO;
+import by.emel.anton.model.beans.users.User;
 import by.emel.anton.model.beans.users.doctors.Doctor;
 import by.emel.anton.model.beans.users.patients.Patient;
 import by.emel.anton.model.dao.exceptions.UserDaoException;
 import by.emel.anton.service.UserService;
-import org.junit.BeforeClass;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.Spy;
-import org.mockito.junit.MockitoJUnitRunner;
+import org.mockito.junit.jupiter.MockitoExtension;
 
 import javax.servlet.http.HttpSession;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.Assert.assertEquals;
 import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.*;
 
-
-@RunWith(MockitoJUnitRunner.class)
+@ExtendWith(MockitoExtension.class)
 public class DoctorFacadeImplTest {
     @InjectMocks
     private DoctorFacadeImpl doctorFacade;
     @Mock
     private UserService userService;
-    @Spy
-    private DoctorConverter converter;
+    @Mock
+    private Converter<Doctor, ResponseDoctorDTO> converter;
     @Mock
     private HttpSession httpSession;
 
-    private static Doctor doctor;
-    private static RequestTherapyDTO requestTherapyDTO;
+    private Doctor doctor;
+    private RequestTherapyDTO requestTherapyDTO;
 
     private static final String LOGIN = "login";
     private static final String PASSWORD = "password";
     private static final String DOCTOR_ID = "doctorId";
 
-    @BeforeClass
-    public static void preparedDoctor() {
-
+    @BeforeEach
+    public void init() {
         doctor = new Doctor();
         doctor.setPassword("password");
         doctor.setLogin("login");
@@ -69,7 +69,15 @@ public class DoctorFacadeImplTest {
 
     @Test
     public void getDoctorByLoginPassword() {
+        ResponseDoctorDTO responseDoctorDTO = new ResponseDoctorDTO();
+        responseDoctorDTO.setLogin(doctor.getLogin());
+        responseDoctorDTO.setName(doctor.getName());
+        responseDoctorDTO.setId(doctor.getId());
+        responseDoctorDTO.setPatientIds(doctor.getPatients().stream().map(User::getId).collect(Collectors.toList()));
+
+
         when(userService.getDoctor(LOGIN, PASSWORD)).thenReturn(Optional.of(doctor));
+        when(converter.convert(doctor)).thenReturn(responseDoctorDTO);
         ResponseDoctorDTO doctorByLoginPassword = doctorFacade.getDoctorByLoginPassword(LOGIN, PASSWORD);
 
         assertEquals(doctorByLoginPassword.getId(), doctor.getId());
@@ -81,10 +89,10 @@ public class DoctorFacadeImplTest {
     }
 
 
-    @Test(expected = UserDaoException.class)
+    @Test
     public void setPatientToDoctorException() {
         when(userService.getDoctorById(10)).thenReturn(Optional.empty());
-        doctorFacade.setPatientToDoctor(10, anyInt());
+        Assertions.assertThrows(UserDaoException.class, () -> doctorFacade.setPatientToDoctor(10, anyInt()));
     }
 
     @Test
@@ -94,19 +102,19 @@ public class DoctorFacadeImplTest {
         verify(userService).addPatientToDoctor(any(), anyInt());
     }
 
-    @Test(expected = UserDaoException.class)
+    @Test
     public void setTherapyToPatientExceptionPatient() {
         int patientId = requestTherapyDTO.getPatientId();
         when(userService.getDoctorById(10)).thenReturn(Optional.of(mock(Doctor.class)));
         when(userService.getPatientById(patientId)).thenReturn(Optional.empty());
-        doctorFacade.setTherapyToPatient(patientId, requestTherapyDTO);
+        Assertions.assertThrows(UserDaoException.class, () -> doctorFacade.setTherapyToPatient(patientId, requestTherapyDTO));
     }
 
-    @Test(expected = UserDaoException.class)
+    @Test
     public void setTherapyToPatientExceptionDoctor() {
         int patientId = requestTherapyDTO.getPatientId();
         when(userService.getDoctorById(10)).thenReturn(Optional.empty());
-        doctorFacade.setTherapyToPatient(patientId, requestTherapyDTO);
+        Assertions.assertThrows(UserDaoException.class, () -> doctorFacade.setTherapyToPatient(patientId, requestTherapyDTO));
     }
 
     @Test
@@ -117,6 +125,5 @@ public class DoctorFacadeImplTest {
         doctorFacade.setTherapyToPatient(patientId, requestTherapyDTO);
         verify(userService).saveTherapy(any());
     }
-
 }
 
