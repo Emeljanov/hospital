@@ -6,12 +6,12 @@
                       http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.8.xsd">
 
 
-    <preConditions>
+<!--    <preConditions>
         <or>
             <dbms type="mysql"/>
             <dbms type="h2"/>
         </or>
-    </preConditions>
+    </preConditions>-->
 
     <changeSet id="0" author="anton_e">
         <tagDatabase tag="db_init"/>

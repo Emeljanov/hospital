@@ -7,14 +7,14 @@
 
 
     <changeSet id="01-1" author="anton_e">
-        <sqlFile dbms="mysql"
+        <sqlFile dbms="mysql,h2"
                  encoding="utf8"
                  relativeToChangelogFile="true"
                  splitStatements="true"
                  stripComments="true"
                  path="01-create-users-table.sql"/>
         <rollback>
-            <sqlFile dbms="mysql"
+            <sqlFile dbms="mysql,h2"
                      encoding="utf8"
                      relativeToChangelogFile="true"
                      splitStatements="true"
