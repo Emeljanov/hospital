@@ -25,23 +25,16 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.print.attribute.Attribute;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.stream.Collectors;
 
 import static org.junit.Assert.assertEquals;
 
-
 @ExtendWith(SpringExtension.class)
 @SpringBootTest
-//@TestPropertySource(locations = "classpath:test.properties")
 @AutoConfigureMockMvc
-//@TestPropertySource("/application.properties")
-
-//@Sql(value = {"classpath:create-user-before.sql"},executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
 @Transactional
-
 public class DoctorControllerTest {
     private static final String ATR_DOC_ID = "doctorId";
     private static final String PARAM_PAT_ID = "patientId";
@@ -52,7 +45,6 @@ public class DoctorControllerTest {
     private static final String DEFAULT_PATIENT_LOGIN = "defaultPatientLogin";
     private static final String DEFAULT_PATIENT_PASS = "defaultPatientPass";
 
-    private DoctorController doctorController;
     private MockMvc mockMvc;
     private ObjectMapper objectMapper;
     private UserJpaRepository userJpaRepository;
@@ -63,14 +55,12 @@ public class DoctorControllerTest {
     @Autowired
     public DoctorControllerTest(
             MockMvc mockMvc,
-            DoctorController doctorController,
             ObjectMapper objectMapper,
             UserJpaRepository userJpaRepository,
             TherapyJpaRepository therapyJpaRepository,
             DoctorJpaRepository doctorJpaRepository,
             PatientJpaRepository patientJpaRepository) {
         this.mockMvc = mockMvc;
-        this.doctorController = doctorController;
         this.objectMapper = objectMapper;
         this.userJpaRepository = userJpaRepository;
         this.therapyJpaRepository = therapyJpaRepository;
@@ -100,8 +90,6 @@ public class DoctorControllerTest {
         patient.setDoctor(doctor);
         userJpaRepository.save(doctor);
         userJpaRepository.save(patient);
-
-
     }
 
     @Test
@@ -112,16 +100,18 @@ public class DoctorControllerTest {
         responseDoctorDTO.setPatientIds(doctor.getPatients().stream().map(User::getId).collect(Collectors.toList()));
         responseDoctorDTO.setName(doctor.getName());
         responseDoctorDTO.setLogin(doctor.getLogin());
+        String jsonResponseBody = objectMapper.writeValueAsString(responseDoctorDTO);
 
         RequestDoctorDTO requestDoctorDTO = new RequestDoctorDTO();
         requestDoctorDTO.setLogin(doctor.getLogin());
         requestDoctorDTO.setPassword(doctor.getPassword());
+        String jsonRequestBody = objectMapper.writeValueAsString(requestDoctorDTO);
+
         mockMvc.perform(MockMvcRequestBuilders.post("/doctor/login")
-                .content(objectMapper.writeValueAsString(requestDoctorDTO)).contentType(MediaType.APPLICATION_JSON)
+                .content(jsonRequestBody).contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON))
                 .andExpect(MockMvcResultMatchers.status().isOk())
-                .andExpect(MockMvcResultMatchers.content().json(objectMapper.writeValueAsString(responseDoctorDTO)));
-
+                .andExpect(MockMvcResultMatchers.content().json(jsonResponseBody));
     }
 
     @Test
@@ -149,6 +139,10 @@ public class DoctorControllerTest {
                 .sessionAttr(ATR_DOC_ID, doctorId)
                 .param(PARAM_PAT_ID, newPatientId))
                 .andExpect(MockMvcResultMatchers.status().isOk());
+
+        Patient patientFromDb = patientJpaRepository.findById(Integer.valueOf(newPatientId)).orElseThrow(Exception::new);
+        int docIdFromDb = patientFromDb.getDoctor().getId();
+        assertEquals(docIdFromDb, doctorId);
     }
 
     @Test
@@ -166,9 +160,10 @@ public class DoctorControllerTest {
         requestTherapyDTO.setStartDate(stDate);
         requestTherapyDTO.setEndDate(endDate);
         requestTherapyDTO.setDescription(description);
+        String jsonRequestTherapyBody = objectMapper.writeValueAsString(requestTherapyDTO);
 
         mockMvc.perform(MockMvcRequestBuilders.post("/doctor/patient/therapy/set")
-                .content(objectMapper.writeValueAsString(requestTherapyDTO))
+                .content(jsonRequestTherapyBody)
                 .contentType(MediaType.APPLICATION_JSON).accept(MediaType.APPLICATION_JSON)
                 .sessionAttr(ATR_DOC_ID, doctorID))
                 .andExpect(MockMvcResultMatchers.status().isOk());
@@ -182,9 +177,7 @@ public class DoctorControllerTest {
     @Test
     public void logout() throws Exception {
         mockMvc.perform(MockMvcRequestBuilders
-                .post("/doctor/logout").sessionAttr(ATR_DOC_ID,1))
+                .post("/doctor/logout").sessionAttr(ATR_DOC_ID, 1))
                 .andExpect(MockMvcResultMatchers.status().isOk());
-
     }
-
 }
