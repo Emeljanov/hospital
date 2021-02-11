@@ -5,6 +5,7 @@ import by.emel.anton.model.beans.users.patients.Patient;
 
 import javax.persistence.*;
 import java.time.LocalDate;
+import java.util.Objects;
 
 @Entity
 public class Therapy {
@@ -72,5 +73,22 @@ public class Therapy {
     @Override
     public String toString() {
         return String.join(Constants.SEPARATOR, String.valueOf(id), description, startDate.toString(), endDate.toString(), String.valueOf(patient.getId()));
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Therapy therapy = (Therapy) o;
+        return id == therapy.id &&
+                description.equals(therapy.description) &&
+                startDate.equals(therapy.startDate) &&
+                endDate.equals(therapy.endDate) &&
+                patient.equals(therapy.patient);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, description, startDate, endDate, patient);
     }
 }
