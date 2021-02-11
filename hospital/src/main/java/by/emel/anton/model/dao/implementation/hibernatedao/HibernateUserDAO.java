@@ -2,7 +2,7 @@ package by.emel.anton.model.dao.implementation.hibernatedao;
 
 import by.emel.anton.constants.Constants;
 import by.emel.anton.model.beans.users.User;
-import by.emel.anton.model.dao.exceptions.UserDAOException;
+import by.emel.anton.model.dao.exceptions.UserDaoException;
 import by.emel.anton.model.dao.interfaces.UserDAO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
@@ -15,8 +15,7 @@ import javax.persistence.NoResultException;
 @Transactional
 public class HibernateUserDAO implements UserDAO {
 
-
-    EntityManager entityManager;
+    private EntityManager entityManager;
 
     @Autowired
     public HibernateUserDAO(EntityManager entityManager) {
@@ -24,7 +23,7 @@ public class HibernateUserDAO implements UserDAO {
     }
 
     @Override
-    public boolean isLoginExist(String login) throws UserDAOException {
+    public boolean isLoginExist(String login) {
         String query = "select count(*) from User where login = ?0";
         int count = (Integer) entityManager.createQuery(query).setParameter(0, login).getSingleResult();
         return count >= 1;
@@ -32,16 +31,16 @@ public class HibernateUserDAO implements UserDAO {
     }
 
     @Override
-    public void updateUser(User user) throws UserDAOException {
+    public void updateUser(User user) {
         entityManager.merge(user);
     }
 
     @Override
-    public void saveUser(User user) throws UserDAOException {
+    public void saveUser(User user) {
         entityManager.persist(user);
     }
 
-    protected static int getUserId(String login, String password, EntityManager entityManager) throws UserDAOException {
+    protected static int getUserId(String login, String password, EntityManager entityManager) {
         String queryGetDoctorId = "select id from User where login = ?0 and password = ?1";
         try {
             return (int) entityManager
@@ -50,7 +49,7 @@ public class HibernateUserDAO implements UserDAO {
                     .setParameter(1, password)
                     .getSingleResult();
         } catch (NoResultException e) {
-            throw new UserDAOException(Constants.EXCEPTION_MESSAGE_LP_INCORRECT);
+            throw new UserDaoException(Constants.EXCEPTION_MESSAGE_LP_INCORRECT);
         }
     }
 }

@@ -6,8 +6,8 @@ import by.emel.anton.model.beans.users.User;
 import by.emel.anton.model.beans.users.doctors.Doctor;
 import by.emel.anton.model.beans.users.patients.Patient;
 import by.emel.anton.model.dao.exceptions.TerminalException;
-import by.emel.anton.model.dao.exceptions.TherapyDAOException;
-import by.emel.anton.model.dao.exceptions.UserDAOException;
+import by.emel.anton.model.dao.exceptions.TherapyDaoException;
+import by.emel.anton.model.dao.exceptions.UserDaoException;
 import by.emel.anton.service.UserService;
 import by.emel.anton.service.UserServiceResolver;
 import org.slf4j.Logger;
@@ -51,7 +51,7 @@ public class TerminalProgram {
     private static final String DATA_FROM_HIBERNATE = "Data from hibernate";
     private static final String DATA_FROM_SPRINGDATA = "Data from spring data";
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(TerminalProgram.class);
+    private static final Logger logger = LoggerFactory.getLogger(TerminalProgram.class);
 
     private UserService userService;
     private final UserServiceResolver userServiceResolver;
@@ -77,27 +77,27 @@ public class TerminalProgram {
     }
 
     private void selectDataStorage(Scanner scanner) {
-        LOGGER.info(SELECT_DATA_STORAGE);
+        logger.info(SELECT_DATA_STORAGE);
         try {
             AnswerType answer = getAnswerAndCheckIllegalArgExp(scanner.nextLine());
             switch (answer) {
                 case FILE:
-                    LOGGER.info(DATA_FROM_FILE);
+                    logger.info(DATA_FROM_FILE);
                     setUserService(userServiceResolver.resolveUserService(answer));
                     processingProgram(scanner);
                     break;
                 case TEMPLATE:
-                    LOGGER.info(DATA_FROM_JDBC_TEMPLATE);
+                    logger.info(DATA_FROM_JDBC_TEMPLATE);
                     setUserService(userServiceResolver.resolveUserService(answer));
                     processingProgram(scanner);
                     break;
                 case HIBERNATE:
-                    LOGGER.info(DATA_FROM_HIBERNATE);
+                    logger.info(DATA_FROM_HIBERNATE);
                     setUserService(userServiceResolver.resolveUserService(answer));
                     processingProgram(scanner);
                     break;
                 case SPRINGDATA:
-                    LOGGER.info(DATA_FROM_SPRINGDATA);
+                    logger.info(DATA_FROM_SPRINGDATA);
                     setUserService(userServiceResolver.resolveUserService(answer));
                     processingProgram(scanner);
                     break;
@@ -109,7 +109,7 @@ public class TerminalProgram {
             }
 
         } catch (TerminalException e) {
-            LOGGER.error(e.getClass().getSimpleName() + Constants.SPACE + e.getMessage());
+            logger.error(e.getClass().getSimpleName() + Constants.SPACE + e.getMessage());
         }
     }
 
@@ -122,7 +122,7 @@ public class TerminalProgram {
 
     public void enterUser(Scanner scanner) {
 
-        LOGGER.info(START_PROGRAM);
+        logger.info(START_PROGRAM);
         flag_doctor = true;
         flag_patient = true;
 
@@ -130,11 +130,11 @@ public class TerminalProgram {
             AnswerType answer = getAnswerAndCheckIllegalArgExp(scanner.nextLine());
             switch (answer) {
                 case DOCTOR:
-                    LOGGER.info(ANSWER_DOCTOR);
+                    logger.info(ANSWER_DOCTOR);
                     enterDoctor(scanner);
                     break;
                 case PATIENT:
-                    LOGGER.info(ANSWER_PATIENT);
+                    logger.info(ANSWER_PATIENT);
                     enterPatient(scanner);
                     break;
                 case NEW:
@@ -146,14 +146,14 @@ public class TerminalProgram {
                 default:
                     throw new TerminalException(ERROR_ARG_INC);
             }
-        } catch (TerminalException | UserDAOException | TherapyDAOException e) {
-            LOGGER.error(e.getClass().getSimpleName() + Constants.SPACE + e.getMessage());
+        } catch (TerminalException | UserDaoException | TherapyDaoException e) {
+            logger.error(e.getClass().getSimpleName() + Constants.SPACE + e.getMessage());
         }
     }
 
-    private void createNewUser(Scanner scanner) throws UserDAOException {
+    private void createNewUser(Scanner scanner) {
 
-        LOGGER.info(CREATE_NEW_USER);
+        logger.info(CREATE_NEW_USER);
 
         try {
             User user;
@@ -168,38 +168,38 @@ public class TerminalProgram {
                 default:
                     throw new TerminalException(ERROR_ARG_INC);
             }
-            LOGGER.info(ENTER_LOGIN);
+            logger.info(ENTER_LOGIN);
             String login = scanner.nextLine();
-            LOGGER.info(ENTER_PASSWORD);
+            logger.info(ENTER_PASSWORD);
             String password = scanner.nextLine();
-            LOGGER.info(ENTER_NAME);
+            logger.info(ENTER_NAME);
             String name = scanner.nextLine();
-            LOGGER.info(ENTER_BIRTHDAY);
+            logger.info(ENTER_BIRTHDAY);
             LocalDate birthday = getDateAndCheckDateTimeExp(scanner.nextLine());
 
             userService.createUser(user, login, password, name, birthday, true);
 
         } catch (TerminalException e) {
-            LOGGER.error(e.getClass().getSimpleName() + Constants.SPACE + e.getMessage());
+            logger.error(e.getClass().getSimpleName() + Constants.SPACE + e.getMessage());
         }
     }
 
-    private void enterDoctor(Scanner scanner) throws UserDAOException, TherapyDAOException {
+    private void enterDoctor(Scanner scanner) {
 
-        LOGGER.info(ENTER_LOGIN);
+        logger.info(ENTER_LOGIN);
         String login = scanner.nextLine();
-        LOGGER.info(ENTER_PASSWORD);
+        logger.info(ENTER_PASSWORD);
         String password = scanner.nextLine();
         Doctor doctor = userService
                 .getDoctor(login, password)
-                .orElseThrow(() -> new UserDAOException(ERROR_ENTER_DOCTOR));
-        LOGGER.info(HI + doctor.getName());
+                .orElseThrow(() -> new UserDaoException(ERROR_ENTER_DOCTOR));
+        logger.info(HI + doctor.getName());
 
         startProcessingDoctor(scanner, doctor);
 
     }
 
-    private void startProcessingDoctor(Scanner scanner, Doctor doctor) throws UserDAOException, TherapyDAOException {
+    private void startProcessingDoctor(Scanner scanner, Doctor doctor) {
 
         while (flag_doctor) {
             processingDoctor(scanner, doctor);
@@ -208,35 +208,35 @@ public class TerminalProgram {
 
     }
 
-    private void processingDoctor(Scanner scanner, Doctor doctor) throws UserDAOException, TherapyDAOException {
+    private void processingDoctor(Scanner scanner, Doctor doctor) {
 
-        LOGGER.info(PROCESSING_DOCTOR);
+        logger.info(PROCESSING_DOCTOR);
 
         try {
 
             AnswerType answer = getAnswerAndCheckIllegalArgExp(scanner.nextLine());
             switch (answer) {
                 case ADD:
-                    LOGGER.info(AnswerType.ADD.toString());
+                    logger.info(AnswerType.ADD.toString());
                     addPatientToDoctor(scanner, doctor);
                     break;
                 case SEE:
-                    LOGGER.info(AnswerType.SEE.toString());
+                    logger.info(AnswerType.SEE.toString());
                     Optional<List<Patient>> patients = Optional.ofNullable(doctor.getPatients());
                     patients.ifPresentOrElse(p ->
-                                    LOGGER.info(p
+                                    logger.info(p
                                             .stream()
                                             .map(Patient::getId)
                                             .collect(Collectors.toList())
                                             .toString()),
-                            () -> LOGGER.info("[]"));
+                            () -> logger.info("[]"));
                     break;
                 case SET:
-                    LOGGER.info(AnswerType.SET.toString());
+                    logger.info(AnswerType.SET.toString());
                     setTherapyToPatient(scanner, doctor);
                     break;
                 case BACK:
-                    LOGGER.info(AnswerType.EXIT.toString());
+                    logger.info(AnswerType.EXIT.toString());
                     flag_doctor = false;
                     break;
                 default:
@@ -244,56 +244,56 @@ public class TerminalProgram {
             }
 
         } catch (TerminalException e) {
-            LOGGER.error(e.getClass().getSimpleName() + Constants.SPACE + e.getMessage());
+            logger.error(e.getClass().getSimpleName() + Constants.SPACE + e.getMessage());
         }
 
     }
 
-    private void setTherapyToPatient(Scanner scanner, Doctor doctor) throws UserDAOException, TherapyDAOException, TerminalException {
+    private void setTherapyToPatient(Scanner scanner, Doctor doctor) throws TerminalException {
 
-        LOGGER.info(ENTER_PATIENT_ID);
+        logger.info(ENTER_PATIENT_ID);
         int patientId = Integer.parseInt(scanner.nextLine().trim());
         Optional<List<Patient>> optionalPatients = Optional.ofNullable(doctor.getPatients());
 
         if (!optionalPatients.isPresent()) {
-            throw new UserDAOException("No patients list");
+            throw new UserDaoException("No patients list");
         }
         Optional<Patient> optPatient = optionalPatients.get().stream().filter(pat -> pat.getId() == patientId).findFirst();
         if (!optPatient.isPresent())
-            throw new UserDAOException("Patien with such id doesn't exist or connect with this doctor");
+            throw new UserDaoException("Patien with such id doesn't exist or connect with this doctor");
         Patient patient = optPatient.get();
-        LOGGER.info(ENTER_THERAPY_DESCR);
+        logger.info(ENTER_THERAPY_DESCR);
         String description = scanner.nextLine();
-        LOGGER.info(ENTER_ENDDATE);
+        logger.info(ENTER_ENDDATE);
         LocalDate endDate = getDateAndCheckDateTimeExp(scanner.nextLine());
 
         userService.addTherapy(patient, description, endDate);
     }
 
-    private void addPatientToDoctor(Scanner scanner, Doctor doctor) throws UserDAOException {
+    private void addPatientToDoctor(Scanner scanner, Doctor doctor) throws UserDaoException {
 
-        LOGGER.info(ENTER_PATIENT_ID);
+        logger.info(ENTER_PATIENT_ID);
         int patientId = Integer.parseInt(scanner.nextLine().trim());
 
         userService.addPatientToDoctor(doctor, patientId);
 
     }
 
-    private void enterPatient(Scanner scanner) throws UserDAOException, TherapyDAOException {
+    private void enterPatient(Scanner scanner) {
 
-        LOGGER.info(ENTER_LOGIN);
+        logger.info(ENTER_LOGIN);
         String login = scanner.nextLine();
-        LOGGER.info(ENTER_PASSWORD);
+        logger.info(ENTER_PASSWORD);
         String password = scanner.nextLine();
         Patient patient = userService
                 .getPatient(login, password)
-                .orElseThrow(() -> new UserDAOException(ERROR_ENTER_PATIENT));
-        LOGGER.info(HI + patient.getName());
+                .orElseThrow(() -> new UserDaoException(ERROR_ENTER_PATIENT));
+        logger.info(HI + patient.getName());
 
         startProcessingPatient(scanner, patient);
     }
 
-    private void startProcessingPatient(Scanner scanner, Patient patient) throws TherapyDAOException, UserDAOException {
+    private void startProcessingPatient(Scanner scanner, Patient patient) {
 
         while (flag_patient) {
             processingPatient(scanner, patient);
@@ -301,9 +301,9 @@ public class TerminalProgram {
         processingProgram(scanner);
     }
 
-    private void processingPatient(Scanner scanner, Patient patient) throws TherapyDAOException, UserDAOException {
+    private void processingPatient(Scanner scanner, Patient patient) {
 
-        LOGGER.info(PROCESSING_PATIENT);
+        logger.info(PROCESSING_PATIENT);
         Optional<List<Therapy>> therapies = Optional.ofNullable(patient.getTherapies());
 
         try {
@@ -311,23 +311,23 @@ public class TerminalProgram {
             switch (answer) {
                 case THERAPIES:
                     therapies.ifPresentOrElse(trps ->
-                                    LOGGER.info(trps
+                                    logger.info(trps
                                             .stream()
                                             .map(Therapy::getId)
                                             .collect(Collectors.toList())
                                             .toString()),
-                            () -> LOGGER.info("No therapies"));
+                            () -> logger.info("No therapies"));
                     break;
                 case THERAPY:
                     therapies.ifPresentOrElse(trps ->
                     {
-                        LOGGER.info(ENTER_ID_THERAPY);
+                        logger.info(ENTER_ID_THERAPY);
                         int therapyId = Integer.parseInt(scanner.nextLine().trim());
                         Optional<Therapy> therapy = trps
                                 .stream()
                                 .filter(t -> t.getId() == therapyId).findFirst();
-                        therapy.ifPresentOrElse(t -> LOGGER.info(t.toString()), () -> LOGGER.error("Wrong id"));
-                    }, () -> LOGGER.info("No therapies"));
+                        therapy.ifPresentOrElse(t -> logger.info(t.toString()), () -> logger.error("Wrong id"));
+                    }, () -> logger.info("No therapies"));
                     break;
                 case BACK:
                     flag_patient = false;
@@ -336,7 +336,7 @@ public class TerminalProgram {
                     throw new TerminalException(ERROR_ARG_INC);
             }
         } catch (TerminalException e) {
-            LOGGER.error(e.getClass().getSimpleName() + Constants.SPACE + e.getMessage());
+            logger.error(e.getClass().getSimpleName() + Constants.SPACE + e.getMessage());
         }
     }
 

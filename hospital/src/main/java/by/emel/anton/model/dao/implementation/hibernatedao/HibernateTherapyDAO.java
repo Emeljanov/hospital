@@ -2,7 +2,7 @@ package by.emel.anton.model.dao.implementation.hibernatedao;
 
 import by.emel.anton.constants.Constants;
 import by.emel.anton.model.beans.therapy.Therapy;
-import by.emel.anton.model.dao.exceptions.TherapyDAOException;
+import by.emel.anton.model.dao.exceptions.TherapyDaoException;
 import by.emel.anton.model.dao.interfaces.TherapyDAO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
@@ -16,7 +16,7 @@ import java.util.Optional;
 @Transactional
 public class HibernateTherapyDAO implements TherapyDAO {
 
-    EntityManager entityManager;
+    private EntityManager entityManager;
 
     @Autowired
     public HibernateTherapyDAO(EntityManager entityManager) {
@@ -24,16 +24,16 @@ public class HibernateTherapyDAO implements TherapyDAO {
     }
 
     @Override
-    public void saveTherapy(Therapy therapy) throws TherapyDAOException {
+    public void saveTherapy(Therapy therapy) {
         entityManager.persist(therapy);
     }
 
     @Override
-    public Optional<Therapy> getTherapy(int id) throws TherapyDAOException {
+    public Optional<Therapy> getTherapy(int id) {
         try {
             return Optional.ofNullable(entityManager.find(Therapy.class, id));
         } catch (NoResultException e) {
-            throw new TherapyDAOException(Constants.EXCEPTION_NO_ID);
+            throw new TherapyDaoException(Constants.EXCEPTION_NO_ID);
         }
     }
 
