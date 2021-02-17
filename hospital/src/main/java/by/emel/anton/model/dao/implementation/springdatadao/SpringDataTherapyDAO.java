@@ -1,6 +1,6 @@
 package by.emel.anton.model.dao.implementation.springdatadao;
 
-import by.emel.anton.model.beans.therapy.Therapy;
+import by.emel.anton.model.entity.therapy.Therapy;
 import by.emel.anton.model.dao.implementation.springdatadao.intefaces.TherapyJpaRepository;
 import by.emel.anton.model.dao.interfaces.TherapyDAO;
 import org.springframework.beans.factory.annotation.Autowired;

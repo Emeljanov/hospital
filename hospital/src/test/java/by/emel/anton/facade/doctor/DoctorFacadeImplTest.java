@@ -2,10 +2,10 @@ package by.emel.anton.facade.doctor;
 
 import by.emel.anton.facade.converter.Converter;
 import by.emel.anton.facade.therapy.RequestTherapyDTO;
-import by.emel.anton.model.beans.therapy.Therapy;
-import by.emel.anton.model.beans.users.User;
-import by.emel.anton.model.beans.users.doctors.Doctor;
-import by.emel.anton.model.beans.users.patients.Patient;
+import by.emel.anton.model.entity.therapy.Therapy;
+import by.emel.anton.model.entity.users.User;
+import by.emel.anton.model.entity.users.doctors.Doctor;
+import by.emel.anton.model.entity.users.patients.Patient;
 import by.emel.anton.model.dao.exceptions.UserDaoException;
 import by.emel.anton.service.UserService;
 import org.junit.jupiter.api.Assertions;

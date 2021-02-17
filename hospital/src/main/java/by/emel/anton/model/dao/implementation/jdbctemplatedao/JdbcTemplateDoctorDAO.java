@@ -1,8 +1,8 @@
 package by.emel.anton.model.dao.implementation.jdbctemplatedao;
 
 import by.emel.anton.constants.Constants;
-import by.emel.anton.model.beans.users.doctors.Doctor;
-import by.emel.anton.model.beans.users.patients.Patient;
+import by.emel.anton.model.entity.users.doctors.Doctor;
+import by.emel.anton.model.entity.users.patients.Patient;
 import by.emel.anton.model.dao.exceptions.UserDaoException;
 import by.emel.anton.model.dao.implementation.jdbctemplatedao.rowmappers.DoctorMapper;
 import by.emel.anton.model.dao.implementation.jdbctemplatedao.rowmappers.PatientMapper;

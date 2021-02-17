@@ -1,6 +1,6 @@
 package by.emel.anton.model.dao.implementation.springdatadao;
 
-import by.emel.anton.model.beans.users.doctors.Doctor;
+import by.emel.anton.model.entity.users.doctors.Doctor;
 import by.emel.anton.model.dao.implementation.springdatadao.intefaces.DoctorJpaRepository;
 import by.emel.anton.model.dao.interfaces.DoctorDAO;
 import org.springframework.beans.factory.annotation.Autowired;

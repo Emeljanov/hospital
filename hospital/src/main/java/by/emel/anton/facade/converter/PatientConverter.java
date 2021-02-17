@@ -1,8 +1,8 @@
 package by.emel.anton.facade.converter;
 
 import by.emel.anton.facade.patient.ResponsePatientDTO;
-import by.emel.anton.model.beans.therapy.Therapy;
-import by.emel.anton.model.beans.users.patients.Patient;
+import by.emel.anton.model.entity.therapy.Therapy;
+import by.emel.anton.model.entity.users.patients.Patient;
 import org.springframework.stereotype.Component;
 
 import java.util.stream.Collectors;

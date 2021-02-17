@@ -1,7 +1,7 @@
 package by.emel.anton.facade.converter;
 
 import by.emel.anton.facade.therapy.ResponseTherapyDTO;
-import by.emel.anton.model.beans.therapy.Therapy;
+import by.emel.anton.model.entity.therapy.Therapy;
 import org.springframework.stereotype.Component;
 
 @Component

@@ -1,10 +1,10 @@
-package by.emel.anton.model.beans.users.patients;
+package by.emel.anton.model.entity.users.patients;
 
 import by.emel.anton.constants.Constants;
-import by.emel.anton.model.beans.therapy.Therapy;
-import by.emel.anton.model.beans.users.User;
-import by.emel.anton.model.beans.users.UserType;
-import by.emel.anton.model.beans.users.doctors.Doctor;
+import by.emel.anton.model.entity.therapy.Therapy;
+import by.emel.anton.model.entity.users.User;
+import by.emel.anton.model.entity.users.UserType;
+import by.emel.anton.model.entity.users.doctors.Doctor;
 
 import javax.persistence.*;
 import java.util.List;

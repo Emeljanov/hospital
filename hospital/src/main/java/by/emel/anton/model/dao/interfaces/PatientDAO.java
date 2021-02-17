@@ -1,6 +1,6 @@
 package by.emel.anton.model.dao.interfaces;
 
-import by.emel.anton.model.beans.users.patients.Patient;
+import by.emel.anton.model.entity.users.patients.Patient;
 
 import java.util.Optional;
 

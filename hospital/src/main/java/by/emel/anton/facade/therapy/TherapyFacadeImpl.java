@@ -1,7 +1,7 @@
 package by.emel.anton.facade.therapy;
 
 import by.emel.anton.facade.converter.Converter;
-import by.emel.anton.model.beans.therapy.Therapy;
+import by.emel.anton.model.entity.therapy.Therapy;
 import by.emel.anton.model.dao.exceptions.TherapyDaoException;
 import by.emel.anton.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;

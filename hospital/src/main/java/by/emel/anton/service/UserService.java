@@ -1,9 +1,9 @@
 package by.emel.anton.service;
 
-import by.emel.anton.model.beans.therapy.Therapy;
-import by.emel.anton.model.beans.users.User;
-import by.emel.anton.model.beans.users.doctors.Doctor;
-import by.emel.anton.model.beans.users.patients.Patient;
+import by.emel.anton.model.entity.therapy.Therapy;
+import by.emel.anton.model.entity.users.User;
+import by.emel.anton.model.entity.users.doctors.Doctor;
+import by.emel.anton.model.entity.users.patients.Patient;
 
 import java.time.LocalDate;
 import java.util.Optional;

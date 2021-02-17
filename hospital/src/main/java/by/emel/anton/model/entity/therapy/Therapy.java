@@ -1,7 +1,7 @@
-package by.emel.anton.model.beans.therapy;
+package by.emel.anton.model.entity.therapy;
 
 import by.emel.anton.constants.Constants;
-import by.emel.anton.model.beans.users.patients.Patient;
+import by.emel.anton.model.entity.users.patients.Patient;
 
 import javax.persistence.*;
 import java.time.LocalDate;

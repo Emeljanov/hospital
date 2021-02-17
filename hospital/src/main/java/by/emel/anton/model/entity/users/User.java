@@ -1,4 +1,4 @@
-package by.emel.anton.model.beans.users;
+package by.emel.anton.model.entity.users;
 
 import by.emel.anton.constants.Constants;
 

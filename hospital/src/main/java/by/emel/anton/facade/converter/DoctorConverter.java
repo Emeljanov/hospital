@@ -1,8 +1,8 @@
 package by.emel.anton.facade.converter;
 
 import by.emel.anton.facade.doctor.ResponseDoctorDTO;
-import by.emel.anton.model.beans.users.User;
-import by.emel.anton.model.beans.users.doctors.Doctor;
+import by.emel.anton.model.entity.users.User;
+import by.emel.anton.model.entity.users.doctors.Doctor;
 import org.springframework.stereotype.Component;
 
 import java.util.stream.Collectors;

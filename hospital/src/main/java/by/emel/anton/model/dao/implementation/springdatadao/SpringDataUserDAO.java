@@ -1,6 +1,6 @@
 package by.emel.anton.model.dao.implementation.springdatadao;
 
-import by.emel.anton.model.beans.users.User;
+import by.emel.anton.model.entity.users.User;
 import by.emel.anton.model.dao.implementation.springdatadao.intefaces.UserJpaRepository;
 import by.emel.anton.model.dao.interfaces.UserDAO;
 import org.springframework.beans.factory.annotation.Autowired;

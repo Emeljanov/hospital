@@ -1,7 +1,7 @@
 package by.emel.anton.controller;
 
-import by.emel.anton.model.beans.therapy.Therapy;
-import by.emel.anton.model.beans.users.patients.Patient;
+import by.emel.anton.model.entity.therapy.Therapy;
+import by.emel.anton.model.entity.users.patients.Patient;
 import by.emel.anton.model.dao.implementation.springdatadao.intefaces.PatientJpaRepository;
 import by.emel.anton.model.dao.implementation.springdatadao.intefaces.TherapyJpaRepository;
 import org.json.JSONObject;

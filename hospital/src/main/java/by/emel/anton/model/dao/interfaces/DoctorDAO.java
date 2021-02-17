@@ -1,6 +1,6 @@
 package by.emel.anton.model.dao.interfaces;
 
-import by.emel.anton.model.beans.users.doctors.Doctor;
+import by.emel.anton.model.entity.users.doctors.Doctor;
 
 import java.util.Optional;
 

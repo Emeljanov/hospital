@@ -1,7 +1,7 @@
 package by.emel.anton.model.dao.implementation.hibernatedao;
 
 import by.emel.anton.constants.Constants;
-import by.emel.anton.model.beans.users.patients.Patient;
+import by.emel.anton.model.entity.users.patients.Patient;
 import by.emel.anton.model.dao.exceptions.UserDaoException;
 import by.emel.anton.model.dao.interfaces.PatientDAO;
 import org.springframework.beans.factory.annotation.Autowired;

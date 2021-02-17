@@ -1,6 +1,6 @@
 package by.emel.anton.model.dao.implementation.filedao;
 
-import by.emel.anton.model.beans.users.patients.Patient;
+import by.emel.anton.model.entity.users.patients.Patient;
 import by.emel.anton.model.dao.interfaces.PatientDAO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
