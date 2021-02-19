@@ -32,4 +32,8 @@ public interface UserService {
 
     void addPatientToDoctor(Doctor doctor, int patientId);
 
+    Optional<Doctor> getDoctorByLogin(String login);
+
+    Optional<Patient> getPatientByLogin(String login);
+
 }

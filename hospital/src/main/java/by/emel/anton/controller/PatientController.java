@@ -9,6 +9,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpSession;
@@ -31,6 +32,7 @@ public class PatientController {
     }
 
     @GetMapping("/by-id")
+    @PreAuthorize("hasAuthority('develop:read')")
     public ResponsePatientDTO getPatientById(@RequestParam int patientId) {
         logger.info("Get patient by id: {}", patientId);
 
@@ -48,6 +50,7 @@ public class PatientController {
     }
 
     @GetMapping("/therapy/get/{id}")
+    @PreAuthorize("hasAuthority('develop:read')")
     public ResponseTherapyDTO getTherapyById(@PathVariable(name = "id") int therapyId) {
         logger.info("Get therapy by id : {}", therapyId);
 
@@ -55,6 +58,7 @@ public class PatientController {
     }
 
     @PostMapping("/logout")
+    @PreAuthorize("hasAuthority('develop:read')")
     public ResponseEntity<Object> logout(@SessionAttribute("patientId") int patientId) {
         httpSession.invalidate();
         logger.info("Session invalidated, id : {}", patientId);

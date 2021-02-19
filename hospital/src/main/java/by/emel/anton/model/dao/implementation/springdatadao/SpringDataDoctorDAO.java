@@ -29,5 +29,10 @@ public class SpringDataDoctorDAO implements DoctorDAO {
         return doctorJpaRepository.findById(id);
     }
 
+    @Override
+    public Optional<Doctor> getDoctorByLogin(String login) {
+        return doctorJpaRepository.findByLogin(login);
+    }
+
 
 }

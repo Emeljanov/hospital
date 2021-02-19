@@ -2,7 +2,7 @@ package by.emel.anton.config;
 
 public enum Permission {
 
-    DEVELOP_READ("delelop:read"),
+    DEVELOP_READ("develop:read"),
     DEVELOP_WRITE("develop:write");
 
     private final String permission;

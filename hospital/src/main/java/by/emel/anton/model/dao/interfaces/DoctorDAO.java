@@ -10,4 +10,6 @@ public interface DoctorDAO {
 
     Optional<Doctor> getDoctorById(int id);
 
+    Optional<Doctor> getDoctorByLogin(String login);
+
 }

@@ -113,4 +113,15 @@ public class UserServiceImp implements UserService {
         doctor.addPatient(patient);
         updateUser(patient);
     }
+
+    @Override
+    public Optional<Doctor> getDoctorByLogin(String login) {
+        return doctorDAO.getDoctorByLogin(login);
+    }
+
+    @Override
+    public Optional<Patient> getPatientByLogin(String login) {
+        return Optional.empty();
+    }
+
 }

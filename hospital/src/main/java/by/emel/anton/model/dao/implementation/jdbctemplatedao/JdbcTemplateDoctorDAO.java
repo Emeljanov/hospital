@@ -61,6 +61,11 @@ public class JdbcTemplateDoctorDAO implements DoctorDAO {
         }
     }
 
+    @Override
+    public Optional<Doctor> getDoctorByLogin(String login) {
+        return Optional.empty();
+    }
+
     private void addPatients(Doctor doctor) {
         List<Patient> patients = jdbcTemplate.query(SQL_GET_PATIENT, patientMapper, doctor.getId());
         patients.forEach(patient -> {

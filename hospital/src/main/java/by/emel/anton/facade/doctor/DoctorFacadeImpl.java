@@ -71,4 +71,15 @@ public class DoctorFacadeImpl implements DoctorFacade {
         userService.saveTherapy(therapy);
     }
 
+    @Override
+    public ResponseDoctorDTO getDoctorByLogin(String login) {
+        ResponseDoctorDTO responseDoctorDTO = userService
+                .getDoctorByLogin(login)
+                .map(converter::convert)
+                .orElseThrow(() -> new UserDaoException("Login or password are incorrect"));
+        httpSession.setAttribute("doctorId", responseDoctorDTO.getId());
+
+        return responseDoctorDTO;
+    }
+
 }

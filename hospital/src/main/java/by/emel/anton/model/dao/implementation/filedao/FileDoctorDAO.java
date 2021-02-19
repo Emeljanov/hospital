@@ -26,4 +26,9 @@ public class FileDoctorDAO implements DoctorDAO {
     public Optional<Doctor> getDoctorById(int id) {
         return Optional.empty();
     }
+
+    @Override
+    public Optional<Doctor> getDoctorByLogin(String login) {
+        return Optional.empty();
+    }
 }

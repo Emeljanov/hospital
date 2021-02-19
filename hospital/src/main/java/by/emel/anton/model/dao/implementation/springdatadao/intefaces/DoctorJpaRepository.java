@@ -11,4 +11,6 @@ public interface DoctorJpaRepository extends JpaRepository<Doctor, Integer> {
 
     @Query("select id from User where login = :login and password = :password")
     Optional<Integer> getDoctorIdByLoginAndPassword(@Param("login") String login, @Param("password") String password);
+
+    Optional<Doctor> findByLogin(String login);
 }

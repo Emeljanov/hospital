@@ -8,6 +8,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpSession;
@@ -27,7 +28,7 @@ public class DoctorController {
     }
 
     private static final Logger logger = LoggerFactory.getLogger(DoctorController.class);
-
+/*
     @PostMapping("/login")
     public ResponseDoctorDTO getDoctorByLoginPass(@RequestBody @Valid RequestDoctorDTO requestDoctorDTO) {
 
@@ -36,9 +37,10 @@ public class DoctorController {
         logger.info("Get doctor by login: {}, password: {}", login, password);
 
         return doctorFacade.getDoctorByLoginPassword(login, password);
-    }
+    }*/
 
     @PostMapping("/patient/set")
+    @PreAuthorize("hasAuthority('develop:write')")
     public ResponseEntity<Object> setPatientToDoctor(@SessionAttribute("doctorId") int doctorId, @RequestParam int patientId) {
 
         logger.info("Set patient id: {} by doctor id: {}", patientId, doctorId);
@@ -48,6 +50,7 @@ public class DoctorController {
     }
 
     @PostMapping("/patient/therapy/set")
+    @PreAuthorize("hasAuthority('develop:write')")
     public ResponseEntity<Object> setTherapyToPatient(@RequestBody RequestTherapyDTO requestTherapyDTO, @SessionAttribute("doctorId") int doctorId) {
 
         logger.info("Set therapy description : {} to patient id: {} by doctor id : {}",
@@ -57,6 +60,7 @@ public class DoctorController {
     }
 
     @PostMapping("/logout")
+    @PreAuthorize("hasAuthority('develop:read')")
     public ResponseEntity<Object> logout(@SessionAttribute("doctorId") int doctorId) {
         httpSession.invalidate();
         logger.info("Session invalidated, id : {}", doctorId);
