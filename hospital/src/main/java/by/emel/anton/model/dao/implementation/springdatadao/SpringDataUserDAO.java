@@ -6,6 +6,8 @@ import by.emel.anton.model.dao.interfaces.UserDAO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
+import java.util.Optional;
+
 @Repository("SpringDataUserDAO")
 public class SpringDataUserDAO implements UserDAO {
 
@@ -30,6 +32,11 @@ public class SpringDataUserDAO implements UserDAO {
     @Override
     public void saveUser(User user) {
         userJpaRepository.save(user);
+    }
+
+    @Override
+    public Optional<User> getSimpleUserByLogin(String login) {
+        return userJpaRepository.findByLogin(login);
     }
 
 

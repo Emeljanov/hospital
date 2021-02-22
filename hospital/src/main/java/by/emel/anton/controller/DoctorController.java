@@ -41,10 +41,10 @@ public class DoctorController {
 
     @PostMapping("/patient/set")
     @PreAuthorize("hasAuthority('develop:write')")
-    public ResponseEntity<Object> setPatientToDoctor(@SessionAttribute("doctorId") int doctorId, @RequestParam int patientId) {
+    public ResponseEntity<Object> setPatientToDoctor(@RequestParam int patientId) {
 
-        logger.info("Set patient id: {} by doctor id: {}", patientId, doctorId);
-        doctorFacade.setPatientToDoctor(doctorId, patientId);
+        logger.info("Set patient id: {} ", patientId);
+        doctorFacade.setPatientToDoctor(patientId);
         return ResponseEntity.ok().build();
 
     }

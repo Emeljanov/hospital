@@ -9,9 +9,13 @@ import by.emel.anton.model.dao.exceptions.UserDaoException;
 import by.emel.anton.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.User;
 import org.springframework.stereotype.Component;
 
 import javax.servlet.http.HttpSession;
+import java.security.Security;
 
 @Component
 public class DoctorFacadeImpl implements DoctorFacade {
@@ -19,12 +23,15 @@ public class DoctorFacadeImpl implements DoctorFacade {
     private UserService userService;
     private Converter<Doctor, ResponseDoctorDTO> converter;
     private HttpSession httpSession;
+//    private Authentication authentication;
+//    private SecurityContextHolder securityContextHolder;
 
     @Autowired
-    public DoctorFacadeImpl(@Qualifier("SpringDataService") UserService userService, Converter<Doctor, ResponseDoctorDTO> converter, HttpSession httpSession) {
+    public DoctorFacadeImpl(@Qualifier("SpringDataService") UserService userService, Converter<Doctor, ResponseDoctorDTO> converter, HttpSession httpSession/*, SecurityContextHolder securityContextHolder*/) {
         this.userService = userService;
         this.converter = converter;
         this.httpSession = httpSession;
+//        this.securityContextHolder = securityContextHolder;
     }
 
     @Override
@@ -41,11 +48,20 @@ public class DoctorFacadeImpl implements DoctorFacade {
     }
 
     @Override
-    public void setPatientToDoctor(int doctorId, int patientId) {
+    public void setPatientToDoctor(int patientId) {
+
+
+
+        org.springframework.security.core.userdetails.User usr = (User)SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        String login = usr.getUsername();
 
         Doctor doctor = userService
+                .getDoctorByLogin(login)
+                .orElseThrow(() -> new UserDaoException("didn't find doctor with id : "));
+
+        /*Doctor doctor = userService
                 .getDoctorById(doctorId)
-                .orElseThrow(() -> new UserDaoException("didn't find doctor with id : " + doctorId));
+                .orElseThrow(() -> new UserDaoException("didn't find doctor with id : " + doctorId));*/
 
         userService.addPatientToDoctor(doctor, patientId);
 

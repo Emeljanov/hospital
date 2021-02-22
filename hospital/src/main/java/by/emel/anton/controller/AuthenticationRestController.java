@@ -5,6 +5,8 @@ import by.emel.anton.config.security.JwtTokenProvider;
 import by.emel.anton.facade.doctor.DoctorFacade;
 import by.emel.anton.facade.doctor.RequestDoctorDTO;
 import by.emel.anton.facade.doctor.ResponseDoctorDTO;
+import by.emel.anton.facade.patient.PatientFacade;
+import by.emel.anton.facade.patient.ResponsePatientDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -25,21 +27,26 @@ import java.util.Map;
 public class AuthenticationRestController {
 
     private final AuthenticationManager authenticationManager;
-    //    private final UserService userService;
     private final DoctorFacade doctorFacade;
+    private final PatientFacade patientFacade;
     private final JwtTokenProvider jwtTokenProvider;
 
     @Autowired
     public AuthenticationRestController(AuthenticationManager authenticationManager,
                                         DoctorFacade doctorFacade,
+                                        PatientFacade patientFacade,
                                         JwtTokenProvider jwtTokenProvider) {
         this.authenticationManager = authenticationManager;
         this.doctorFacade = doctorFacade;
+        this.patientFacade = patientFacade;
         this.jwtTokenProvider = jwtTokenProvider;
     }
 
     @PostMapping("/login/{usertype}")
     public ResponseEntity<?> authenticate(@RequestBody @Valid RequestDoctorDTO requestDoctorDTO,@PathVariable(name = "usertype") String usertype) {
+        String s = "k";
+
+
         try {
             String login = requestDoctorDTO.getLogin();
             String password = requestDoctorDTO.getPassword();
@@ -53,10 +60,13 @@ public class AuthenticationRestController {
                 response.put("doc", responseDoctorDTO);
                 response.put("token", token);
             }
-            /*ResponseDoctorDTO responseDoctorDTO = doctorFacade.getDoctorByLogin(login);
-            String token = jwtTokenProvider.createToken(login, Role.ADMIN.name());
-            response.put("doc", responseDoctorDTO);
-            response.put("token", token);*/
+            else if(usertype.equals("patient")) {
+               ResponsePatientDTO responsePatientDTO = patientFacade.getPatientByLogin(login);
+               String token = jwtTokenProvider.createToken(login,Role.USER.name());
+               response.put("patient",responsePatientDTO);
+               response.put("token",token);
+            }
+
             return ResponseEntity.ok(response);
 
         } catch (AuthenticationException e) {

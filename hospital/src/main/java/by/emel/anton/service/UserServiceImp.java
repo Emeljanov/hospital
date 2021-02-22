@@ -121,7 +121,12 @@ public class UserServiceImp implements UserService {
 
     @Override
     public Optional<Patient> getPatientByLogin(String login) {
-        return Optional.empty();
+        return patientDAO.getPatientByLogin(login);
+    }
+
+    @Override
+    public Optional<User> getUserByLogin(String login) {
+        return userDAO.getSimpleUserByLogin(login);
     }
 
 }

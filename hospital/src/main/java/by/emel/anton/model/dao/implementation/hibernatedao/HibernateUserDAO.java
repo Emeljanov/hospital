@@ -10,6 +10,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
+import java.util.Optional;
 
 @Repository("HibernateUserDAO")
 @Transactional
@@ -38,6 +39,11 @@ public class HibernateUserDAO implements UserDAO {
     @Override
     public void saveUser(User user) {
         entityManager.persist(user);
+    }
+
+    @Override
+    public Optional<User> getSimpleUserByLogin(String login) {
+        return null;
     }
 
     protected static int getUserId(String login, String password, EntityManager entityManager) {

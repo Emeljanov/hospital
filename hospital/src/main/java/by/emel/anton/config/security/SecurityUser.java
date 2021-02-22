@@ -2,6 +2,7 @@ package by.emel.anton.config.security;
 
 import by.emel.anton.config.Role;
 import by.emel.anton.model.entity.users.User;
+import by.emel.anton.model.entity.users.UserType;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -59,11 +60,18 @@ public class SecurityUser implements UserDetails {
     }
 
     public static UserDetails fromUser(User user) {
+        UserType userType = user.getUserType();
+
+        Role role = Role.ADMIN;
+        if(UserType.PATIENT.equals(userType)) {
+            role = Role.USER;
+        }
+
         return new org.springframework.security.core.userdetails.User(
                 user.getLogin(),
                 user.getPassword(),
                 true,true,true,true,
-                Role.ADMIN.getAuthorities()
+                role.getAuthorities()
         );
     }
 }

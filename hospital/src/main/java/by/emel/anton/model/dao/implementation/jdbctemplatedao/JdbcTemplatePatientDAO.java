@@ -50,6 +50,11 @@ public class JdbcTemplatePatientDAO implements PatientDAO {
         }
     }
 
+    @Override
+    public Optional<Patient> getPatientByLogin(String login) {
+        return Optional.empty();
+    }
+
     private void addDoctorAndTherapiesToPatient(Patient patient, JdbcTemplate jdbcTemplate) {
 
         Optional<Doctor> optionalDoctor = Optional.ofNullable(patient.getDoctor());

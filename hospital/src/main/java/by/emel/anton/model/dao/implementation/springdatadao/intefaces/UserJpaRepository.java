@@ -6,10 +6,14 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Component;
 
+import java.util.Optional;
+
 @Component
 public interface UserJpaRepository extends JpaRepository<User, Integer> {
 
     @Query("select count(*) from User where login = :login")
     int loginCount(@Param("login") String login);
+
+    Optional<User> findByLogin(String login);
 
 }

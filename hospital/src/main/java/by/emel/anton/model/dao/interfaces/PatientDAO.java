@@ -12,4 +12,6 @@ public interface PatientDAO {
     Optional<Patient> getPatient(String login, String password);
 
     Optional<Patient> getPatientById(int id);
+
+    Optional<Patient> getPatientByLogin(String login);
 }

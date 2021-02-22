@@ -45,4 +45,9 @@ public class PatientFacadeImpl implements PatientFacade {
 
         return responsePatientDTO;
     }
+
+    @Override
+    public ResponsePatientDTO getPatientByLogin(String login) {
+        return userService.getPatientByLogin(login).map(converter::convert).orElseThrow(() -> new UserDaoException("Can't find patient with login : " + login));
+    }
 }

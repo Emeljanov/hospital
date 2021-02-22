@@ -7,7 +7,7 @@ public interface DoctorFacade {
 
     ResponseDoctorDTO getDoctorByLoginPassword(String login, String password);
 
-    void setPatientToDoctor(int doctorId, int patientId);
+    void setPatientToDoctor(int patientId);
 
     void setTherapyToPatient(int doctorId, RequestTherapyDTO requestTherapyDTO);
 

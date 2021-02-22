@@ -86,6 +86,11 @@ public class FileUserDAO implements UserDAO {
     }
 
     @Override
+    public Optional<User> getSimpleUserByLogin(String login) {
+        return null;
+    }
+
+    @Override
     public void updateUser(User user) {
 
         String login = user.getLogin();

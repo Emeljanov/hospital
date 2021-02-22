@@ -28,4 +28,9 @@ public class SpringDataPatientDAO implements PatientDAO {
     public Optional<Patient> getPatientById(int id) {
         return patientJpaRepository.findById(id);
     }
+
+    @Override
+    public Optional<Patient> getPatientByLogin(String login) {
+        return patientJpaRepository.findByLogin(login);
+    }
 }

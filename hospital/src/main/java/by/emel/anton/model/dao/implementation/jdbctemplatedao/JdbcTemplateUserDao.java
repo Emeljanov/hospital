@@ -89,6 +89,11 @@ public class JdbcTemplateUserDao implements UserDAO {
         }
     }
 
+    @Override
+    public Optional<User> getSimpleUserByLogin(String login) {
+        return null;
+    }
+
     private int getUsersId(User user) {
         String login = user.getLogin();
         return jdbcTemplate.queryForObject(SQL_GET_USER_ID, new Object[]{login}, Integer.class);

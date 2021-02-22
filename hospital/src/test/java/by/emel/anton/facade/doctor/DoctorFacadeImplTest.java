@@ -97,7 +97,7 @@ public class DoctorFacadeImplTest {
         int doctorId = doctor.getId();
         int patientId = patient10.getId();
         when(userService.getDoctorById(doctorId)).thenReturn(Optional.empty());
-        Assertions.assertThrows(UserDaoException.class, () -> doctorFacade.setPatientToDoctor(doctorId, patientId));
+        Assertions.assertThrows(UserDaoException.class, () -> doctorFacade.setPatientToDoctor(patientId));
     }
 
     @Test
@@ -105,7 +105,7 @@ public class DoctorFacadeImplTest {
         int doctorId = doctor.getId();
         int patientId = patient10.getId();
         when(userService.getDoctorById(doctorId)).thenReturn(Optional.of(doctor));
-        doctorFacade.setPatientToDoctor(doctorId, patientId);
+        doctorFacade.setPatientToDoctor(patientId);
         verify(userService).addPatientToDoctor(doctor, patientId);
     }
 

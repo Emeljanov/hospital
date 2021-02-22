@@ -1,7 +1,9 @@
 package by.emel.anton.config.security;
 
 import by.emel.anton.model.dao.exceptions.UserDaoException;
+import by.emel.anton.model.entity.users.User;
 import by.emel.anton.model.entity.users.doctors.Doctor;
+import by.emel.anton.model.entity.users.patients.Patient;
 import by.emel.anton.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -22,7 +24,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String login) throws UsernameNotFoundException {
-        Doctor doctor = userService.getDoctorByLogin(login).orElseThrow(() -> new UserDaoException("blahhhhhhhh"));
-        return SecurityUser.fromUser(doctor);
+        User user = userService.getUserByLogin(login).orElseThrow(() -> new UserDaoException("Can't find User in loadUserByUsername method"));
+        return SecurityUser.fromUser(user);
     }
 }

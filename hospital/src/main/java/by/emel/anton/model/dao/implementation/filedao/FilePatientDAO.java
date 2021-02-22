@@ -27,4 +27,9 @@ public class FilePatientDAO implements PatientDAO {
 
         return fileUserDAO.getPatientFromFileByID(id);
     }
+
+    @Override
+    public Optional<Patient> getPatientByLogin(String login) {
+        return Optional.empty();
+    }
 }

@@ -6,4 +6,6 @@ public interface PatientFacade {
 
     ResponsePatientDTO getPatientByLogPass(String login, String password);
 
+    ResponsePatientDTO getPatientByLogin(String login);
+
 }

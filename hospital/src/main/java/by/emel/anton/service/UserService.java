@@ -36,4 +36,6 @@ public interface UserService {
 
     Optional<Patient> getPatientByLogin(String login);
 
+    Optional<User> getUserByLogin(String login);
+
 }

@@ -39,4 +39,9 @@ public class HibernatePatientDAO implements PatientDAO {
             throw new UserDaoException(Constants.EXCEPTION_NO_ID);
         }
     }
+
+    @Override
+    public Optional<Patient> getPatientByLogin(String login) {
+        return Optional.empty();
+    }
 }
