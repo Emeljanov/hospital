@@ -2,8 +2,6 @@ package by.emel.anton.config.security;
 
 import by.emel.anton.model.dao.exceptions.UserDaoException;
 import by.emel.anton.model.entity.users.User;
-import by.emel.anton.model.entity.users.doctors.Doctor;
-import by.emel.anton.model.entity.users.patients.Patient;
 import by.emel.anton.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;

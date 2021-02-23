@@ -50,12 +50,11 @@ public class AuthenticationRestController {
     public ResponseEntity<?> authenticate(@RequestBody @Valid RequestUserDTO requestUserDTO, @PathVariable(name = "usertype") String usertype) {
 
 
-
         try {
             String login = requestUserDTO.getLogin();
             String password = requestUserDTO.getPassword();
 
-            logger.info("Login in with login : {} , password: {}",login,password);
+            logger.info("Login in with login : {} , password: {}", login, password);
 
             authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(login, password));
 

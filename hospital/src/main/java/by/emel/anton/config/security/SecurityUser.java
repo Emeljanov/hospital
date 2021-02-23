@@ -63,14 +63,14 @@ public class SecurityUser implements UserDetails {
         UserType userType = user.getUserType();
 
         Role role = Role.ADMIN;
-        if(UserType.PATIENT.equals(userType)) {
+        if (UserType.PATIENT.equals(userType)) {
             role = Role.USER;
         }
 
         return new org.springframework.security.core.userdetails.User(
                 user.getLogin(),
                 user.getPassword(),
-                true,true,true,true,
+                true, true, true, true,
                 role.getAuthorities()
         );
     }
