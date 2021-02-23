@@ -55,16 +55,26 @@ public class JwtTokenProvider {
     public boolean validateToken(String token) {
 
         try {
-            Jws<Claims> claimsJws = Jwts.parser().setSigningKey(secretKey).parseClaimsJws(token);
-            return !claimsJws.getBody().getExpiration().before(new Date());
+            Jws<Claims> claimsJws = Jwts
+                    .parser()
+                    .setSigningKey(secretKey)
+                    .parseClaimsJws(token);
+
+            return !claimsJws
+                    .getBody()
+                    .getExpiration()
+                    .before(new Date());
+
         } catch (JwtException | IllegalArgumentException e) {
             throw new JwtAuthenticationException("JWT token is expired or invalid", HttpStatus.UNAUTHORIZED);
         }
     }
 
     public Authentication getAuthentication(String token) {
+
         UserDetails userDetails = this.userDetailsService.loadUserByUsername(getLoginFromToken(token));
         return new UsernamePasswordAuthenticationToken(userDetails, "", userDetails.getAuthorities());
+
     }
 
     public String getLoginFromToken(String token) {

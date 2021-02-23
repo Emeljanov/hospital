@@ -4,7 +4,7 @@ delete from doctor;
 delete from user;
 
 insert into user (id,login,password,name,birthday,user_type) values
-('1','defaultDoctorLogin','defaultPass','defaultDoctorName','1901-01-01','DOCTOR'),
+('1','defaultDoctorLogin','$2y$12$wfxeN1UsTpRtnPpRxHUZme.8.kRfmfyzsUrZtfLXtlk7VmigcYMEG','defaultDoctorName','1901-01-01','DOCTOR'),
 ('2','defaultPatientLogin','defaultpatientPass','defaultPatientName','1990-01-01','PATIENT');
 
 insert into doctor (id) values ('1');

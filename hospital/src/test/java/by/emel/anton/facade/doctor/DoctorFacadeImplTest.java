@@ -1,12 +1,11 @@
 package by.emel.anton.facade.doctor;
 
-import by.emel.anton.facade.converter.Converter;
+import by.emel.anton.config.Role;
 import by.emel.anton.facade.therapy.RequestTherapyDTO;
+import by.emel.anton.model.dao.exceptions.UserDaoException;
 import by.emel.anton.model.entity.therapy.Therapy;
-import by.emel.anton.model.entity.users.User;
 import by.emel.anton.model.entity.users.doctors.Doctor;
 import by.emel.anton.model.entity.users.patients.Patient;
-import by.emel.anton.model.dao.exceptions.UserDaoException;
 import by.emel.anton.service.UserService;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -15,16 +14,15 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContext;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.User;
 
-import javax.servlet.http.HttpSession;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.Assert.assertEquals;
-import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -35,22 +33,24 @@ public class DoctorFacadeImplTest {
     @Mock
     private UserService userService;
     @Mock
-    private Converter<Doctor, ResponseDoctorDTO> converter;
+    private Authentication authentication;
     @Mock
-    private HttpSession httpSession;
+    private SecurityContext securityContext;
+
 
     private Doctor doctor;
     private Patient patient10;
     private Patient patient13;
     private RequestTherapyDTO requestTherapyDTO;
+    private org.springframework.security.core.userdetails.User securityUser;
 
     private static final String LOGIN = "login";
     private static final String PASSWORD = "password";
-    private static final String DOCTOR_ID = "doctorId";
     private static final String NAME = "name";
 
     @BeforeEach
     public void init() {
+
         doctor = new Doctor();
         doctor.setPassword(PASSWORD);
         doctor.setLogin(LOGIN);
@@ -70,74 +70,84 @@ public class DoctorFacadeImplTest {
         requestTherapyDTO.setEndDate(LocalDate.of(2100, 1, 1));
         requestTherapyDTO.setStartDate(LocalDate.of(2000, 1, 1));
         requestTherapyDTO.setPatientId(10);
-    }
 
-    @Test
-    public void getDoctorByLoginPassword() {
-        ResponseDoctorDTO responseDoctorDTO = new ResponseDoctorDTO();
-        responseDoctorDTO.setLogin(doctor.getLogin());
-        responseDoctorDTO.setName(doctor.getName());
-        responseDoctorDTO.setId(doctor.getId());
-        responseDoctorDTO.setPatientIds(doctor.getPatients().stream().map(User::getId).collect(Collectors.toList()));
 
-        when(userService.getDoctor(LOGIN, PASSWORD)).thenReturn(Optional.of(doctor));
-        when(converter.convert(doctor)).thenReturn(responseDoctorDTO);
-        ResponseDoctorDTO doctorByLoginPassword = doctorFacade.getDoctorByLoginPassword(LOGIN, PASSWORD);
+        securityUser =
+                new User(doctor.getLogin(), doctor.getPassword(), true, true, true, true, Role.ADMIN.getAuthorities());
 
-        assertEquals(doctorByLoginPassword.getId(), doctor.getId());
-        assertEquals(doctorByLoginPassword.getName(), doctor.getName());
-        assertEquals(doctorByLoginPassword.getLogin(), doctor.getLogin());
-        int size = doctor.getPatients().size();
-        assertThat(doctorByLoginPassword.getPatientIds()).hasSize(size).containsExactlyInAnyOrder(10, 13);
-        verify(httpSession).setAttribute(eq(DOCTOR_ID), eq(doctor.getId()));
+        SecurityContextHolder.setContext(securityContext);
     }
 
     @Test
     public void setPatientToDoctorException() {
-        int doctorId = doctor.getId();
+
+        String doctorLogin = doctor.getLogin();
         int patientId = patient10.getId();
-        when(userService.getDoctorById(doctorId)).thenReturn(Optional.empty());
+
+        when(userService.getDoctorByLogin(doctorLogin)).thenReturn(Optional.empty());
+        when(securityContext.getAuthentication()).thenReturn(authentication);
+        when(SecurityContextHolder.getContext().getAuthentication().getPrincipal()).thenReturn(securityUser);
+
         Assertions.assertThrows(UserDaoException.class, () -> doctorFacade.setPatientToDoctor(patientId));
     }
 
     @Test
     public void setPatientToDoctor() {
-        int doctorId = doctor.getId();
+
+        String doctorLogin = doctor.getLogin();
         int patientId = patient10.getId();
-        when(userService.getDoctorById(doctorId)).thenReturn(Optional.of(doctor));
+
+        when(userService.getDoctorByLogin(doctorLogin)).thenReturn(Optional.of(doctor));
+        when(securityContext.getAuthentication()).thenReturn(authentication);
+        when(SecurityContextHolder.getContext().getAuthentication().getPrincipal()).thenReturn(securityUser);
+
         doctorFacade.setPatientToDoctor(patientId);
         verify(userService).addPatientToDoctor(doctor, patientId);
     }
 
     @Test
     public void setTherapyToPatientExceptionPatient() {
+
         int patientId = patient10.getId();
-        int doctorId = doctor.getId();
-        when(userService.getDoctorById(doctorId)).thenReturn(Optional.of(doctor));
+        String doctorLogin = doctor.getLogin();
+
+        when(securityContext.getAuthentication()).thenReturn(authentication);
+        when(SecurityContextHolder.getContext().getAuthentication().getPrincipal()).thenReturn(securityUser);
+        when(userService.getDoctorByLogin(doctorLogin)).thenReturn(Optional.of(doctor));
         when(userService.getPatientById(patientId)).thenReturn(Optional.empty());
-        Assertions.assertThrows(UserDaoException.class, () -> doctorFacade.setTherapyToPatient(doctorId, requestTherapyDTO));
+
+        Assertions.assertThrows(UserDaoException.class, () -> doctorFacade.setTherapyToPatient(requestTherapyDTO));
     }
 
     @Test
     public void setTherapyToPatientExceptionDoctor() {
-        int doctorId = doctor.getId();
-        when(userService.getDoctorById(doctorId)).thenReturn(Optional.empty());
-        Assertions.assertThrows(UserDaoException.class, () -> doctorFacade.setTherapyToPatient(doctorId, requestTherapyDTO));
+
+        String doctorLogin = doctor.getLogin();
+        when(securityContext.getAuthentication()).thenReturn(authentication);
+        when(SecurityContextHolder.getContext().getAuthentication().getPrincipal()).thenReturn(securityUser);
+        when(userService.getDoctorByLogin(doctorLogin)).thenReturn(Optional.empty());
+
+        Assertions.assertThrows(UserDaoException.class, () -> doctorFacade.setTherapyToPatient(requestTherapyDTO));
     }
 
     @Test
     public void setTherapyToPatient() {
-        int doctorId = doctor.getId();
+
+        String doctorLogin = doctor.getLogin();
         int patientId = patient10.getId();
+
         Therapy therapy = new Therapy();
         therapy.setPatient(patient10);
         therapy.setDescription(requestTherapyDTO.getDescription());
         therapy.setEndDate(requestTherapyDTO.getEndDate());
         therapy.setStartDate(requestTherapyDTO.getStartDate());
 
-        when(userService.getDoctorById(doctorId)).thenReturn(Optional.of(doctor));
+        when(securityContext.getAuthentication()).thenReturn(authentication);
+        when(SecurityContextHolder.getContext().getAuthentication().getPrincipal()).thenReturn(securityUser);
+        when(userService.getDoctorByLogin(doctorLogin)).thenReturn(Optional.of(doctor));
         when(userService.getPatientById(patientId)).thenReturn(Optional.of(patient10));
-        doctorFacade.setTherapyToPatient(doctorId, requestTherapyDTO);
+
+        doctorFacade.setTherapyToPatient(requestTherapyDTO);
         verify(userService).saveTherapy(therapy);
     }
 }

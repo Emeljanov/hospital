@@ -1,8 +1,8 @@
-package by.emel.anton.facade.doctor;
+package by.emel.anton.facade.user;
 
 import javax.validation.constraints.NotNull;
 
-public class RequestDoctorDTO {
+public class RequestUserDTO {
     @NotNull(message = "field login = null")
     private String login;
     @NotNull(message = "field password = null")

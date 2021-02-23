@@ -1,27 +1,23 @@
 package by.emel.anton.facade.patient;
 
 import by.emel.anton.facade.converter.Converter;
-import by.emel.anton.model.entity.users.patients.Patient;
 import by.emel.anton.model.dao.exceptions.UserDaoException;
+import by.emel.anton.model.entity.users.patients.Patient;
 import by.emel.anton.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
-
-import javax.servlet.http.HttpSession;
 
 @Component
 public class PatientFacadeImpl implements PatientFacade {
 
     private UserService userService;
     private Converter<Patient, ResponsePatientDTO> converter;
-    private HttpSession httpSession;
 
     @Autowired
-    public PatientFacadeImpl(@Qualifier("SpringDataService") UserService userService, Converter<Patient, ResponsePatientDTO> converter, HttpSession httpSession) {
+    public PatientFacadeImpl(@Qualifier("SpringDataService") UserService userService, Converter<Patient, ResponsePatientDTO> converter) {
         this.userService = userService;
         this.converter = converter;
-        this.httpSession = httpSession;
     }
 
     @Override
@@ -34,20 +30,9 @@ public class PatientFacadeImpl implements PatientFacade {
     }
 
     @Override
-    public ResponsePatientDTO getPatientByLogPass(String login, String password) {
-        ResponsePatientDTO responsePatientDTO = userService
-                .getPatient(login, password)
-                .map(converter::convert)
-                .orElseThrow(() -> new UserDaoException("Login or password are incorrect"));
-
-        int patientId = responsePatientDTO.getId();
-        httpSession.setAttribute("patientId", patientId);
-
-        return responsePatientDTO;
-    }
-
-    @Override
     public ResponsePatientDTO getPatientByLogin(String login) {
-        return userService.getPatientByLogin(login).map(converter::convert).orElseThrow(() -> new UserDaoException("Can't find patient with login : " + login));
+
+        return userService.getPatientByLogin(login).map(converter::convert)
+                .orElseThrow(() -> new UserDaoException("Can't find patient with login : " + login));
     }
 }

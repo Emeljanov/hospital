@@ -3,10 +3,10 @@ package by.emel.anton.controller;
 import by.emel.anton.config.Role;
 import by.emel.anton.config.security.JwtTokenProvider;
 import by.emel.anton.facade.doctor.DoctorFacade;
-import by.emel.anton.facade.doctor.RequestDoctorDTO;
 import by.emel.anton.facade.doctor.ResponseDoctorDTO;
 import by.emel.anton.facade.patient.PatientFacade;
 import by.emel.anton.facade.patient.ResponsePatientDTO;
+import by.emel.anton.facade.user.RequestUserDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -43,28 +43,25 @@ public class AuthenticationRestController {
     }
 
     @PostMapping("/login/{usertype}")
-    public ResponseEntity<?> authenticate(@RequestBody @Valid RequestDoctorDTO requestDoctorDTO,@PathVariable(name = "usertype") String usertype) {
-        String s = "k";
-
+    public ResponseEntity<?> authenticate(@RequestBody @Valid RequestUserDTO requestUserDTO, @PathVariable(name = "usertype") String usertype) {
 
         try {
-            String login = requestDoctorDTO.getLogin();
-            String password = requestDoctorDTO.getPassword();
+            String login = requestUserDTO.getLogin();
+            String password = requestUserDTO.getPassword();
 
             authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(login, password));
-//            Doctor doctor = userService.getDoctorByLogin(login).orElseThrow(()-> new UsernameNotFoundException("Doctor doesnt exist"))
+
             Map<Object, Object> response = new HashMap<>();
-            if(usertype.equals("doctor")) {
+            if (usertype.equals("doctor")) {
                 ResponseDoctorDTO responseDoctorDTO = doctorFacade.getDoctorByLogin(login);
                 String token = jwtTokenProvider.createToken(login, Role.ADMIN.name());
-                response.put("doc", responseDoctorDTO);
+                response.put("doctor", responseDoctorDTO);
                 response.put("token", token);
-            }
-            else if(usertype.equals("patient")) {
-               ResponsePatientDTO responsePatientDTO = patientFacade.getPatientByLogin(login);
-               String token = jwtTokenProvider.createToken(login,Role.USER.name());
-               response.put("patient",responsePatientDTO);
-               response.put("token",token);
+            } else if (usertype.equals("patient")) {
+                ResponsePatientDTO responsePatientDTO = patientFacade.getPatientByLogin(login);
+                String token = jwtTokenProvider.createToken(login, Role.USER.name());
+                response.put("patient", responsePatientDTO);
+                response.put("token", token);
             }
 
             return ResponseEntity.ok(response);
