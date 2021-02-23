@@ -10,7 +10,7 @@ import by.emel.anton.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.User;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -28,9 +28,8 @@ public class DoctorFacadeImpl implements DoctorFacade {
     @Override
     public void setPatientToDoctor(int patientId) {
 
-
-        org.springframework.security.core.userdetails.User usr = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        String login = usr.getUsername();
+        UserDetails userDetails = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        String login = userDetails.getUsername();
 
         Doctor doctor = userService
                 .getDoctorByLogin(login)
@@ -43,8 +42,9 @@ public class DoctorFacadeImpl implements DoctorFacade {
     @Override
     public void setTherapyToPatient(RequestTherapyDTO requestTherapyDTO) {
 
-        org.springframework.security.core.userdetails.User usr = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        String login = usr.getUsername();
+        UserDetails userDetails = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        String login = userDetails.getUsername();
+
         int patientId = requestTherapyDTO.getPatientId();
         Doctor doctor = userService
                 .getDoctorByLogin(login)

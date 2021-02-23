@@ -7,6 +7,8 @@ import by.emel.anton.facade.doctor.ResponseDoctorDTO;
 import by.emel.anton.facade.patient.PatientFacade;
 import by.emel.anton.facade.patient.ResponsePatientDTO;
 import by.emel.anton.facade.user.RequestUserDTO;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -31,6 +33,8 @@ public class AuthenticationRestController {
     private final PatientFacade patientFacade;
     private final JwtTokenProvider jwtTokenProvider;
 
+    private static final Logger logger = LoggerFactory.getLogger(AuthenticationRestController.class);
+
     @Autowired
     public AuthenticationRestController(AuthenticationManager authenticationManager,
                                         DoctorFacade doctorFacade,
@@ -45,9 +49,13 @@ public class AuthenticationRestController {
     @PostMapping("/login/{usertype}")
     public ResponseEntity<?> authenticate(@RequestBody @Valid RequestUserDTO requestUserDTO, @PathVariable(name = "usertype") String usertype) {
 
+
+
         try {
             String login = requestUserDTO.getLogin();
             String password = requestUserDTO.getPassword();
+
+            logger.info("Login in with login : {} , password: {}",login,password);
 
             authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(login, password));
 
@@ -73,6 +81,7 @@ public class AuthenticationRestController {
 
     @PostMapping("/logout")
     public void logout(HttpServletRequest request, HttpServletResponse response) {
+        logger.info("Logout from token {}", request.getHeader("Authorization"));
         SecurityContextLogoutHandler securityContextLogoutHandler = new SecurityContextLogoutHandler();
         securityContextLogoutHandler.logout(request, response, null);
     }

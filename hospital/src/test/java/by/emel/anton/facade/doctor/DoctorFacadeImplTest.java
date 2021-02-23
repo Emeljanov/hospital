@@ -1,6 +1,6 @@
 package by.emel.anton.facade.doctor;
 
-import by.emel.anton.config.Role;
+import by.emel.anton.config.security.SecurityUser;
 import by.emel.anton.facade.therapy.RequestTherapyDTO;
 import by.emel.anton.model.dao.exceptions.UserDaoException;
 import by.emel.anton.model.entity.therapy.Therapy;
@@ -17,7 +17,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.User;
+import org.springframework.security.core.userdetails.UserDetails;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -42,7 +42,7 @@ public class DoctorFacadeImplTest {
     private Patient patient10;
     private Patient patient13;
     private RequestTherapyDTO requestTherapyDTO;
-    private org.springframework.security.core.userdetails.User securityUser;
+    private UserDetails securityUserDetails;
 
     private static final String LOGIN = "login";
     private static final String PASSWORD = "password";
@@ -71,9 +71,7 @@ public class DoctorFacadeImplTest {
         requestTherapyDTO.setStartDate(LocalDate.of(2000, 1, 1));
         requestTherapyDTO.setPatientId(10);
 
-
-        securityUser =
-                new User(doctor.getLogin(), doctor.getPassword(), true, true, true, true, Role.ADMIN.getAuthorities());
+        securityUserDetails = SecurityUser.fromUser(doctor);
 
         SecurityContextHolder.setContext(securityContext);
     }
@@ -86,7 +84,7 @@ public class DoctorFacadeImplTest {
 
         when(userService.getDoctorByLogin(doctorLogin)).thenReturn(Optional.empty());
         when(securityContext.getAuthentication()).thenReturn(authentication);
-        when(SecurityContextHolder.getContext().getAuthentication().getPrincipal()).thenReturn(securityUser);
+        when(SecurityContextHolder.getContext().getAuthentication().getPrincipal()).thenReturn(securityUserDetails);
 
         Assertions.assertThrows(UserDaoException.class, () -> doctorFacade.setPatientToDoctor(patientId));
     }
@@ -99,7 +97,7 @@ public class DoctorFacadeImplTest {
 
         when(userService.getDoctorByLogin(doctorLogin)).thenReturn(Optional.of(doctor));
         when(securityContext.getAuthentication()).thenReturn(authentication);
-        when(SecurityContextHolder.getContext().getAuthentication().getPrincipal()).thenReturn(securityUser);
+        when(SecurityContextHolder.getContext().getAuthentication().getPrincipal()).thenReturn(securityUserDetails);
 
         doctorFacade.setPatientToDoctor(patientId);
         verify(userService).addPatientToDoctor(doctor, patientId);
@@ -112,7 +110,7 @@ public class DoctorFacadeImplTest {
         String doctorLogin = doctor.getLogin();
 
         when(securityContext.getAuthentication()).thenReturn(authentication);
-        when(SecurityContextHolder.getContext().getAuthentication().getPrincipal()).thenReturn(securityUser);
+        when(SecurityContextHolder.getContext().getAuthentication().getPrincipal()).thenReturn(securityUserDetails);
         when(userService.getDoctorByLogin(doctorLogin)).thenReturn(Optional.of(doctor));
         when(userService.getPatientById(patientId)).thenReturn(Optional.empty());
 
@@ -124,7 +122,7 @@ public class DoctorFacadeImplTest {
 
         String doctorLogin = doctor.getLogin();
         when(securityContext.getAuthentication()).thenReturn(authentication);
-        when(SecurityContextHolder.getContext().getAuthentication().getPrincipal()).thenReturn(securityUser);
+        when(SecurityContextHolder.getContext().getAuthentication().getPrincipal()).thenReturn(securityUserDetails);
         when(userService.getDoctorByLogin(doctorLogin)).thenReturn(Optional.empty());
 
         Assertions.assertThrows(UserDaoException.class, () -> doctorFacade.setTherapyToPatient(requestTherapyDTO));
@@ -143,7 +141,7 @@ public class DoctorFacadeImplTest {
         therapy.setStartDate(requestTherapyDTO.getStartDate());
 
         when(securityContext.getAuthentication()).thenReturn(authentication);
-        when(SecurityContextHolder.getContext().getAuthentication().getPrincipal()).thenReturn(securityUser);
+        when(SecurityContextHolder.getContext().getAuthentication().getPrincipal()).thenReturn(securityUserDetails);
         when(userService.getDoctorByLogin(doctorLogin)).thenReturn(Optional.of(doctor));
         when(userService.getPatientById(patientId)).thenReturn(Optional.of(patient10));
 
