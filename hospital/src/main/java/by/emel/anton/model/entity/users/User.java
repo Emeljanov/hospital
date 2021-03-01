@@ -1,10 +1,12 @@
 package by.emel.anton.model.entity.users;
 
 import by.emel.anton.constants.Constants;
+import lombok.Data;
 
 import javax.persistence.*;
 import java.time.LocalDate;
 
+@Data
 @Entity
 @Inheritance(strategy = InheritanceType.JOINED)
 public class User {
@@ -32,7 +34,7 @@ public class User {
     public User() {
     }
 
-    public int getId() {
+   /* public int getId() {
         return id;
     }
 
@@ -78,7 +80,7 @@ public class User {
 
     public void setBirthday(LocalDate birthday) {
         this.birthday = birthday;
-    }
+    }*/
 
     @Override
     public String toString() {

@@ -4,21 +4,27 @@ import by.emel.anton.facade.converter.Converter;
 import by.emel.anton.model.entity.therapy.Therapy;
 import by.emel.anton.model.dao.exceptions.TherapyDaoException;
 import by.emel.anton.service.UserService;
+import lombok.NoArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 
+
+@NoArgsConstructor
 @Component
 public class TherapyFacadeImpl implements TherapyFacade {
 
-    private UserService userService;
-    private Converter<Therapy, ResponseTherapyDTO> converter;
+    private  UserService userService;
+    private  Converter<Therapy, ResponseTherapyDTO> converter;
 
-    @Autowired
+
+
+   /* @Autowired
     public TherapyFacadeImpl(@Qualifier("SpringDataService") UserService userService, Converter<Therapy, ResponseTherapyDTO> converter) {
         this.userService = userService;
         this.converter = converter;
-    }
+    }*/
 
     @Override
     public ResponseTherapyDTO getTherapy(int id) {

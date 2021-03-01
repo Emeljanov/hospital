@@ -9,13 +9,12 @@ public class TherapyConverter implements Converter<Therapy, ResponseTherapyDTO> 
     @Override
     public ResponseTherapyDTO convert(Therapy from) {
 
-        ResponseTherapyDTO responseTherapyDTO = new ResponseTherapyDTO();
-        responseTherapyDTO.setTherapyId(from.getId());
-        responseTherapyDTO.setDescription(from.getDescription());
-        responseTherapyDTO.setEndDate(from.getEndDate());
-        responseTherapyDTO.setStartDate(from.getStartDate());
-        responseTherapyDTO.setPatientId(from.getPatient().getId());
-
-        return responseTherapyDTO;
+        return ResponseTherapyDTO.builder()
+                .therapyId(from.getId())
+                .description(from.getDescription())
+                .endDate(from.getEndDate())
+                .startDate(from.getStartDate())
+                .patientId(from.getPatient().getId())
+                .build();
     }
 }

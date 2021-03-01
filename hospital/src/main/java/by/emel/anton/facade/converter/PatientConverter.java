@@ -11,12 +11,12 @@ import java.util.stream.Collectors;
 public class PatientConverter implements Converter<Patient, ResponsePatientDTO> {
     @Override
     public ResponsePatientDTO convert(Patient from) {
-        ResponsePatientDTO responsePatientDTO = new ResponsePatientDTO();
-        responsePatientDTO.setId(from.getId());
-        responsePatientDTO.setName(from.getName());
-        responsePatientDTO.setLogin(from.getLogin());
-        responsePatientDTO.setTherapyIds(from.getTherapies().stream().map(Therapy::getId).collect(Collectors.toList()));
-
-        return responsePatientDTO;
+        return ResponsePatientDTO.builder()
+                .id(from.getId())
+                .name(from.getName())
+                .login(from.getLogin())
+                .doctorId(from.getDoctor().getId())
+                .therapyIds(from.getTherapies().stream().map(Therapy::getId).collect(Collectors.toList()))
+                .build();
     }
 }
