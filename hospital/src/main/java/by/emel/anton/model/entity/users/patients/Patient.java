@@ -5,11 +5,13 @@ import by.emel.anton.model.entity.therapy.Therapy;
 import by.emel.anton.model.entity.users.User;
 import by.emel.anton.model.entity.users.UserType;
 import by.emel.anton.model.entity.users.doctors.Doctor;
+import lombok.Data;
 
 import javax.persistence.*;
 import java.util.List;
 import java.util.stream.Collectors;
 
+@Data
 @Entity
 public class Patient extends User {
 
@@ -22,22 +24,6 @@ public class Patient extends User {
 
     public Patient() {
         setUserType(UserType.PATIENT);
-    }
-
-    public Doctor getDoctor() {
-        return doctor;
-    }
-
-    public List<Therapy> getTherapies() {
-        return therapies;
-    }
-
-    public void setDoctor(Doctor doctor) {
-        this.doctor = doctor;
-    }
-
-    public void setTherapies(List<Therapy> therapies) {
-        this.therapies = therapies;
     }
 
     public void addTherapy(Therapy therapy) {

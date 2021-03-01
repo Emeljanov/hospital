@@ -5,6 +5,7 @@ import by.emel.anton.model.entity.therapy.Therapy;
 import by.emel.anton.model.entity.users.User;
 import by.emel.anton.model.entity.users.UserType;
 import by.emel.anton.model.entity.users.patients.Patient;
+import lombok.Data;
 
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -12,6 +13,7 @@ import javax.persistence.OneToMany;
 import java.util.List;
 import java.util.stream.Collectors;
 
+@Data
 @Entity
 public class Doctor extends User {
 
@@ -22,22 +24,12 @@ public class Doctor extends User {
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "doctor")
     private List<Patient> patients;
 
-    public List<Patient> getPatients() {
-        return patients;
-    }
-
-    public void setPatients(List<Patient> patients) {
-        this.patients = patients;
-    }
-
     public void addPatient(Patient patient) {
         patients.add(patient);
     }
 
     public void setTherapy(Patient patient, Therapy therapy) {
-        patient
-                .getTherapies()
-                .add(therapy);
+        patient.addTherapy(therapy);
     }
 
     @Override
