@@ -7,6 +7,7 @@ import by.emel.anton.facade.doctor.ResponseDoctorDTO;
 import by.emel.anton.facade.patient.PatientFacade;
 import by.emel.anton.facade.patient.ResponsePatientDTO;
 import by.emel.anton.facade.user.RequestUserDTO;
+import by.emel.anton.service.exception.UserServiceException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -73,7 +74,7 @@ public class AuthenticationRestController {
 
             return ResponseEntity.ok(response);
 
-        } catch (AuthenticationException e) {
+        } catch (AuthenticationException | UserServiceException e) {
             return new ResponseEntity<>("Invalid login or password", HttpStatus.FORBIDDEN);
         }
     }

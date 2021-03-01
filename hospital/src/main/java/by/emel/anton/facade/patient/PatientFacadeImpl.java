@@ -4,6 +4,7 @@ import by.emel.anton.facade.converter.Converter;
 import by.emel.anton.model.dao.exceptions.UserDaoException;
 import by.emel.anton.model.entity.users.patients.Patient;
 import by.emel.anton.service.UserService;
+import by.emel.anton.service.exception.UserServiceException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
@@ -21,7 +22,7 @@ public class PatientFacadeImpl implements PatientFacade {
     }
 
     @Override
-    public ResponsePatientDTO getPatientById(int id) {
+    public ResponsePatientDTO getPatientById(int id) throws UserServiceException {
 
         return userService
                 .getPatientById(id)

@@ -2,6 +2,7 @@ package by.emel.anton.controller;
 
 import by.emel.anton.facade.doctor.DoctorFacade;
 import by.emel.anton.facade.therapy.RequestTherapyDTO;
+import by.emel.anton.service.exception.UserServiceException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,7 +25,7 @@ public class DoctorController {
 
     @PostMapping("/patient/set")
     @PreAuthorize("hasAuthority('develop:write')")
-    public ResponseEntity<Object> setPatientToDoctor(@RequestParam int patientId) {
+    public ResponseEntity<Object> setPatientToDoctor(@RequestParam int patientId) throws UserServiceException {
 
         logger.info("Set patient id: {} ", patientId);
         doctorFacade.setPatientToDoctor(patientId);
@@ -34,7 +35,7 @@ public class DoctorController {
 
     @PostMapping("/patient/therapy/set")
     @PreAuthorize("hasAuthority('develop:write')")
-    public ResponseEntity<Object> setTherapyToPatient(@RequestBody RequestTherapyDTO requestTherapyDTO) {
+    public ResponseEntity<Object> setTherapyToPatient(@RequestBody RequestTherapyDTO requestTherapyDTO) throws UserServiceException {
 
         logger.info("Set therapy description : {} to patient id: {}",
                 requestTherapyDTO.getDescription(), requestTherapyDTO.getPatientId());

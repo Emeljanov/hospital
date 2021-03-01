@@ -4,6 +4,7 @@ import by.emel.anton.model.entity.therapy.Therapy;
 import by.emel.anton.model.entity.users.User;
 import by.emel.anton.model.entity.users.doctors.Doctor;
 import by.emel.anton.model.entity.users.patients.Patient;
+import by.emel.anton.service.exception.UserServiceException;
 
 import java.time.LocalDate;
 import java.util.Optional;
@@ -22,7 +23,7 @@ public interface UserService {
 
     Optional<Patient> getPatient(String login, String password);
 
-    Optional<Patient> getPatientById(int id);
+    Optional<Patient> getPatientById(int id) throws UserServiceException;
 
     Optional<Therapy> getTherapy(int id);
 
@@ -30,9 +31,9 @@ public interface UserService {
 
     void addTherapy(Patient patient, String description, LocalDate endDate);
 
-    void addPatientToDoctor(Doctor doctor, int patientId);
+    void addPatientToDoctor(Doctor doctor, int patientId) throws UserServiceException;
 
-    Optional<Doctor> getDoctorByLogin(String login);
+    Optional<Doctor> getDoctorByLogin(String login) throws UserServiceException;
 
     Optional<Patient> getPatientByLogin(String login);
 

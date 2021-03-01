@@ -8,6 +8,7 @@ import by.emel.anton.model.entity.therapy.Therapy;
 import by.emel.anton.model.entity.users.doctors.Doctor;
 import by.emel.anton.model.entity.users.patients.Patient;
 import by.emel.anton.service.UserService;
+import by.emel.anton.service.exception.UserServiceException;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -67,7 +68,7 @@ public class DoctorFacadeImplTest {
     }
 
     @Test
-    public void shouldThrowUserDaoExceptionWhenDoctorNotFound() {
+    public void shouldThrowUserDaoExceptionWhenDoctorNotFound() throws UserServiceException {
 
         String doctorLogin = doctor.getLogin();
         int patientId = patient10.getId();
@@ -79,7 +80,7 @@ public class DoctorFacadeImplTest {
     }
 
     @Test
-    public void shouldAssignPatientToDoctor() {
+    public void shouldAssignPatientToDoctor() throws UserServiceException {
 
         String doctorLogin = doctor.getLogin();
         int patientId = patient10.getId();
@@ -92,7 +93,7 @@ public class DoctorFacadeImplTest {
     }
 
     @Test
-    public void shouldThrowUserDaoExceptionWhenPatientNotFound() {
+    public void shouldThrowUserDaoExceptionWhenPatientNotFound() throws UserServiceException {
 
         int patientId = patient10.getId();
 
@@ -102,7 +103,7 @@ public class DoctorFacadeImplTest {
     }
 
     @Test
-    public void shouldAssignTherapyToPatient() {
+    public void shouldAssignTherapyToPatient() throws UserServiceException {
 
         int patientId = patient10.getId();
 

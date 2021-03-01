@@ -1,39 +1,31 @@
 package by.emel.anton.service;
 
 import by.emel.anton.constants.Constants;
-import by.emel.anton.model.entity.therapy.Therapy;
-import by.emel.anton.model.entity.users.User;
-import by.emel.anton.model.entity.users.doctors.Doctor;
-import by.emel.anton.model.entity.users.patients.Patient;
 import by.emel.anton.model.dao.exceptions.UserDaoException;
 import by.emel.anton.model.dao.interfaces.DoctorDAO;
 import by.emel.anton.model.dao.interfaces.PatientDAO;
 import by.emel.anton.model.dao.interfaces.TherapyDAO;
 import by.emel.anton.model.dao.interfaces.UserDAO;
+import by.emel.anton.model.entity.therapy.Therapy;
+import by.emel.anton.model.entity.users.User;
+import by.emel.anton.model.entity.users.doctors.Doctor;
+import by.emel.anton.model.entity.users.patients.Patient;
+import by.emel.anton.service.exception.UserServiceException;
+import lombok.AllArgsConstructor;
+import org.springframework.security.core.parameters.P;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+@AllArgsConstructor
 public class UserServiceImp implements UserService {
 
     private final UserDAO userDAO;
     private final PatientDAO patientDAO;
     private final DoctorDAO doctorDAO;
     private final TherapyDAO therapyDAO;
-
-    public UserServiceImp(
-            UserDAO userDAO,
-            PatientDAO patientDAO,
-            DoctorDAO doctorDAO,
-            TherapyDAO therapyDAO) {
-
-        this.userDAO = userDAO;
-        this.patientDAO = patientDAO;
-        this.doctorDAO = doctorDAO;
-        this.therapyDAO = therapyDAO;
-    }
 
     @Override
     public void createUser(User user, String login, String password, String name, LocalDate birthday, boolean isSave) {
@@ -72,8 +64,13 @@ public class UserServiceImp implements UserService {
     }
 
     @Override
-    public Optional<Patient> getPatientById(int id) {
-        return patientDAO.getPatientById(id);
+    public Optional<Patient> getPatientById(int id) throws UserServiceException {
+        try {
+            return patientDAO.getPatientById(id);
+        }
+        catch (RuntimeException e) {
+            throw new UserServiceException("Exception in getPatientById");
+        }
     }
 
     @Override
@@ -105,7 +102,7 @@ public class UserServiceImp implements UserService {
     }
 
     @Override
-    public void addPatientToDoctor(Doctor doctor, int patientId) {
+    public void addPatientToDoctor(Doctor doctor, int patientId) throws UserServiceException {
 
         Patient patient = getPatientById(patientId)
                 .orElseThrow(() -> new UserDaoException(Constants.EXCEPTION_NO_ID));
@@ -115,8 +112,12 @@ public class UserServiceImp implements UserService {
     }
 
     @Override
-    public Optional<Doctor> getDoctorByLogin(String login) {
-        return doctorDAO.getDoctorByLogin(login);
+    public Optional<Doctor> getDoctorByLogin(String login) throws UserServiceException {
+        try {
+            return doctorDAO.getDoctorByLogin(login);
+        }catch (RuntimeException e) {
+            throw new UserServiceException("Exception was thrown in the method getDoctorByLogin");
+        }
     }
 
     @Override

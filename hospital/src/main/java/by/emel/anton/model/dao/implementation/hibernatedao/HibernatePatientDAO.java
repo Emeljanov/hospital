@@ -38,6 +38,9 @@ public class HibernatePatientDAO implements PatientDAO {
         } catch (NoResultException e) {
             throw new UserDaoException(Constants.EXCEPTION_NO_ID);
         }
+//        return Optional.ofNullable(entityManager.find(Patient.class, id));
+
+
     }
 
     @Override

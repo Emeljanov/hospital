@@ -10,6 +10,7 @@ import by.emel.anton.model.dao.exceptions.TherapyDaoException;
 import by.emel.anton.model.dao.exceptions.UserDaoException;
 import by.emel.anton.service.UserService;
 import by.emel.anton.service.UserServiceResolver;
+import by.emel.anton.service.exception.UserServiceException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -243,7 +244,7 @@ public class TerminalProgram {
                     throw new TerminalException(ERROR_ARG_INC);
             }
 
-        } catch (TerminalException e) {
+        } catch (TerminalException | UserServiceException e) {
             logger.error(e.getClass().getSimpleName() + Constants.SPACE + e.getMessage());
         }
 
@@ -270,7 +271,7 @@ public class TerminalProgram {
         userService.addTherapy(patient, description, endDate);
     }
 
-    private void addPatientToDoctor(Scanner scanner, Doctor doctor) throws UserDaoException {
+    private void addPatientToDoctor(Scanner scanner, Doctor doctor) throws UserDaoException, UserServiceException {
 
         logger.info(ENTER_PATIENT_ID);
         int patientId = Integer.parseInt(scanner.nextLine().trim());

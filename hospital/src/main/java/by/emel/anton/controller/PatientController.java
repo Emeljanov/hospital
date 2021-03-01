@@ -4,6 +4,7 @@ import by.emel.anton.facade.patient.PatientFacade;
 import by.emel.anton.facade.patient.ResponsePatientDTO;
 import by.emel.anton.facade.therapy.ResponseTherapyDTO;
 import by.emel.anton.facade.therapy.TherapyFacade;
+import by.emel.anton.service.exception.UserServiceException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,7 +27,7 @@ public class PatientController {
 
     @GetMapping("/by-id")
     @PreAuthorize("hasAuthority('develop:read')")
-    public ResponsePatientDTO getPatientById(@RequestParam int patientId) {
+    public ResponsePatientDTO getPatientById(@RequestParam int patientId) throws UserServiceException {
         logger.info("Get patient by id: {}", patientId);
 
         return patientFacade.getPatientById(patientId);

@@ -1,6 +1,5 @@
 package by.emel.anton;
 
-import by.emel.anton.model.entity.users.User;
 import by.emel.anton.terminalprog.TerminalProgram;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
@@ -23,6 +22,6 @@ public class Runner implements CommandLineRunner {
     @Override
     public void run(String... args) {
 
-       /* terminalProgram.startProgram();*/
+        /* terminalProgram.startProgram();*/
     }
 }

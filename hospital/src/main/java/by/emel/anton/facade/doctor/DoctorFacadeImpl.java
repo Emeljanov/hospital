@@ -9,6 +9,7 @@ import by.emel.anton.model.entity.therapy.Therapy;
 import by.emel.anton.model.entity.users.doctors.Doctor;
 import by.emel.anton.model.entity.users.patients.Patient;
 import by.emel.anton.service.UserService;
+import by.emel.anton.service.exception.UserServiceException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
@@ -30,7 +31,7 @@ public class DoctorFacadeImpl implements DoctorFacade {
     }
 
     @Override
-    public void setPatientToDoctor(int patientId) {
+    public void setPatientToDoctor(int patientId) throws UserServiceException {
 
         String login = securityService.getLoginFromUserDetails();
 
@@ -43,7 +44,7 @@ public class DoctorFacadeImpl implements DoctorFacade {
     }
 
     @Override
-    public void setTherapyToPatient(RequestTherapyDTO requestTherapyDTO) {
+    public void setTherapyToPatient(RequestTherapyDTO requestTherapyDTO) throws UserServiceException {
 
         int patientId = requestTherapyDTO.getPatientId();
 
@@ -61,7 +62,7 @@ public class DoctorFacadeImpl implements DoctorFacade {
     }
 
     @Override
-    public ResponseDoctorDTO getDoctorByLogin(String login) {
+    public ResponseDoctorDTO getDoctorByLogin(String login) throws UserServiceException {
         ResponseDoctorDTO responseDoctorDTO = userService
                 .getDoctorByLogin(login)
                 .map(converter::convert)
