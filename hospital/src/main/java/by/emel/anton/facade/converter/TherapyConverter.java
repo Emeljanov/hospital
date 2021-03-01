@@ -8,7 +8,6 @@ import org.springframework.stereotype.Component;
 public class TherapyConverter implements Converter<Therapy, ResponseTherapyDTO> {
     @Override
     public ResponseTherapyDTO convert(Therapy from) {
-
         return ResponseTherapyDTO.builder()
                 .therapyId(from.getId())
                 .description(from.getDescription())
