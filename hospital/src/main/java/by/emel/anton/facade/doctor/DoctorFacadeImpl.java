@@ -1,5 +1,7 @@
 package by.emel.anton.facade.doctor;
 
+import by.emel.anton.config.service.SecurityService;
+import by.emel.anton.config.service.SecurityServiceImpl;
 import by.emel.anton.facade.converter.Converter;
 import by.emel.anton.facade.therapy.RequestTherapyDTO;
 import by.emel.anton.model.dao.exceptions.UserDaoException;
@@ -9,8 +11,6 @@ import by.emel.anton.model.entity.users.patients.Patient;
 import by.emel.anton.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -18,18 +18,21 @@ public class DoctorFacadeImpl implements DoctorFacade {
 
     private UserService userService;
     private Converter<Doctor, ResponseDoctorDTO> converter;
+    private SecurityService securityService;
 
     @Autowired
-    public DoctorFacadeImpl(@Qualifier("SpringDataService") UserService userService, Converter<Doctor, ResponseDoctorDTO> converter) {
+    public DoctorFacadeImpl(@Qualifier("SpringDataService") UserService userService,
+                            Converter<Doctor, ResponseDoctorDTO> converter,
+                            SecurityService securityService) {
         this.userService = userService;
         this.converter = converter;
+        this.securityService = securityService;
     }
 
     @Override
     public void setPatientToDoctor(int patientId) {
 
-        UserDetails userDetails = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        String login = userDetails.getUsername();
+        String login = securityService.getLoginFromUserDetails();
 
         Doctor doctor = userService
                 .getDoctorByLogin(login)
@@ -42,13 +45,8 @@ public class DoctorFacadeImpl implements DoctorFacade {
     @Override
     public void setTherapyToPatient(RequestTherapyDTO requestTherapyDTO) {
 
-        UserDetails userDetails = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        String login = userDetails.getUsername();
-
         int patientId = requestTherapyDTO.getPatientId();
-        Doctor doctor = userService
-                .getDoctorByLogin(login)
-                .orElseThrow(() -> new UserDaoException("didn't find doctor with login : " + login));
+
         Patient patient = userService
                 .getPatientById(patientId)
                 .orElseThrow(() -> new UserDaoException("didn't find doctor with id : " + patientId));

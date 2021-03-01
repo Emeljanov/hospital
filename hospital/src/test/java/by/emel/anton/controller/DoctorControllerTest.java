@@ -66,7 +66,7 @@ public class DoctorControllerTest {
     }
 
     @Test
-    public void setPatientToDoctor() throws Exception {
+    public void shouldAssignPatientToDoctor() throws Exception {
 
         String paramNewPatientId = "3";
 
@@ -93,7 +93,7 @@ public class DoctorControllerTest {
     }
 
     @Test
-    public void setTherapyToPatient() throws Exception {
+    public void shouldAssignTherapyToPatient() throws Exception {
 
         MvcResult mvcResult = mockMvc.perform(MockMvcRequestBuilders.post("/api/v1/auth/login/doctor")
                 .content(getJsonStringFromFile(REQUEST_BODY_DOCTOR_PATH)).contentType(MediaType.APPLICATION_JSON)
