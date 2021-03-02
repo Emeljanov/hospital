@@ -1,7 +1,6 @@
 package by.emel.anton.facade.patient;
 
 import by.emel.anton.facade.converter.Converter;
-import by.emel.anton.model.dao.exceptions.UserDaoException;
 import by.emel.anton.model.entity.users.patients.Patient;
 import by.emel.anton.service.UserService;
 import by.emel.anton.service.exception.UserServiceException;
@@ -22,18 +21,18 @@ public class PatientFacadeImpl implements PatientFacade {
     }
 
     @Override
-    public ResponsePatientDTO getPatientById(int id) throws UserServiceException {
+    public ResponsePatientDTO getPatientById(int id) {
 
         return userService
                 .getPatientById(id)
                 .map(converter::convert)
-                .orElseThrow(() -> new UserDaoException("Can't find patient with id : " + id));
+                .orElseThrow(() -> new UserServiceException("Can't find patient with id : " + id));
     }
 
     @Override
     public ResponsePatientDTO getPatientByLogin(String login) {
 
         return userService.getPatientByLogin(login).map(converter::convert)
-                .orElseThrow(() -> new UserDaoException("Can't find patient with login : " + login));
+                .orElseThrow(() -> new UserServiceException("Can't find patient with login : " + login));
     }
 }

@@ -1,7 +1,6 @@
 package by.emel.anton.service;
 
 import by.emel.anton.constants.Constants;
-import by.emel.anton.model.dao.exceptions.UserDaoException;
 import by.emel.anton.model.dao.interfaces.DoctorDAO;
 import by.emel.anton.model.dao.interfaces.PatientDAO;
 import by.emel.anton.model.dao.interfaces.TherapyDAO;
@@ -12,7 +11,6 @@ import by.emel.anton.model.entity.users.doctors.Doctor;
 import by.emel.anton.model.entity.users.patients.Patient;
 import by.emel.anton.service.exception.UserServiceException;
 import lombok.AllArgsConstructor;
-import org.springframework.security.core.parameters.P;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -40,47 +38,75 @@ public class UserServiceImp implements UserService {
 
     @Override
     public void saveUser(User user) {
-        userDAO.saveUser(user);
+        try {
+            userDAO.saveUser(user);
+        } catch (RuntimeException e) {
+            throw new UserServiceException("Can't save User");
+        }
     }
 
     @Override
     public void saveTherapy(Therapy therapy) {
-        therapyDAO.saveTherapy(therapy);
+        try {
+            therapyDAO.saveTherapy(therapy);
+        } catch (RuntimeException e) {
+            throw new UserServiceException("Can't save Therapy");
+        }
     }
 
     @Override
     public Optional<Doctor> getDoctor(String login, String password) {
-        return doctorDAO.getDoctor(login, password);
+        try {
+            return doctorDAO.getDoctor(login, password);
+        } catch (RuntimeException e) {
+            throw new UserServiceException("Can't get Doctor by login and password");
+        }
     }
 
     @Override
     public Optional<Doctor> getDoctorById(int id) {
-        return doctorDAO.getDoctorById(id);
+        try {
+            return doctorDAO.getDoctorById(id);
+        } catch (RuntimeException e) {
+            throw new UserServiceException("Can't get Doctor by id");
+        }
     }
+
 
     @Override
     public Optional<Patient> getPatient(String login, String password) {
-        return patientDAO.getPatient(login, password);
+        try {
+            return patientDAO.getPatient(login, password);
+        } catch (RuntimeException e) {
+            throw new UserServiceException("Can't get Patient by login and password");
+        }
     }
 
     @Override
     public Optional<Patient> getPatientById(int id) throws UserServiceException {
         try {
             return patientDAO.getPatientById(id);
-        }
-        catch (RuntimeException e) {
-            throw new UserServiceException("Exception in getPatientById");
+        } catch (RuntimeException e) {
+            throw new UserServiceException("Can't get Patient by id");
         }
     }
 
     @Override
     public Optional<Therapy> getTherapy(int id) {
-        return therapyDAO.getTherapy(id);
+        try {
+            return therapyDAO.getTherapy(id);
+        } catch (RuntimeException e) {
+            throw new UserServiceException("Can't get Therapy");
+        }
     }
 
     @Override
     public void updateUser(User user) {
-        userDAO.updateUser(user);
+        try {
+            userDAO.updateUser(user);
+        } catch (RuntimeException e) {
+            throw new UserServiceException("Can't update User");
+        }
     }
 
     @Override
@@ -105,29 +131,37 @@ public class UserServiceImp implements UserService {
     public void addPatientToDoctor(Doctor doctor, int patientId) throws UserServiceException {
 
         Patient patient = getPatientById(patientId)
-                .orElseThrow(() -> new UserDaoException(Constants.EXCEPTION_NO_ID));
+                .orElseThrow(() -> new UserServiceException(Constants.EXCEPTION_NO_ID));
         patient.setDoctor(doctor);
         doctor.addPatient(patient);
         updateUser(patient);
     }
 
     @Override
-    public Optional<Doctor> getDoctorByLogin(String login) throws UserServiceException {
+    public Optional<Doctor> getDoctorByLogin(String login) {
         try {
             return doctorDAO.getDoctorByLogin(login);
-        }catch (RuntimeException e) {
-            throw new UserServiceException("Exception was thrown in the method getDoctorByLogin");
+        } catch (RuntimeException e) {
+            throw new UserServiceException("Can't get Doctor by login");
         }
     }
 
     @Override
     public Optional<Patient> getPatientByLogin(String login) {
-        return patientDAO.getPatientByLogin(login);
+        try {
+            return patientDAO.getPatientByLogin(login);
+        } catch (RuntimeException e) {
+            throw new UserServiceException("Can't get Patient by login");
+        }
     }
 
     @Override
     public Optional<User> getUserByLogin(String login) {
-        return userDAO.getSimpleUserByLogin(login);
+        try {
+            return userDAO.getSimpleUserByLogin(login);
+        } catch (RuntimeException e) {
+            throw new UserServiceException("Can't get User by login");
+        }
     }
 
 }

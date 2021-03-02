@@ -1,6 +1,6 @@
 package by.emel.anton.service.exception;
 
-public class UserServiceException extends Exception {
+public class UserServiceException extends RuntimeException{
     public UserServiceException() {
     }
 

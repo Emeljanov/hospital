@@ -7,9 +7,7 @@ import by.emel.anton.facade.doctor.ResponseDoctorDTO;
 import by.emel.anton.facade.patient.PatientFacade;
 import by.emel.anton.facade.patient.ResponsePatientDTO;
 import by.emel.anton.facade.user.RequestUserDTO;
-import by.emel.anton.service.exception.UserServiceException;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -25,6 +23,7 @@ import javax.validation.Valid;
 import java.util.HashMap;
 import java.util.Map;
 
+@Slf4j
 @RestController
 @RequestMapping("/api/v1/auth")
 public class AuthenticationRestController {
@@ -33,8 +32,6 @@ public class AuthenticationRestController {
     private final DoctorFacade doctorFacade;
     private final PatientFacade patientFacade;
     private final JwtTokenProvider jwtTokenProvider;
-
-    private static final Logger logger = LoggerFactory.getLogger(AuthenticationRestController.class);
 
     @Autowired
     public AuthenticationRestController(AuthenticationManager authenticationManager,
@@ -55,7 +52,7 @@ public class AuthenticationRestController {
             String login = requestUserDTO.getLogin();
             String password = requestUserDTO.getPassword();
 
-            logger.info("Login in with login : {} , password: {}", login, password);
+            log.info("Login in with login : {} , password: {}", login, password);
 
             authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(login, password));
 
@@ -74,14 +71,14 @@ public class AuthenticationRestController {
 
             return ResponseEntity.ok(response);
 
-        } catch (AuthenticationException | UserServiceException e) {
+        } catch (AuthenticationException e) {
             return new ResponseEntity<>("Invalid login or password", HttpStatus.FORBIDDEN);
         }
     }
 
     @PostMapping("/logout")
     public void logout(HttpServletRequest request, HttpServletResponse response) {
-        logger.info("Logout from token {}", request.getHeader("Authorization"));
+        log.info("Logout from token {}", request.getHeader("Authorization"));
         SecurityContextLogoutHandler securityContextLogoutHandler = new SecurityContextLogoutHandler();
         securityContextLogoutHandler.logout(request, response, null);
     }

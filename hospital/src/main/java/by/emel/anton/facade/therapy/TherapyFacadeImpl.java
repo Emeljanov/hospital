@@ -1,9 +1,9 @@
 package by.emel.anton.facade.therapy;
 
 import by.emel.anton.facade.converter.Converter;
-import by.emel.anton.model.dao.exceptions.TherapyDaoException;
 import by.emel.anton.model.entity.therapy.Therapy;
 import by.emel.anton.service.UserService;
+import by.emel.anton.service.exception.UserServiceException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
@@ -27,6 +27,6 @@ public class TherapyFacadeImpl implements TherapyFacade {
         return userService
                 .getTherapy(id)
                 .map(converter::convert)
-                .orElseThrow(() -> new TherapyDaoException("Didn't fint therapy with id :" + id));
+                .orElseThrow(() -> new UserServiceException("Didn't fint therapy with id :" + id));
     }
 }

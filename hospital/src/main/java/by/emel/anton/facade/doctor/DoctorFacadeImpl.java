@@ -1,10 +1,8 @@
 package by.emel.anton.facade.doctor;
 
 import by.emel.anton.config.service.SecurityService;
-import by.emel.anton.config.service.SecurityServiceImpl;
 import by.emel.anton.facade.converter.Converter;
 import by.emel.anton.facade.therapy.RequestTherapyDTO;
-import by.emel.anton.model.dao.exceptions.UserDaoException;
 import by.emel.anton.model.entity.therapy.Therapy;
 import by.emel.anton.model.entity.users.doctors.Doctor;
 import by.emel.anton.model.entity.users.patients.Patient;
@@ -31,26 +29,26 @@ public class DoctorFacadeImpl implements DoctorFacade {
     }
 
     @Override
-    public void setPatientToDoctor(int patientId) throws UserServiceException {
+    public void setPatientToDoctor(int patientId) {
 
         String login = securityService.getLoginFromUserDetails();
 
         Doctor doctor = userService
                 .getDoctorByLogin(login)
-                .orElseThrow(() -> new UserDaoException("didn't find doctor with id : "));
+                .orElseThrow(() -> new UserServiceException("didn't find doctor with id : "));
 
         userService.addPatientToDoctor(doctor, patientId);
 
     }
 
     @Override
-    public void setTherapyToPatient(RequestTherapyDTO requestTherapyDTO) throws UserServiceException {
+    public void setTherapyToPatient(RequestTherapyDTO requestTherapyDTO) {
 
         int patientId = requestTherapyDTO.getPatientId();
 
         Patient patient = userService
                 .getPatientById(patientId)
-                .orElseThrow(() -> new UserDaoException("didn't find doctor with id : " + patientId));
+                .orElseThrow(() -> new UserServiceException("didn't find doctor with id : " + patientId));
 
         Therapy therapy = new Therapy();
         therapy.setPatient(patient);
@@ -62,11 +60,11 @@ public class DoctorFacadeImpl implements DoctorFacade {
     }
 
     @Override
-    public ResponseDoctorDTO getDoctorByLogin(String login) throws UserServiceException {
+    public ResponseDoctorDTO getDoctorByLogin(String login) {
         ResponseDoctorDTO responseDoctorDTO = userService
                 .getDoctorByLogin(login)
                 .map(converter::convert)
-                .orElseThrow(() -> new UserDaoException("Login or password are incorrect"));
+                .orElseThrow(() -> new UserServiceException("Login or password are incorrect"));
 
         return responseDoctorDTO;
     }
