@@ -4,6 +4,7 @@ import by.emel.anton.model.dao.implementation.springdatadao.intefaces.PatientJpa
 import by.emel.anton.model.dao.implementation.springdatadao.intefaces.TherapyJpaRepository;
 import by.emel.anton.model.entity.therapy.Therapy;
 import by.emel.anton.model.entity.users.patients.Patient;
+import lombok.RequiredArgsConstructor;
 import org.json.JSONObject;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
@@ -33,6 +34,7 @@ import static org.junit.Assert.assertEquals;
 @AutoConfigureMockMvc
 @Transactional
 @Sql(value = {"classpath:before-each.sql"}, executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
+@RequiredArgsConstructor(onConstructor = @__(@Autowired))
 public class DoctorControllerTest {
 
     private static final String KEY_PAT_ID = "patientId";
@@ -45,20 +47,9 @@ public class DoctorControllerTest {
     private static final String REQUEST_BODY_THERAPY_PATH = "src/test/resources/requestTherapyBodySetThToPat.json";
     private static final String REQUEST_BODY_DOCTOR_PATH = "src/test/resources/requestBodyGetDoctorByLP.json";
 
-    private MockMvc mockMvc;
-    private PatientJpaRepository patientJpaRepository;
-    private TherapyJpaRepository therapyJpaRepository;
-
-    @Autowired
-    public DoctorControllerTest(
-            MockMvc mockMvc,
-            TherapyJpaRepository therapyJpaRepository,
-            PatientJpaRepository patientJpaRepository) {
-        this.mockMvc = mockMvc;
-        this.therapyJpaRepository = therapyJpaRepository;
-        this.patientJpaRepository = patientJpaRepository;
-
-    }
+    private final MockMvc mockMvc;
+    private final PatientJpaRepository patientJpaRepository;
+    private final TherapyJpaRepository therapyJpaRepository;
 
     @AfterEach
     public void clearSecurityContext() {

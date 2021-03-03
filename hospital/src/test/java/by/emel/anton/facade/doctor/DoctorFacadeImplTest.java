@@ -1,9 +1,7 @@
 package by.emel.anton.facade.doctor;
 
 import by.emel.anton.config.service.SecurityService;
-import by.emel.anton.config.service.SecurityServiceImpl;
 import by.emel.anton.facade.therapy.RequestTherapyDTO;
-import by.emel.anton.model.dao.exceptions.UserDaoException;
 import by.emel.anton.model.entity.therapy.Therapy;
 import by.emel.anton.model.entity.users.doctors.Doctor;
 import by.emel.anton.model.entity.users.patients.Patient;
@@ -59,16 +57,16 @@ public class DoctorFacadeImplTest {
         doctor.addPatient(patient10);
         doctor.addPatient(patient13);
 
-        requestTherapyDTO = new RequestTherapyDTO();
-        requestTherapyDTO.setDescription("description");
-        requestTherapyDTO.setEndDate(LocalDate.of(2100, 1, 1));
-        requestTherapyDTO.setStartDate(LocalDate.of(2000, 1, 1));
-        requestTherapyDTO.setPatientId(10);
-
+        requestTherapyDTO = RequestTherapyDTO.builder()
+                .description("description")
+                .endDate(LocalDate.of(2100, 1, 1))
+                .startDate(LocalDate.of(2000, 1, 1))
+                .patientId(10)
+                .build();
     }
 
     @Test
-    public void shouldThrowUserDaoExceptionWhenDoctorNotFound() throws UserServiceException {
+    public void shouldThrowUserServiceExceptionWhenDoctorNotFound() throws UserServiceException {
 
         String doctorLogin = doctor.getLogin();
         int patientId = patient10.getId();
@@ -76,7 +74,7 @@ public class DoctorFacadeImplTest {
         when(userService.getDoctorByLogin(doctorLogin)).thenReturn(Optional.empty());
         when(securityService.getLoginFromUserDetails()).thenReturn(doctorLogin);
 
-        Assertions.assertThrows(UserDaoException.class, () -> doctorFacade.setPatientToDoctor(patientId));
+        Assertions.assertThrows(UserServiceException.class, () -> doctorFacade.setPatientToDoctor(patientId));
     }
 
     @Test
@@ -93,13 +91,13 @@ public class DoctorFacadeImplTest {
     }
 
     @Test
-    public void shouldThrowUserDaoExceptionWhenPatientNotFound() throws UserServiceException {
+    public void shouldThrowUserServiceExceptionWhenPatientNotFound() throws UserServiceException {
 
         int patientId = patient10.getId();
 
         when(userService.getPatientById(patientId)).thenReturn(Optional.empty());
 
-        Assertions.assertThrows(UserDaoException.class, () -> doctorFacade.setTherapyToPatient(requestTherapyDTO));
+        Assertions.assertThrows(UserServiceException.class, () -> doctorFacade.setTherapyToPatient(requestTherapyDTO));
     }
 
     @Test

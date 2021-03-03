@@ -1,11 +1,17 @@
 package by.emel.anton.facade.therapy;
 
-import lombok.Data;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 import javax.validation.constraints.NotNull;
 import java.time.LocalDate;
 
-@Data
+@AllArgsConstructor
+@Getter
+@NoArgsConstructor
+@Builder
 public class RequestTherapyDTO {
 
     @NotNull(message = "field description = null")

@@ -1,10 +1,12 @@
 package by.emel.anton.facade.user;
 
-import lombok.Data;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
 
 import javax.validation.constraints.NotNull;
 
-@Data
+@AllArgsConstructor
+@Getter
 public class RequestUserDTO {
     @NotNull(message = "field login = null")
     private String login;
