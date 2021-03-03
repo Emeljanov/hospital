@@ -7,11 +7,11 @@ import by.emel.anton.facade.doctor.ResponseDoctorDTO;
 import by.emel.anton.facade.patient.PatientFacade;
 import by.emel.anton.facade.patient.ResponsePatientDTO;
 import by.emel.anton.facade.user.RequestUserDTO;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler;
@@ -23,6 +23,7 @@ import javax.validation.Valid;
 import java.util.HashMap;
 import java.util.Map;
 
+@RequiredArgsConstructor
 @Slf4j
 @RestController
 @RequestMapping("/api/v1/auth")
@@ -32,17 +33,6 @@ public class AuthenticationRestController {
     private final DoctorFacade doctorFacade;
     private final PatientFacade patientFacade;
     private final JwtTokenProvider jwtTokenProvider;
-
-    @Autowired
-    public AuthenticationRestController(AuthenticationManager authenticationManager,
-                                        DoctorFacade doctorFacade,
-                                        PatientFacade patientFacade,
-                                        JwtTokenProvider jwtTokenProvider) {
-        this.authenticationManager = authenticationManager;
-        this.doctorFacade = doctorFacade;
-        this.patientFacade = patientFacade;
-        this.jwtTokenProvider = jwtTokenProvider;
-    }
 
     @PostMapping("/login/{usertype}")
     public ResponseEntity<?> authenticate(@RequestBody @Valid RequestUserDTO requestUserDTO, @PathVariable(name = "usertype") String usertype) {
@@ -72,7 +62,7 @@ public class AuthenticationRestController {
             return ResponseEntity.ok(response);
 
         } catch (AuthenticationException e) {
-            return new ResponseEntity<>("Invalid login or password", HttpStatus.FORBIDDEN);
+            throw new BadCredentialsException("Invalid login or password");
         }
     }
 

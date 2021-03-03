@@ -1,7 +1,7 @@
 package by.emel.anton.config;
 
 import by.emel.anton.config.security.JwtConfigure;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -13,17 +13,13 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
+@RequiredArgsConstructor
 @Configuration
 @EnableWebSecurity
 @EnableGlobalMethodSecurity(prePostEnabled = true)
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     private final JwtConfigure jwtConfigure;
-
-    @Autowired
-    public SecurityConfig(JwtConfigure jwtConfigure) {
-        this.jwtConfigure = jwtConfigure;
-    }
 
     @Bean
     protected PasswordEncoder passwordEncoder() {
