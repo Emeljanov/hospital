@@ -11,6 +11,7 @@ import by.emel.anton.model.entity.users.doctors.Doctor;
 import by.emel.anton.model.entity.users.patients.Patient;
 import by.emel.anton.service.exception.UserServiceException;
 import lombok.AllArgsConstructor;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -18,6 +19,7 @@ import java.util.List;
 import java.util.Optional;
 
 @AllArgsConstructor
+@Transactional
 public class UserServiceImp implements UserService {
 
     private final UserDAO userDAO;

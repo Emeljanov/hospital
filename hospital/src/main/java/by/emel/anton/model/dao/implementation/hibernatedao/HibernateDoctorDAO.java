@@ -10,7 +10,6 @@ import javax.persistence.EntityManager;
 import java.util.Optional;
 
 @Repository("HibernateDoctorDAO")
-@Transactional
 public class HibernateDoctorDAO implements DoctorDAO {
 
     private EntityManager entityManager;

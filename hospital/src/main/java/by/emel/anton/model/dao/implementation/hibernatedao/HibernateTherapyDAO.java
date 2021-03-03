@@ -13,7 +13,6 @@ import javax.persistence.NoResultException;
 import java.util.Optional;
 
 @Repository("HibernateTherapyDAO")
-@Transactional
 public class HibernateTherapyDAO implements TherapyDAO {
 
     private EntityManager entityManager;

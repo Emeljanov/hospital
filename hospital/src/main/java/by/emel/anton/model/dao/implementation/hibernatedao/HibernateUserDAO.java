@@ -13,7 +13,6 @@ import javax.persistence.NoResultException;
 import java.util.Optional;
 
 @Repository("HibernateUserDAO")
-@Transactional
 public class HibernateUserDAO implements UserDAO {
 
     private EntityManager entityManager;
